@@ -11,7 +11,11 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
 
-    private String[] myDataset = {"Bonjour", "Hello"};
+    // TODO: this is mock data, get real data
+    private User[] myDataset = {
+        new User("Felix", "flx", "Give me food", true),
+        new User("Raoul", "rwl", "I like fish", false)
+    };
 
 
     @Override
@@ -31,5 +35,6 @@ public class MainActivity extends AppCompatActivity {
         // specify an adapter
         adapter = new MyAdapter(myDataset);
         recyclerView.setAdapter(adapter);
+
     }
 }
