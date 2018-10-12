@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">PtiChatApp</string>
+    <string name="connexion">Connexion</string>
 </resources>
