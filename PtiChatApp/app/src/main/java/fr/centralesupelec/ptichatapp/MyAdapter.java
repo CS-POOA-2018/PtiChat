@@ -2,6 +2,7 @@ package fr.centralesupelec.ptichatapp;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -16,8 +17,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         // each data item is just a string in this case
         // TODO : make it a User
         public TextView mTextView;
-        public MyViewHolder(TextView textView) {
-            super(textView);
+        public MyViewHolder(View itemView) {
+            super(itemView);
+            TextView textView = itemView.findViewById(R.id.nameContact);
             mTextView = textView;
         }
     }
@@ -31,9 +33,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     @Override
     public MyAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new view
-        TextView textView = (TextView) LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.contact_row, parent, false);
-        return new MyViewHolder(textView);
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        View itemView = inflater.inflate(R.layout.contact_row, parent, false);
+        return new MyViewHolder(itemView);
     }
 
     // Replace the contents of a view (invoked by the layout manager)

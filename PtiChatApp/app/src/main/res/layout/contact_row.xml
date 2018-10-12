@@ -1,9 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="30dp"
-    android:layout_marginLeft="0dp"
-    android:layout_marginRight="0dp"
-    android:gravity="center_vertical"
-    android:text="Bonjour">
-</TextView>
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="3dp">
+
+    <ImageView
+        android:id="@+id/iconContact"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp"
+        app:srcCompat="@drawable/ic_contact_24dp" />
+
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/nameContact"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintStart_toEndOf="@+id/iconContact"
+        android:gravity="center_vertical"
+        tools:text="Bonjour" />
+
+</LinearLayout>
