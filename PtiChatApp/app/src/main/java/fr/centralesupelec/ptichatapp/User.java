@@ -38,7 +38,7 @@ public class User {
         this.status = status;
     }
 
-    public Boolean getConnected() {
+    public Boolean isConnected() {
         return isConnected;
     }
 

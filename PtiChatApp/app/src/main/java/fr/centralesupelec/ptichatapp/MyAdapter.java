@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
@@ -16,10 +17,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView mContactName;
         public TextView mContactStatus;
+        public ImageView mContactIcon;
         public MyViewHolder(View itemView) {
             super(itemView);
             mContactName = itemView.findViewById(R.id.nameContact);
             mContactStatus = itemView.findViewById(R.id.statusContact);
+            mContactIcon = itemView.findViewById(R.id.iconContact);
         }
     }
 
@@ -42,8 +45,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     public void onBindViewHolder(MyViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.mContactName.setText(mDataset[position].getPseudo());
-        holder.mContactStatus.setText(String.format("- %s", mDataset[position].getStatus()));
+        User contact = mDataset[position];
+        holder.mContactName.setText(contact.getPseudo());
+        holder.mContactStatus.setText(String.format("- %s", contact.getStatus()));
+        if (contact.isConnected()) {
+            holder.mContactIcon.setImageResource(R.drawable.ic_contact_green_24dp);
+        } else {
+            holder.mContactIcon.setImageResource(R.drawable.ic_contact_red_24dp);
+        }
     }
 
     // Return the size of your dataset (invoked by the layout manager)
