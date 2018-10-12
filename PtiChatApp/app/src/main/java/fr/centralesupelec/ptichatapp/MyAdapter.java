@@ -14,11 +14,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
     public static class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView mTextView;
+        public TextView mContactName;
+        public TextView mContactStatus;
         public MyViewHolder(View itemView) {
             super(itemView);
-            TextView textView = itemView.findViewById(R.id.nameContact);
-            mTextView = textView;
+            mContactName = itemView.findViewById(R.id.nameContact);
+            mContactStatus = itemView.findViewById(R.id.statusContact);
         }
     }
 
@@ -41,8 +42,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     public void onBindViewHolder(MyViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.mTextView.setText(mDataset[position].getPseudo());
-
+        holder.mContactName.setText(mDataset[position].getPseudo());
+        holder.mContactStatus.setText(String.format("- %s", mDataset[position].getStatus()));
     }
 
     // Return the size of your dataset (invoked by the layout manager)
