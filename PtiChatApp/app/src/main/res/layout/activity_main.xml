@@ -18,7 +18,7 @@
         tools:srcCompat="@tools:sample/avatars[14]" />
 
     <TextView
-        android:id="@+id/mainPseudo"
+        android:id="@+id/mainName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -31,30 +31,30 @@
         tools:text="Garfield" />
 
     <TextView
-        android:id="@+id/mainStatus"
+        android:id="@+id/mainIsOnline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="36dp"
         android:text="(en ligne)"
         android:textSize="18sp"
-        app:layout_constraintStart_toEndOf="@+id/mainPseudo"
+        app:layout_constraintStart_toEndOf="@+id/mainName"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="(en ligne)" />
 
     <TextView
-        android:id="@+id/mainMessage"
+        android:id="@+id/mainStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="Tapez votre message perso"
         app:layout_constraintStart_toEndOf="@+id/mainAvatar"
-        app:layout_constraintTop_toBottomOf="@+id/mainPseudo"
+        app:layout_constraintTop_toBottomOf="@+id/mainName"
         tools:text="Tapez votre message perso" />
 
     <View
-        android:id="@+id/view"
+        android:id="@+id/greyLine"
         android:layout_width="fill_parent"
         android:layout_height="2dp"
         android:layout_marginTop="16dp"
@@ -62,7 +62,7 @@
         app:layout_constraintTop_toBottomOf="@+id/mainAvatar" />
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/mainRecyclerView"
+        android:id="@+id/mainContactView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
@@ -72,6 +72,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view" />
+        app:layout_constraintTop_toBottomOf="@+id/greyLine" />
 
 </android.support.constraint.ConstraintLayout>
