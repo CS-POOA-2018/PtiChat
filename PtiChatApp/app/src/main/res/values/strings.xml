@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">PtiChatApp</string>
     <string name="connexion">Connexion</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="avatar">Cute image of a cat</string>
 </resources>
