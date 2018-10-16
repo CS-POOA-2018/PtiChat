@@ -31,4 +31,5 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-websocket")
     compile("org.springframework.boot:spring-boot-starter")
     compile("org.springframework.boot:spring-boot-starter-data-redis")
+    compile group:'org.xerial', name:'sqlite-jdbc', version:'3.8.11.2'
 }
