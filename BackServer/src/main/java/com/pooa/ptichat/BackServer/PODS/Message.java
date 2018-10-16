@@ -12,11 +12,12 @@ public class Message {
     private boolean read;
 
     /** Use this constructor when a new message arrives (without uuid), it will give it a new uuid */
-    public Message(String content, Date date, String senderId, String chatId) {
+    public Message(String content, String senderId, String chatId) {
         this.content = content;
-        this.date = date;
         this.senderId = senderId;
         this.chatId = chatId;
+
+        this.date = new Date();
 
         UUID uuid = UUID.randomUUID();
         this.id = uuid.toString();
