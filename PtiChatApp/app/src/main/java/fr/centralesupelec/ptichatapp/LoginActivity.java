@@ -30,7 +30,8 @@ public class LoginActivity extends AppCompatActivity {
         Session.connect(login, password);
 
         // switch activity to main
-        Intent intent = new Intent(this, MainActivity.class);
+        // Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, ChatActivity.class);
         startActivity(intent);
     }
 }
