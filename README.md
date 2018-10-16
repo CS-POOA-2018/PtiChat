@@ -23,7 +23,7 @@ This project has two folders: one for the back in Java 8.0 and one for the Andro
 ```json
 {
   "type": "createNewUser",
-  "id": "user id",
+  "userId": "user id",
   "password": "user password"
 }
 ```
@@ -89,8 +89,8 @@ This project has two folders: one for the back in Java 8.0 and one for the Andro
 {
   "type": "listOfChats",
   "userId": "user id",
-  "chats": [{"chatId": "chat id", "name": "chat display name"},
-            {"chatId": "chat id", "name": "chat display name"}]
+  "chats": [{"chatId": "chat id", "chatName": "chat display name"},
+            {"chatId": "chat id", "chatName": "chat display name"}]
 }
 ```
 
