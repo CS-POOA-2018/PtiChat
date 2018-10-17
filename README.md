@@ -57,7 +57,7 @@ This project has two folders: one for the back in Java 8.0 and one for the Andro
 ##### get list of chats
 ```json
 {
-  "type": "getListOfUsers",
+  "type": "getListOfChats",
   "userId": "user id of the requester"
 }
 ```
@@ -65,8 +65,8 @@ This project has two folders: one for the back in Java 8.0 and one for the Andro
 ##### get list of messages in one chat
 ```json
 {
-  "type": "getListOfChats",
-  "userId": "user id of the requester"
+  "type": "getListOfMessages",
+  "chatId": "chat id from which to get the messages"
 }
 ```
 
@@ -74,6 +74,14 @@ This project has two folders: one for the back in Java 8.0 and one for the Andro
 ### Back-end -> Front-end messages
 
 ##### send "you are connected"
+```json
+{
+  "type": "loginAcceptance",
+  "user": {"userId": "user id", "pseudo": "pseudo", "profilePicture": "...", "status": "...", "isConnected": true},
+  "value": true,
+  "message": ""
+}
+```
 
 ##### send list of users
 ```json
