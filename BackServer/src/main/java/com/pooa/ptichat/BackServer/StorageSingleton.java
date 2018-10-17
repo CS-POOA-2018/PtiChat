@@ -1,7 +1,9 @@
 package com.pooa.ptichat.BackServer;
 
+import com.pooa.ptichat.BackServer.NativeSocketServer.ConnectionsManager;
 import com.pooa.ptichat.BackServer.Storage.IStorage;
-import com.pooa.ptichat.BackServer.Storage.MemoryStorage;
+//import com.pooa.ptichat.BackServer.Storage.MemoryStorage;
+import com.pooa.ptichat.BackServer.Storage.SqliteStorage;
 
 /** Singleton Pattern, Holder method, as described here:
  * http://thecodersbreakfast.net/index.php?post/2008/02/25/26-de-la-bonne-implementation-du-singleton-en-java
@@ -9,7 +11,8 @@ import com.pooa.ptichat.BackServer.Storage.MemoryStorage;
 public class StorageSingleton {
 
     private int mPlopCount;
-    private IStorage mStorage = new MemoryStorage();
+    private IStorage mStorage = new SqliteStorage();
+    private ConnectionsManager mConnectionsManager = new ConnectionsManager();
 
     /** Private constructor */
     private StorageSingleton() { }
@@ -21,6 +24,10 @@ public class StorageSingleton {
 
     public IStorage getStorage() {
         return mStorage;
+    }
+
+    public ConnectionsManager getConnectionsManager() {
+        return mConnectionsManager;
     }
 
     /** Holder */
