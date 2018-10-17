@@ -6,6 +6,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 
+import fr.centralesupelec.ptichatapp.PODS.User;
+
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
@@ -18,10 +20,9 @@ public class MainActivity extends AppCompatActivity {
 
     // TODO: this is mock data, get real data
     private User[] myDataset = {
-        new User("Felix", "flx", "Give me food", true),
-        new User("Raoul", "rwl", "I like fish", false)
+        new User("flx", "Felix", "pic", "Give me food", true),
+        new User("rwl", "Raoul", "pic", "I like fish", false)
     };
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

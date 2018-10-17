@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import fr.centralesupelec.ptichatapp.PODS.User;
+
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     private User[] mDataset;
