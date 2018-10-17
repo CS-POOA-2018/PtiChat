@@ -27,6 +27,7 @@ repositories {
 
 dependencies {
     implementation('org.springframework.boot:spring-boot-starter-data-rest')
+    implementation('org.json:json:20180813')
     testImplementation('org.springframework.boot:spring-boot-starter-test')
     compile("org.springframework.boot:spring-boot-starter-websocket")
     compile("org.springframework.boot:spring-boot-starter")
