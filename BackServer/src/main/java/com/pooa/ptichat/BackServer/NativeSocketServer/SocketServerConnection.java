@@ -1,6 +1,11 @@
 package com.pooa.ptichat.BackServer.NativeSocketServer;
 
+import com.pooa.ptichat.BackServer.JsonUtils;
+import com.pooa.ptichat.BackServer.PODS.User;
+import com.pooa.ptichat.BackServer.Storage.IStorage;
 import com.pooa.ptichat.BackServer.StorageSingleton;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,6 +27,10 @@ public class SocketServerConnection implements Runnable {
     private void sendMessage(String message) {
         mOut.println(message);
         mOut.flush();
+    }
+
+    private void sendMessage(JSONObject json) {
+        sendMessage(json.toString());
     }
 
     private String receiveMessage() {
@@ -78,8 +87,63 @@ public class SocketServerConnection implements Runnable {
                     System.out.println("👈 Plop #" + responseNum);
                     sendMessage("This was Plop #" + responseNum);
                 }
-            }
 
+                try {
+                    // TODO obviously move that, in a separate Thread (or one per different handler), somewhere clean
+                    JSONObject json = new JSONObject(messageIn);
+                    String messageType = json.getString("type");
+
+                    if ("createNewUser".equals(messageType)) {
+                        User user = JsonUtils.jsonToUser(json);
+                        String userId = user.getId();
+                        String userPassword = user.getPassword();
+
+                        IStorage storage = StorageSingleton.getInstance().getStorage();
+                        User[] userArray = storage.listUsers();
+                        boolean foundLogin = false;
+                        boolean validCredentials = false;
+                        User userMatch = null;
+                        for (User u : userArray) {
+                            if (userId.equals(u.getId())) {
+                                foundLogin = true;
+                                if (userPassword.equals(u.getPassword())) {
+                                    validCredentials = true;
+                                }
+                                userMatch = u;
+                                break;
+                            }
+                        }
+                        if (validCredentials) {
+                            System.out.println("😺 User " + userId + " exists and user gave valid credentials");
+                            sendMessage(JsonUtils.loginAcceptanceJSON(userMatch, true, ""));
+                        } else if (foundLogin) {
+                            System.out.println("🙀 User " + userId + " exists but user gave invalid credentials");
+                            sendMessage(JsonUtils.loginAcceptanceJSON(userMatch, false, "Invalid Credentials"));
+                        } else {
+                            if (userId.length() >= 3) {
+                                System.out.println("😻 User " + userId + " does not exist, creating it");
+                                user.setPseudo(userId);
+                                storage.addUser(user);
+                                sendMessage(JsonUtils.loginAcceptanceJSON(user, true, ""));
+                            } else {
+                                sendMessage(JsonUtils.loginAcceptanceJSON(null, false, "Login too short"));
+                            }
+                        }
+                    } else if ("getListOfUsers".equals(messageType)) {
+                        StorageSingleton.getInstance().getConnectionsManager().checkConnectedUsers();
+                        IStorage storage = StorageSingleton.getInstance().getStorage();
+                        sendMessage(JsonUtils.sendListOfUsersJson(storage.listUsers()));
+
+                    } else if ("getListOfChats".equals(messageType)) {
+                        String userId = json.getString("userId");
+                        IStorage storage = StorageSingleton.getInstance().getStorage();
+                        sendMessage(JsonUtils.sendListOfChatsJson(userId, storage.listChatsOfUser(userId)));
+                    }
+
+                } catch (JSONException e) {
+                    System.out.println("Could not parse message as JSON");
+                }
+            }
         } catch (IOException e) {
             System.out.println("😿 Client disconnected");
         }

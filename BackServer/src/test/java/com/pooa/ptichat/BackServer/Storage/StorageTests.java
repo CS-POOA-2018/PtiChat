@@ -57,7 +57,7 @@ public abstract class StorageTests {
         mStorage.addUser(u0);
         mStorage.userJoinsChat(u0.getId(), c0.getId());
 
-        Message m0 = new Message("Hello!", new Date(), u0.getId(), c0.getId());
+        Message m0 = new Message("Hello!", u0.getId(), c0.getId());
         mStorage.addMessage(m0);
 
         String m0id = m0.getId();

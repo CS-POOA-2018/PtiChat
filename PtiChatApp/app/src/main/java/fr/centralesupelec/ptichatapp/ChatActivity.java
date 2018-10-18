@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import fr.centralesupelec.ptichatapp.PODS.User;
+import fr.centralesupelec.ptichatapp.PODS.Message;
+
 public class ChatActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
@@ -12,11 +15,11 @@ public class ChatActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager layoutManager;
 
     // TODO: this is mock data, get real data
-    private User sender = new User("Felix", "flx", "", true);
+    private User sender = new User("Felix", "flx", "", "", true);
     private Chat chat = new Chat("test", "TestChat");
     private Message[] myDataset = {
-            new Message(sender, chat, "test", null, "Coucou", true),
-            new Message(sender, chat, "test2", null, "Ca va ?", false)
+            new Message("1", "Coucou", null, sender.getId(), chat.getId(), true),
+            new Message("2", "Ca va ?", null, sender.getId(), chat.getId(), false)
     };
 
     @Override

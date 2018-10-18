@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import fr.centralesupelec.ptichatapp.PODS.Message;
+
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MyViewHolder> {
 
     private Message[] mDataset;
@@ -44,7 +46,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MyViewHo
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         Message message = mDataset[position];
-        holder.mMessageSender.setText(message.getSender().getPseudo());
+        holder.mMessageSender.setText(message.getSenderId());
         holder.mMessageContent.setText(message.getContent());
     }
 

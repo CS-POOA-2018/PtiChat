@@ -1,7 +1,6 @@
-package com.pooa.ptichat.BackServer.PODS;
+package fr.centralesupelec.ptichatapp.PODS;
 
 import java.util.Date;
-import java.util.UUID;
 
 public class Message {
     private String id;
@@ -11,21 +10,7 @@ public class Message {
     private String chatId;
     private boolean read;
 
-    /** Use this constructor when a new message arrives (without uuid), it will give it a new uuid */
-    public Message(String content, String senderId, String chatId) {
-        this.content = content;
-        this.senderId = senderId;
-        this.chatId = chatId;
-
-        this.date = new Date();
-
-        UUID uuid = UUID.randomUUID();
-        this.id = uuid.toString();
-
-        this.read = false;
-    }
-
-    /** Constructor when all message attributes are known */
+    /** Constructor when all message attributes are known (sent by BackServer) */
     public Message(String id, String content, Date date, String senderId, String chatId, boolean read) {
         this.id = id;
         this.content = content;

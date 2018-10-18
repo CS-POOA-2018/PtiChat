@@ -4,6 +4,7 @@ import com.pooa.ptichat.BackServer.Constants;
 import com.pooa.ptichat.BackServer.PODS.Chat;
 import com.pooa.ptichat.BackServer.PODS.Message;
 import com.pooa.ptichat.BackServer.PODS.User;
+import com.pooa.ptichat.BackServer.Utils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -11,16 +12,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class SqliteStorage implements IStorage {
 
     private static String url = "jdbc:sqlite:" + Constants.SQLITE_PATH;
     private boolean isReady = false;
+
+    public SqliteStorage() {
+        getReady();
+    }
 
     public SqliteStorage(String urlOverride) {
         url = urlOverride;
@@ -174,15 +175,11 @@ public class SqliteStorage implements IStorage {
         System.out.println("Adding message " + message.getId());
         String sql = "INSERT INTO messages(messageId,content,sendDate,senderId,chatId,read) VALUES(?,?,?,?,?,?)";
 
-        Date messageDate = message.getDate();
-        DateFormat messageDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String messageDateString = messageDateFormat.format(messageDate);
-
         try (Connection conn = this.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, message.getId());
             pstmt.setString(2, message.getContent());
-            pstmt.setString(3, messageDateString);
+            pstmt.setString(3, Utils.dateToString(message.getDate()));
             pstmt.setString(4, message.getSenderId());
             pstmt.setString(5, message.getChatId());
             pstmt.setBoolean(6, message.isRead());
@@ -200,19 +197,10 @@ public class SqliteStorage implements IStorage {
              ResultSet rs    = stmt.executeQuery(sqlRequest)){
 
             while (rs.next()) {
-                String messageDateString = rs.getString("sendDate");
-                DateFormat messageDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                Date messageDate = null;
-                try {
-                    messageDate = messageDateFormat.parse(messageDateString);
-                } catch (ParseException e) {
-                    System.out.println("listMessages: Could not parse stored date: " + e.getMessage());
-                }
-
                 Message m = new Message(
                         rs.getString("messageId"),
                         rs.getString("content"),
-                        messageDate,
+                        Utils.stringToDate(rs.getString("sendDate")),
                         rs.getString("senderId"),
                         rs.getString("chatId"),
                         rs.getBoolean("read")
