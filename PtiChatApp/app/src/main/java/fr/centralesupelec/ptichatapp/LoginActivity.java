@@ -36,7 +36,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private TextView mSocketTempTextView;  // TEMP SOCKET
     // TODO : this is a debug option plz remove for prod
-    private Boolean backIsWorking = true;
+    private Boolean backIsWorking = false;
 
 
     @Override

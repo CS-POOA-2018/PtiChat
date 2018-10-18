@@ -110,6 +110,13 @@ public class MainActivity extends AppCompatActivity {
         userIsOnline.setText(isConnected ? "(En ligne)" : "(Hors ligne)");
     }
 
+    public void onSelectChat(View view) {
+        // switch activy to Chat
+        // TODO : switch to the right chat and not just on the activity
+        Intent selectChatIntent = new Intent(this, ChatActivity.class);
+        startActivity(selectChatIntent);
+    }
+
     /** TEMP SOCKET */
     public void onPlopButtonClicked2(View v) {
         Log.i("MAb", "👈 Plop button clicked!");
