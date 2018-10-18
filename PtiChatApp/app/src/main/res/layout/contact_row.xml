@@ -17,7 +17,7 @@
 
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/nameContact"
+        android:id="@+id/nameSender"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
         android:layout_marginStart="10dp"
@@ -32,7 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:layout_marginStart="10dp"
-        app:layout_constraintStart_toEndOf="@+id/nameContact"
+        app:layout_constraintStart_toEndOf="@+id/nameSender"
         android:gravity="center_vertical"
         android:text="Message"
         android:textStyle="italic"

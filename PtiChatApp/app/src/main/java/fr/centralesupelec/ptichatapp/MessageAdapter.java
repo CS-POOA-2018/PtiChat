@@ -7,36 +7,34 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
+public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MyViewHolder> {
 
-    private User[] mDataset;
+    private Message[] mDataset;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
     public static class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView mContactName;
-        public TextView mContactStatus;
-        public ImageView mContactIcon;
+        public TextView mMessageSender;
+        public TextView mMessageContent;
         public MyViewHolder(View itemView) {
             super(itemView);
-            mContactName = itemView.findViewById(R.id.nameContact);
-            mContactStatus = itemView.findViewById(R.id.statusContact);
-            mContactIcon = itemView.findViewById(R.id.iconContact);
+            mMessageSender = itemView.findViewById(R.id.messageSender);
+            mMessageContent = itemView.findViewById(R.id.messageContent);
         }
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MyAdapter(User[] myDataset) {
+    public MessageAdapter(Message[] myDataset) {
         mDataset = myDataset;
     }
 
     // Create new views (invoked by the layout manager)
     @Override
-    public MyAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MessageAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new view
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View itemView = inflater.inflate(R.layout.contact_row, parent, false);
+        View itemView = inflater.inflate(R.layout.message_row, parent, false);
         return new MyViewHolder(itemView);
     }
 
@@ -45,14 +43,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     public void onBindViewHolder(MyViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        User contact = mDataset[position];
-        holder.mContactName.setText(contact.getPseudo());
-        holder.mContactStatus.setText(String.format("- %s", contact.getStatus()));
-        if (contact.isConnected()) {
-            holder.mContactIcon.setImageResource(R.drawable.ic_contact_green_24dp);
-        } else {
-            holder.mContactIcon.setImageResource(R.drawable.ic_contact_red_24dp);
-        }
+        Message message = mDataset[position];
+        holder.mMessageSender.setText(message.getSender().getPseudo());
+        holder.mMessageContent.setText(message.getContent());
     }
 
     // Return the size of your dataset (invoked by the layout manager)

@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
 
         // specify an adapter
-        adapter = new MyAdapter(myDataset);
+        adapter = new ContactAdapter(myDataset);
         recyclerView.setAdapter(adapter);
 
         // get the textViews
