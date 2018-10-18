@@ -19,6 +19,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
         public TextView mContactName;
         public TextView mContactStatus;
         public ImageView mContactIcon;
+
         public MyViewHolder(View itemView) {
             super(itemView);
             mContactName = itemView.findViewById(R.id.nameSender);

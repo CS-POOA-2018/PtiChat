@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 
 import fr.centralesupelec.ptichatapp.PODS.User;
 import fr.centralesupelec.ptichatapp.PODS.Message;
+import fr.centralesupelec.ptichatapp.PODS.Chat;
 
 public class ChatActivity extends AppCompatActivity {
 
