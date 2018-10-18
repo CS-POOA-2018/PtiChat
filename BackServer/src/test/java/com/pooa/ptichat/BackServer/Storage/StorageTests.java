@@ -7,7 +7,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
-import java.util.Date;
 
 public abstract class StorageTests {
 
@@ -28,10 +27,16 @@ public abstract class StorageTests {
 
         Chat[] chatArray = mStorage.listChats();
         assert Arrays.stream(chatArray).anyMatch(c -> c0id.equals(c.getId()));
+        Chat queriedChat1 = mStorage.getChat(c0id);
+        assert queriedChat1 != null;
+        assert queriedChat1.getId().equals(c0.getId());
+        assert queriedChat1.getName().equals(c0.getName());
 
         mStorage.removeChat(c0.getId());
         Chat[] chatArray2 = mStorage.listChats();
         assert Arrays.stream(chatArray2).noneMatch(c -> c0id.equals(c.getId()));
+        Chat queriedChat2 = mStorage.getChat(c0id);
+        assert queriedChat2 == null;
     }
 
     @Test
@@ -41,10 +46,16 @@ public abstract class StorageTests {
 
         User[] userArray = mStorage.listUsers();
         assert Arrays.stream(userArray).anyMatch(u -> "TestUser".equals(u.getId()));
+        User queriedUser1 = mStorage.getUser("TestUser");
+        assert queriedUser1 != null;
+        assert queriedUser1.getId().equals(u0.getId());
+        assert queriedUser1.getPassword().equals(u0.getPassword());
 
         mStorage.removeUser(u0.getId());
         User[] userArray2 = mStorage.listUsers();
         assert Arrays.stream(userArray2).noneMatch(u -> "TestUser".equals(u.getId()));
+        User queriedUser2 = mStorage.getUser("TestUser");
+        assert queriedUser2 == null;
     }
 
     @Test

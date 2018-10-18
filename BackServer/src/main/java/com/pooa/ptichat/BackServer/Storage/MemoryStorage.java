@@ -22,6 +22,11 @@ public class MemoryStorage implements IStorage {
     }
 
     @Override
+    public Chat getChat(String chatId) {
+        return mChatData.get(chatId);
+    }
+
+    @Override
     public void removeChat(String chatId) {
         mChatData.remove(chatId);
     }
@@ -63,6 +68,11 @@ public class MemoryStorage implements IStorage {
     @Override
     public void addUser(User user) {
         mUserData.put(user.getId(), user);
+    }
+
+    @Override
+    public User getUser(String userId) {
+        return mUserData.get(userId);
     }
 
     @Override

@@ -99,18 +99,15 @@ public class SocketServerConnection implements Runnable {
                         String userPassword = user.getPassword();
 
                         IStorage storage = StorageSingleton.getInstance().getStorage();
-                        User[] userArray = storage.listUsers();
                         boolean foundLogin = false;
                         boolean validCredentials = false;
-                        User userMatch = null;
-                        for (User u : userArray) {
-                            if (userId.equals(u.getId())) {
-                                foundLogin = true;
-                                if (userPassword.equals(u.getPassword())) {
-                                    validCredentials = true;
-                                }
-                                userMatch = u;
-                                break;
+
+                        User userMatch = storage.getUser(userId);
+
+                        if (userMatch != null) {
+                            foundLogin = true;
+                            if (userPassword.equals(userMatch.getPassword())) {
+                                validCredentials = true;
                             }
                         }
                         if (validCredentials) {

@@ -115,6 +115,24 @@ public class SqliteStorage implements IStorage {
     }
 
     @Override
+    public Chat getChat(String chatId) {
+        String sql = "SELECT chatId, name FROM chats WHERE chatId = ?";
+
+        try (Connection conn = this.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, chatId);
+            ResultSet rs  = pstmt.executeQuery();
+
+            if (rs.next()) {
+                return new Chat(rs.getString("chatId"), rs.getString("name"));
+            }
+        } catch (SQLException e) {
+            System.out.println("getChat failed: " + e.getMessage());
+        }
+        return null;
+    }
+
+    @Override
     public void removeChat(String chatId) {
         System.out.println("Removing chat " + chatId);
         try (Connection conn = this.connect();
@@ -140,6 +158,7 @@ public class SqliteStorage implements IStorage {
 
             while (rs.next()) {
                 Chat c = new Chat(rs.getString("chatId"), rs.getString("name"));
+                // TODO add the chat users and messages ?
                 chatList.add(c);
             }
         } catch (SQLException e) {
@@ -244,9 +263,32 @@ public class SqliteStorage implements IStorage {
     }
 
     @Override
+    public User getUser(String userId) {
+        String sql = "SELECT userId,password,pseudo,profilePicture,status FROM users WHERE userId = ?";
+
+        try (Connection conn = this.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, userId);
+            ResultSet rs  = pstmt.executeQuery();
+
+            if (rs.next()) {
+                return new User(
+                        rs.getString("userId"),
+                        rs.getString("password"),
+                        rs.getString("pseudo"),
+                        rs.getString("profilePicture"),
+                        rs.getString("status")
+                );
+            }
+        } catch (SQLException e) {
+            System.out.println("getUser failed: " + e.getMessage());
+        }
+        return null;
+    }
+
+    @Override
     public void removeUser(String userId) {
         System.out.println("Removing user " + userId);
-        String sql = "DELETE FROM users WHERE userId = ?";
 
         try (Connection conn = this.connect();
              PreparedStatement pstmt = conn.prepareStatement("DELETE FROM users WHERE userId = ?");
@@ -270,7 +312,7 @@ public class SqliteStorage implements IStorage {
              Statement stmt  = conn.createStatement();
              ResultSet rs    = stmt.executeQuery(sql)){
 
-            while (rs.next()) {  // User(String id, String password, String pseudo, String profilePicture, String status)
+            while (rs.next()) {
                 User u = new User(
                         rs.getString("userId"),
                         rs.getString("password"),
