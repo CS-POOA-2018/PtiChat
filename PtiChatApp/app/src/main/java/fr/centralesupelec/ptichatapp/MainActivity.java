@@ -18,6 +18,7 @@ import org.json.JSONObject;
 import fr.centralesupelec.ptichatapp.NativeSocketClient.SendMessageTask;
 import fr.centralesupelec.ptichatapp.PODS.User;
 
+
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
