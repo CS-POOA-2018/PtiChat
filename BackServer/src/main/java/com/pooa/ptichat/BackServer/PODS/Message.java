@@ -35,6 +35,18 @@ public class Message {
         this.read = read;
     }
 
+    @Override
+    public String toString() {
+        return "Message{" +
+                "id='" + id + '\'' +
+                ", content='" + content + '\'' +
+                ", date=" + date +
+                ", senderId='" + senderId + '\'' +
+                ", chatId='" + chatId + '\'' +
+                ", read=" + read +
+                '}';
+    }
+
     public String getId() {
         return id;
     }

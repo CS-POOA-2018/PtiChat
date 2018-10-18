@@ -32,6 +32,18 @@ public class Chat {
     public Chat(String id, String name) {
         this.id = id;
         this.name = name;
+        this.users = new ArrayList<>();
+        this.messages = new ArrayList<>();
+    }
+
+    @Override
+    public String toString() {
+        return "Chat{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", #users=" + users.size() +
+                ", #messages=" + messages.size() +
+                '}';
     }
 
     public String getId() {

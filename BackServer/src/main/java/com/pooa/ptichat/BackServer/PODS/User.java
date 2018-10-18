@@ -27,6 +27,18 @@ public class User {
         this.status = status;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id='" + id + '\'' +
+                ", password='" + password + '\'' +
+                ", pseudo='" + pseudo + '\'' +
+                ", profilePicture='" + profilePicture + '\'' +
+                ", status='" + status + '\'' +
+                ", isConnected=" + isConnected +
+                '}';
+    }
+
     public String getId() {
         return id;
     }
