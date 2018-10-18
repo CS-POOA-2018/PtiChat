@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -17,7 +18,16 @@ import org.json.JSONObject;
 import fr.centralesupelec.ptichatapp.NativeSocketClient.SendMessageTask;
 import fr.centralesupelec.ptichatapp.PODS.User;
 
+import android.util.Log;
+import android.widget.Button;
+
+import ua.naiksoftware.stomp.Stomp;
+import ua.naiksoftware.stomp.client.StompClient;
+
 public class LoginActivity extends AppCompatActivity {
+
+    private Button connect;
+    private StompClient mStompClient;
 
     private EditText nameField;
     private EditText passwordField;
@@ -26,7 +36,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private TextView mSocketTempTextView;  // TEMP SOCKET
     // TODO : this is a debug option plz remove for prod
-    private Boolean backIsWorking = false;
+    private Boolean backIsWorking = true;
 
 
     @Override
@@ -47,6 +57,12 @@ public class LoginActivity extends AppCompatActivity {
 
             // Register the receiver for new incoming message
             registerNewBroadcastReceiver();
+
+            // Set the listener on the button
+            connect = findViewById(R.id.button2);
+            connect.setOnClickListener(v -> {
+                stompTest();
+            });
         }
     }
 
@@ -92,6 +108,18 @@ public class LoginActivity extends AppCompatActivity {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.BROADCAST_NEW_MESSAGE);
         registerReceiver(newMessageReceiver, intentFilter);
+    }
+
+    /** Test the stomp connexion **/
+    public void stompTest() {
+        mStompClient = Stomp.over(Stomp.ConnectionProvider.JWS, "ws://localhost:8080/chat");
+        mStompClient.connect();
+
+        mStompClient.topic("/topic/messages").subscribe(topicMessage -> {
+            System.out.println(topicMessage.getPayload());
+        });
+        mStompClient.send("/app/chat", "{\"from\":\"from\", \"text\":\"text\"}").subscribe();
+        Log.e("MAISLOL", "this is running");
     }
 
     /** Receive messages from the socket interface. If login is accepted, go to main activity */

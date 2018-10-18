@@ -78,6 +78,14 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Plop stomp"
+        tools:layout_editor_absoluteX="280dp"
+        tools:layout_editor_absoluteY="385dp" />
     <!--END TEMP SOCKET-->
 
 </android.support.constraint.ConstraintLayout>

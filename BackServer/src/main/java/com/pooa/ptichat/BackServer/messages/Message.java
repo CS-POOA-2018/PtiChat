@@ -1,20 +1,23 @@
 package com.pooa.ptichat.BackServer.messages;
 
 public class Message {
-    private String name;
 
-    public Message() {
+    private String from;
+    private String text;
+
+    public String getText() {
+        return text;
     }
 
-    public Message(String name) {
-        this.name = name;
+    public void setText(String text) {
+        this.text = text;
     }
 
-    public String getName() {
-        return name;
+    public String getFrom() {
+        return from;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFrom(String from) {
+        this.from = from;
     }
 }
