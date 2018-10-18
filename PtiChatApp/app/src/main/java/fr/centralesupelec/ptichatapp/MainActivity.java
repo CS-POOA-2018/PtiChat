@@ -15,29 +15,37 @@ import android.widget.TextView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import fr.centralesupelec.ptichatapp.NativeSocketClient.SendMessageTask;
+import fr.centralesupelec.ptichatapp.PODS.Chat;
 import fr.centralesupelec.ptichatapp.PODS.User;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter;
-    private RecyclerView.LayoutManager layoutManager;
+    private RecyclerView mUsersRecyclerView;
+    private RecyclerView.Adapter mUsersAdapter;
+    private RecyclerView.LayoutManager mUsersLayoutManager;
 
-    private TextView userName;
-    private TextView userStatus;
-    private TextView userIsOnline;
+    private RecyclerView mChatsRecyclerView;
+    private RecyclerView.Adapter mChatsAdapter;
+    private RecyclerView.LayoutManager mChatsLayoutManager;
+
+    private TextView userNameTV;
+    private TextView userStatusTV;
+    private TextView userIsOnlineTV;
+
+    private User currentUser;
 
     private final NewMessageReceiver newMessageReceiver = new MainActivity.NewMessageReceiver();
 
     private TextView mSocketTempTextView;  // TEMP SOCKET
 
-    // TODO: this is mock data, get real data
-    private User[] myDataset = {
-        new User("flx", "Felix", "pic", "Give me food", true),
-        new User("rwl", "Raoul", "pic", "I like fish", false)
-    };
+    private List<User> myUserDataset = new ArrayList<>();
+    private List<Chat> myChatDataset = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,27 +58,45 @@ public class MainActivity extends AppCompatActivity {
         // Register the receiver for new incoming message
         registerNewBroadcastReceiver();
 
-        recyclerView = findViewById(R.id.mainContactView);
+        mUsersRecyclerView = findViewById(R.id.mainContactView);
+        mChatsRecyclerView = findViewById(R.id.mainChatView);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
-        recyclerView.setHasFixedSize(true);
+        mUsersRecyclerView.setHasFixedSize(true);
+        mChatsRecyclerView.setHasFixedSize(true);
 
         // use a linear layout manager
-        layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
+        mUsersLayoutManager = new LinearLayoutManager(this);
+        mUsersRecyclerView.setLayoutManager(mUsersLayoutManager);
 
-        // specify an adapter
-        adapter = new ContactAdapter(myDataset);
-        recyclerView.setAdapter(adapter);
+        mChatsLayoutManager = new LinearLayoutManager(this);
+        mChatsRecyclerView.setLayoutManager(mChatsLayoutManager);
+
+        // specify an mUsersAdapter
+        mUsersAdapter = new ContactAdapter(myUserDataset);
+        mUsersRecyclerView.setAdapter(mUsersAdapter);
+
+        // specify an mChatsAdapter
+        mChatsAdapter = new ChatAdapter(myChatDataset);
+        mChatsRecyclerView.setAdapter(mChatsAdapter);
 
         // get the textViews
-        userName = findViewById(R.id.mainName);
-        userStatus = findViewById(R.id.mainStatus);
-        userIsOnline = findViewById(R.id.mainIsOnline);
+        userNameTV = findViewById(R.id.mainName);
+        userStatusTV = findViewById(R.id.mainStatus);
+        userIsOnlineTV = findViewById(R.id.mainIsOnline);
 
         // update user
+        currentUser = Session.getUser();
         updateUser();
+
+        myUserDataset.add(new User("flx", "Felix", "pic", "Give me food", true));
+        myUserDataset.add(new User("rwl", "Raoul", "pic", "I like fish", false));
+        mUsersAdapter.notifyDataSetChanged();
+
+        myChatDataset.add(new Chat("id000", "First Chat"));
+        myChatDataset.add(new Chat("id001", "Second Chat"));
+        mChatsAdapter.notifyDataSetChanged();
     }
 
     public void onPause() {
@@ -88,7 +114,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateUser() {
-        User currentUser = Session.getUser();
         updateName(currentUser.getPseudo());
         updateStatus(currentUser.getStatus());
         updateOnline(currentUser.isConnected());
@@ -96,18 +121,18 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateName(String pseudo) {
         if (!pseudo.isEmpty()) {
-            userName.setText(pseudo);
+            userNameTV.setText(pseudo);
         }
     }
 
     private void updateStatus(String status) {
         if (!status.isEmpty()) {
-            userStatus.setText(status);
+            userStatusTV.setText(status);
         }
     }
 
     private void updateOnline(Boolean isConnected) {
-        userIsOnline.setText(isConnected ? "(En ligne)" : "(Hors ligne)");
+        userIsOnlineTV.setText(isConnected ? "(En ligne)" : "(Hors ligne)");
     }
 
     /** TEMP SOCKET */
@@ -135,11 +160,21 @@ public class MainActivity extends AppCompatActivity {
 
                 if ("listOfUsers".equals(json.getString("type"))) {
                     Log.i("LAu", "🗒 Got list of users message");
-                    // TODO
+                    myUserDataset.clear();
+                    for (User u : JsonUtils.listOfUsersJsonToUsers(json)) {
+                        if (!u.getId().equals(Session.getUser().getId())) {
+                            myUserDataset.add(u);
+                        }
+                    }
+                    mUsersAdapter.notifyDataSetChanged();
+                    Log.i("MAd", "New dataset: " + myUserDataset);
 
                 } else if ("listOfChats".equals(json.getString("type"))) {
                     Log.i("LAc", "🗒 Got list of chats message");
-                    // TODO
+                    myChatDataset.clear();
+                    myChatDataset.addAll(Arrays.asList(JsonUtils.listOfChatsJsonToUsers(json)));
+                    mChatsAdapter.notifyDataSetChanged();
+                    Log.i("MAd", "New dataset: " + myChatDataset);
 
                 }
             } catch (JSONException e) {

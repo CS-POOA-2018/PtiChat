@@ -2,10 +2,15 @@ package fr.centralesupelec.ptichatapp;
 
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import fr.centralesupelec.ptichatapp.NativeSocketClient.SendMessageTask;
+import fr.centralesupelec.ptichatapp.PODS.Chat;
 import fr.centralesupelec.ptichatapp.PODS.User;
 
 public class JsonUtils {
@@ -75,6 +80,45 @@ public class JsonUtils {
             Log.e("JUu", "Could not parse login acceptance Json to User: " + e.getMessage());
         }
         return user;
+    }
+
+    public static User[] listOfUsersJsonToUsers(JSONObject json) {
+        List<User> userList = new ArrayList<>();
+        try {
+            JSONArray userJsonArray = json.getJSONArray("users");
+            for (int i = 0; i < userJsonArray.length(); i++) {
+                JSONObject userJson = userJsonArray.getJSONObject(i);
+                User user = new User(
+                        userJson.getString("userId"),
+                        userJson.getString("pseudo"),
+                        userJson.optString("profilePicture"),
+                        userJson.optString("status"),
+                        userJson.getBoolean("isConnected")
+                );
+                userList.add(user);
+            }
+        } catch (JSONException e) {
+            Log.e("JUu", "Could not parse list of users json to users: " + e.getMessage());
+        }
+        return userList.toArray(new User[0]);
+    }
+
+    public static Chat[] listOfChatsJsonToUsers(JSONObject json) {
+        List<Chat> chatList = new ArrayList<>();
+        try {
+            JSONArray chatJsonArray = json.getJSONArray("chats");
+            for (int i = 0; i < chatJsonArray.length(); i++) {
+                JSONObject chatJson = chatJsonArray.getJSONObject(i);
+                Chat chat = new Chat(
+                        chatJson.getString("chatId"),
+                        chatJson.getString("chatName")
+                );
+                chatList.add(chat);
+            }
+        } catch (JSONException e) {
+            Log.e("JUc", "Could not parse list of chats json to chats: " + e.getMessage());
+        }
+        return chatList.toArray(new Chat[0]);
     }
 
 

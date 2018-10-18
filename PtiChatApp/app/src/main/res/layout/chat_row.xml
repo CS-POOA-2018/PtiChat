@@ -8,30 +8,19 @@
     android:padding="3dp">
 
     <ImageView
-        android:id="@+id/iconContact"
+        android:id="@+id/iconChat"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginTop="3dp"
         android:layout_marginBottom="3dp"
-        app:srcCompat="@drawable/ic_contact_24dp" />
+        app:srcCompat="@drawable/ic_chat_24dp" />
 
     <TextView
-        android:id="@+id/nameSender"
+        android:id="@+id/nameChat"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
         android:layout_marginStart="10dp"
         app:layout_constraintStart_toEndOf="@+id/iconContact"
         android:gravity="center_vertical"
-        android:text="Bonjour" />
-
-    <TextView
-        android:id="@+id/statusContact"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_marginStart="10dp"
-        app:layout_constraintStart_toEndOf="@+id/nameSender"
-        android:gravity="center_vertical"
-        android:text="Message"
-        android:textStyle="italic" />
-
+        android:text="This is a chat" />
 </LinearLayout>
