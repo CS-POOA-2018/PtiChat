@@ -9,14 +9,54 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.centralesupelec.ptichatapp.NativeSocketClient.SendMessageTask;
 import fr.centralesupelec.ptichatapp.PODS.Chat;
+import fr.centralesupelec.ptichatapp.PODS.Message;
 import fr.centralesupelec.ptichatapp.PODS.User;
 
 public class JsonUtils {
-    // jsonToListOfChats
-    // jsonToListOfMessages
-    // jsonToListOfUsers
+
+    private static Chat chatJsonToChat(JSONObject chatJson) {
+        try {
+            return new Chat(
+                    chatJson.getString("chatId"),
+                    chatJson.getString("chatName")
+            );
+        } catch (JSONException e) {
+            Log.e("LAc", "Could not make Chat from JSON: " + e.getMessage());
+        }
+        return null;
+    }
+
+    public static Message messageJsonToMessage(JSONObject messageJson) {
+        try {
+            return new Message(
+                    messageJson.getString("messageId"),
+                    messageJson.getString("content"),
+                    Utils.stringToDate(messageJson.getString("date")),
+                    messageJson.getString("senderId"),
+                    messageJson.getString("chatId"),
+                    messageJson.getBoolean("read")
+            );
+        } catch (JSONException e) {
+            Log.e("LAc", "Could not make Message from JSON: " + e.getMessage());
+        }
+        return null;
+    }
+
+    private static User userJsonToUser(JSONObject userJson) {
+        try {
+            return new User(
+                    userJson.getString("userId"),
+                    userJson.getString("pseudo"),
+                    userJson.optString("profilePicture"),
+                    userJson.optString("status"),
+                    userJson.getBoolean("isConnected")
+            );
+        } catch (JSONException e) {
+            Log.e("LAc", "Could not make User from JSON: " + e.getMessage());
+        }
+        return null;
+    }
 
     public static JSONObject userInfoToNewUserJson(String login, String password) {
         JSONObject toSend = null;
@@ -67,19 +107,12 @@ public class JsonUtils {
     }
 
     public static User loginAcceptanceJsonToUser(JSONObject json) {
-        User user = null;
         try {
-            user = new User(
-                    json.getString("userId"),
-                    json.getString("pseudo"),
-                    json.optString("profilePicture"),
-                    json.optString("status"),
-                    json.getBoolean("isConnected")
-            );
+            return userJsonToUser(json.getJSONObject("user"));
         } catch (JSONException e) {
-            Log.e("JUu", "Could not parse login acceptance Json to User: " + e.getMessage());
+            Log.e("LAc", "Could not parse loginAcceptance json: " + e.getMessage());
         }
-        return user;
+        return null;
     }
 
     public static User[] listOfUsersJsonToUsers(JSONObject json) {
@@ -87,15 +120,7 @@ public class JsonUtils {
         try {
             JSONArray userJsonArray = json.getJSONArray("users");
             for (int i = 0; i < userJsonArray.length(); i++) {
-                JSONObject userJson = userJsonArray.getJSONObject(i);
-                User user = new User(
-                        userJson.getString("userId"),
-                        userJson.getString("pseudo"),
-                        userJson.optString("profilePicture"),
-                        userJson.optString("status"),
-                        userJson.getBoolean("isConnected")
-                );
-                userList.add(user);
+                userList.add(userJsonToUser(userJsonArray.getJSONObject(i)));
             }
         } catch (JSONException e) {
             Log.e("JUu", "Could not parse list of users json to users: " + e.getMessage());
@@ -108,12 +133,7 @@ public class JsonUtils {
         try {
             JSONArray chatJsonArray = json.getJSONArray("chats");
             for (int i = 0; i < chatJsonArray.length(); i++) {
-                JSONObject chatJson = chatJsonArray.getJSONObject(i);
-                Chat chat = new Chat(
-                        chatJson.getString("chatId"),
-                        chatJson.getString("chatName")
-                );
-                chatList.add(chat);
+                chatList.add(chatJsonToChat(chatJsonArray.getJSONObject(i)));
             }
         } catch (JSONException e) {
             Log.e("JUc", "Could not parse list of chats json to chats: " + e.getMessage());
@@ -121,23 +141,46 @@ public class JsonUtils {
         return chatList.toArray(new Chat[0]);
     }
 
+    public static Message[] listOfMessagesJsonToMessages(JSONObject json) {
+        List<Message> messageList = new ArrayList<>();
+        try {
+            JSONArray chatJsonArray = json.getJSONArray("messages");
+            for (int i = 0; i < chatJsonArray.length(); i++) {
+                messageList.add(messageJsonToMessage(chatJsonArray.getJSONObject(i)));
+            }
+        } catch (JSONException e) {
+            Log.e("JUc", "Could not parse list of messages json to messages: " + e.getMessage());
+        }
+        return messageList.toArray(new Message[0]);
+    }
 
-//    public static Chat jsonToChat(JSONObject json) {
-//        Chat c = new Chat(json.getString("chatName"));
-//        JSONArray usersJsonArray = new JSONArray(json.getString("users"));
-//        List<String> userList = new ArrayList<>();
-//        for(int i = 0; i < usersJsonArray.length(); i++){
-//            userList.add(usersJsonArray.getJSONObject(i).getString("name"));
-//        }
-//        c.setUsers(userList);
-//        return c;
-//    }
-//
-//    public static Message jsonToMessage(JSONObject json) {
-//        return new Message(json.getString("content"), json.getString("senderId"), json.getString("chatId"));
-//    }
-//
-//    public static User jsonToUser(JSONObject json) {
-//        return new User(json.getString("userId"), json.getString("password"), null);
-//    }
+    public static JSONObject messageToJson(Message message) {
+        JSONObject json = null;
+        try {
+            json = new JSONObject();
+            json.put("messageId", message.getId());
+            json.put("content", message.getContent());
+            json.put("date", Utils.dateToString(message.getDate()));
+            json.put("senderId", message.getSenderId());
+            json.put("chatId", message.getChatId());
+            json.put("read", message.isRead());
+        } catch (JSONException e) {
+            Log.e("JUm", "Could not transform message to Json: " + e.getMessage());
+        }
+        return json;
+    }
+
+    public static JSONObject sendNewMessageJson(Message message) {
+        JSONObject toSend = null;
+        try {
+            toSend = new JSONObject();
+            toSend.put("type", "sendNewMessage");
+            toSend.put("message", messageToJson(message));
+        } catch (JSONException e) {
+            Log.e("LAc", "Could not make JSON: " + e.getMessage());
+        }
+        return toSend;
+    }
+
+
 }

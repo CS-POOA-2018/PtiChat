@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
     private final NewMessageReceiver newMessageReceiver = new MainActivity.NewMessageReceiver();
 
-    private TextView mSocketTempTextView;  // TEMP SOCKET
+//    private TextView mSocketTempTextView;  // TEMP SOCKET
 
     private List<User> myUserDataset = new ArrayList<>();
     private List<Chat> myChatDataset = new ArrayList<>();
@@ -53,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Register UI elements not to search them each time  // TEMP SOCKET
-        mSocketTempTextView = findViewById(R.id.socketTempTextView2);  // TEMP SOCKET
+//        mSocketTempTextView = findViewById(R.id.socketTempTextView2);  // TEMP SOCKET
 
         // Register the receiver for new incoming message
         registerNewBroadcastReceiver();
@@ -78,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         mUsersRecyclerView.setAdapter(mUsersAdapter);
 
         // specify an mChatsAdapter
-        mChatsAdapter = new ChatAdapter(myChatDataset);
+        mChatsAdapter = new ChatAdapter(myChatDataset, this);
         mChatsRecyclerView.setAdapter(mChatsAdapter);
 
         // get the textViews
@@ -88,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
 
         // update user
         currentUser = Session.getUser();
+        Log.i("MAu", "current user: " + Session.getUser());
         updateUser();
 
         myUserDataset.add(new User("flx", "Felix", "pic", "Give me food", true));
@@ -102,13 +104,13 @@ public class MainActivity extends AppCompatActivity {
     public void onPause() {
         super.onPause();
         unregisterReceiver(newMessageReceiver);
-        SendMessageTask.sendMessageAsync(this, "brb");  // TEMP ?
+//        SendMessageTask.sendMessageAsync(this, "brb");  // TEMP ?
     }
 
     public void onResume() {
         super.onResume();
         registerNewBroadcastReceiver();
-        SendMessageTask.sendMessageAsync(this, "re");  // TEMP ?
+//        SendMessageTask.sendMessageAsync(this, "re");  // TEMP ?
         SendMessageTask.sendMessageAsync(this, JsonUtils.askForListOfUsers());
         SendMessageTask.sendMessageAsync(this, JsonUtils.askForListOfChats(Session.getUser().getId()));
     }
@@ -135,10 +137,18 @@ public class MainActivity extends AppCompatActivity {
         userIsOnlineTV.setText(isConnected ? "(En ligne)" : "(Hors ligne)");
     }
 
-    public void onSelectChat(View view) {
-        // switch activy to Chat
-        // TODO : switch to the right chat and not just on the activity
+//    public void onSelectChat(View view) {
+//        // switch activy to Chat
+//        // TODO : switch to the right chat and not just on the activity
+//        Intent selectChatIntent = new Intent(this, ChatActivity.class);
+//        startActivity(selectChatIntent);
+//    }
+
+    public void onSelectChat(String chatId) {
+        // switch activity to Chat
+        Log.i("MAc", "👈 Selected chat " + chatId);
         Intent selectChatIntent = new Intent(this, ChatActivity.class);
+        selectChatIntent.putExtra("chatId", chatId);
         startActivity(selectChatIntent);
     }
 
@@ -160,13 +170,16 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String message = intent.getStringExtra("message");
-            mSocketTempTextView.setText(message);
+//            mSocketTempTextView.setText(message);
 
             try {
                 JSONObject json = new JSONObject(message);
 
-                if ("listOfUsers".equals(json.getString("type"))) {
-                    Log.i("LAu", "🗒 Got list of users message");
+                if ("justText".equals(json.getString("type"))) {
+                    Toast.makeText(getApplicationContext(), json.getString("content"), Toast.LENGTH_LONG).show();
+
+                } else if ("listOfUsers".equals(json.getString("type"))) {
+//                    Log.i("LAu", "🗒 Got list of users message");
                     myUserDataset.clear();
                     for (User u : JsonUtils.listOfUsersJsonToUsers(json)) {
                         if (!u.getId().equals(Session.getUser().getId())) {
@@ -174,14 +187,12 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                     mUsersAdapter.notifyDataSetChanged();
-                    Log.i("MAd", "New dataset: " + myUserDataset);
 
                 } else if ("listOfChats".equals(json.getString("type"))) {
-                    Log.i("LAc", "🗒 Got list of chats message");
+//                    Log.i("LAc", "🗒 Got list of chats message");
                     myChatDataset.clear();
                     myChatDataset.addAll(Arrays.asList(JsonUtils.listOfChatsJsonToUsers(json)));
                     mChatsAdapter.notifyDataSetChanged();
-                    Log.i("MAd", "New dataset: " + myChatDataset);
 
                 }
             } catch (JSONException e) {

@@ -56,36 +56,36 @@
         app:layout_constraintTop_toBottomOf="@+id/passwordLogin" />
 
     <!--TEMP SOCKET-->
-    <Button
-        android:id="@+id/socketTempPlopButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="16dp"
-        android:onClick="onPlopButtonClicked"
-        android:text="Plop"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+    <!--<Button-->
+        <!--android:id="@+id/socketTempPlopButton"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginBottom="16dp"-->
+        <!--android:layout_marginEnd="16dp"-->
+        <!--android:onClick="onPlopButtonClicked"-->
+        <!--android:text="Plop"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--app:layout_constraintEnd_toEndOf="parent" />-->
 
-    <TextView
-        android:id="@+id/socketTempTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="16dp"
-        android:text="Socket debug text"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+    <!--<TextView-->
+        <!--android:id="@+id/socketTempTextView"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginBottom="16dp"-->
+        <!--android:layout_marginEnd="16dp"-->
+        <!--android:layout_marginStart="16dp"-->
+        <!--android:text="Socket debug text"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintStart_toStartOf="parent" />-->
 
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Plop stomp"
-        tools:layout_editor_absoluteX="280dp"
-        tools:layout_editor_absoluteY="385dp" />
+    <!--<Button-->
+        <!--android:id="@+id/button2"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Plop stomp"-->
+        <!--tools:layout_editor_absoluteX="280dp"-->
+        <!--tools:layout_editor_absoluteY="385dp" />-->
     <!--END TEMP SOCKET-->
 
 </android.support.constraint.ConstraintLayout>

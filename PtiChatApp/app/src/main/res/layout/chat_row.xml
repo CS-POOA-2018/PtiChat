@@ -2,13 +2,14 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/chatRow"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:padding="3dp">
 
     <ImageView
-        android:id="@+id/iconChat"
+        android:id="@+id/chatIcon"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginTop="3dp"
@@ -16,7 +17,7 @@
         app:srcCompat="@drawable/ic_chat_24dp" />
 
     <TextView
-        android:id="@+id/nameChat"
+        android:id="@+id/chatName"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
         android:layout_marginStart="10dp"
