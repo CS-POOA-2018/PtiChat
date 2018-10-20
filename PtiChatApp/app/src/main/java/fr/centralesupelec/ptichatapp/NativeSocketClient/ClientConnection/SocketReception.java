@@ -60,10 +60,10 @@ public class SocketReception implements Runnable {
                 // Send the new incoming message to the other classes
                 broadcastNewMessage(messageIn);
 
-                if ("HLO".equals(messageIn)) {
-                    Log.i("CCh", "😻 Client received HELLO! \\o/. Responding with HELLO");
-                    SendMessageTask.sendMessageAsync(mCtx, "HLO");
-                }
+//                if ("HLO".equals(messageIn)) {
+//                    Log.i("CCh", "😻 Client received HELLO! \\o/. Responding with HELLO");
+//                    SendMessageTask.sendMessageAsync(mCtx, "HLO");
+//                }
 
                 if ("QUT".equals(messageIn)) {
                     Log.i("CCq", "😿 QUIT requested, quitting");
