@@ -17,6 +17,14 @@ public class User {
         this.isConnected = isConnected;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id='" + id + '\'' +
+                ", pseudo='" + pseudo + '\'' +
+                '}';
+    }
+
     public String getId() {
         return id;
     }

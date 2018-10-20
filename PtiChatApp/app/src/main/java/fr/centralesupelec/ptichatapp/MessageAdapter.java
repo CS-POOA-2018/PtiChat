@@ -7,27 +7,31 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.List;
+
 import fr.centralesupelec.ptichatapp.PODS.Message;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MyViewHolder> {
 
-    private Message[] mDataset;
+    private List<Message> mDataset;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
     public static class MyViewHolder extends RecyclerView.ViewHolder {
+        public TextView mMessageTime;
         public TextView mMessageSender;
         public TextView mMessageContent;
         public MyViewHolder(View itemView) {
             super(itemView);
+            mMessageTime = itemView.findViewById(R.id.messageTime);
             mMessageSender = itemView.findViewById(R.id.messageSender);
             mMessageContent = itemView.findViewById(R.id.messageContent);
         }
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MessageAdapter(Message[] myDataset) {
+    public MessageAdapter(List<Message> myDataset) {
         mDataset = myDataset;
     }
 
@@ -45,7 +49,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MyViewHo
     public void onBindViewHolder(MyViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        Message message = mDataset[position];
+        Message message = mDataset.get(position);
+        holder.mMessageTime.setText(Utils.dateToString(message.getDate(), "HH:mm"));
         holder.mMessageSender.setText(message.getSenderId());
         holder.mMessageContent.setText(message.getContent());
     }
@@ -53,7 +58,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MyViewHo
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return mDataset.length;
+        return mDataset.size();
     }
 
 }
