@@ -66,5 +66,15 @@ public class DoStuffInStorage {
         System.out.println("\n--- Chats ---");
         chats = storage.listChats();
         System.out.println(Arrays.toString(chats));
+
+        Message m0 = new Message("Heyyy", "wah", c0.getId());
+        Message m1 = new Message("Le Backend nous a envoyé du mockup :O", "wah", c0.getId());
+        Message m2 = new Message("C'est dingue !", "nope", c0.getId());
+        Message m3 = new Message("Teeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeest XD", "nope", c0.getId());
+
+        storage.addMessage(m0);
+        storage.addMessage(m1);
+        storage.addMessage(m2);
+        storage.addMessage(m3);
     }
 }

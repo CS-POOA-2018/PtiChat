@@ -8,11 +8,13 @@ import java.util.Date;
 public class Utils {
 
     public static String dateToString(Date date) {
+        if (date == null) return "";
         DateFormat messageDateFormat = new SimpleDateFormat(Constants.DATE_PATTERN);
         return messageDateFormat.format(date);
     }
 
     public static Date stringToDate(String dateString) {
+        if ("".equals(dateString)) return null;
         DateFormat messageDateFormat = new SimpleDateFormat(Constants.DATE_PATTERN);
         Date messageDate = null;
         try {

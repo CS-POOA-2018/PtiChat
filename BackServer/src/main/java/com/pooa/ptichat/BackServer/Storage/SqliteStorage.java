@@ -170,7 +170,7 @@ public class SqliteStorage implements IStorage {
     @Override
     public Chat[] listChatsOfUser(String userId) {
         System.out.println("Listing chats of user " + userId);
-        String sql = "SELECT chats.chatId, name FROM chats INNER JOIN userschats "
+        String sql = "SELECT DISTINCT chats.chatId, name FROM chats INNER JOIN userschats "
                    + "ON chats.chatID = userschats.chatID where userId = ?";
         ArrayList<Chat> chatList = new ArrayList<>();
 
@@ -235,13 +235,14 @@ public class SqliteStorage implements IStorage {
     @Override
     public Message[] listMessages(String chatId, int limit) {
         System.out.println("Listing messages of chat " + chatId + " (limit " + limit + ")");
-        return listMessagesAux("SELECT messageId, content, sendDate, senderId, chatId, read FROM messages LIMIT " + limit);
+        // TODO concat berk
+        return listMessagesAux("SELECT messageId, content, sendDate, senderId, chatId, read FROM messages WHERE chatId = \"" + chatId + "\" LIMIT " + limit);
     }
 
     @Override
     public Message[] listAllMessages(String chatId) {
         System.out.println("Listing messages of chat " + chatId);
-        return listMessagesAux("SELECT messageId, content, sendDate, senderId, chatId, read FROM messages");
+        return listMessagesAux("SELECT messageId, content, sendDate, senderId, chatId, read FROM messages WHERE chatId = \"" + chatId + "\"");
     }
 
     @Override

@@ -77,6 +77,8 @@ public abstract class StorageTests {
         assert Arrays.stream(messageArray).anyMatch(m -> m0id.equals(m.getId()));
         assert Arrays.stream(messageArray).anyMatch(m -> "Hello!".equals(m.getContent()));
 
+        System.out.println(Arrays.toString(mStorage.listChats()));
+
         mStorage.removeUser(u0.getId());
         mStorage.removeChat(c0.getId());
     }
