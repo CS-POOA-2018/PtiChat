@@ -25,6 +25,17 @@ public class Message {
         this.read = false;
     }
 
+    /** Use this constructor when a new message arrives (without uuid), it will give it a new uuid */
+    public Message(String id, String content, String senderId, String chatId) {
+        this.id = id;
+        this.content = content;
+        this.senderId = senderId;
+        this.chatId = chatId;
+
+        this.date = new Date();
+        this.read = false;
+    }
+
     /** Constructor when all message attributes are known */
     public Message(String id, String content, Date date, String senderId, String chatId, boolean read) {
         this.id = id;
