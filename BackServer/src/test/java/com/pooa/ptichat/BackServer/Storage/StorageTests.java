@@ -106,6 +106,9 @@ public abstract class StorageTests {
         assert Arrays.stream(chatsOfUser).anyMatch(c -> c0id.equals(c.getId()));
         assert Arrays.stream(chatsOfUser).noneMatch(c -> c1id.equals(c.getId()));
 
+        String[] userIdsOfChat = mStorage.listUserIdsInChat(c0id);
+        assert Arrays.asList(userIdsOfChat).contains("TestUser");
+
         mStorage.removeUser(u0.getId());
         mStorage.removeChat(c0.getId());
         mStorage.removeChat(c1.getId());

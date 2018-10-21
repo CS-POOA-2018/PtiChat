@@ -2,7 +2,7 @@ package fr.centralesupelec.ptichatapp;
 
 import fr.centralesupelec.ptichatapp.PODS.User;
 
-class Session {
+public class Session {
     private static User user;
 
     // TODO use a session structure that will be the interface between data that servers sends, and the display
@@ -16,6 +16,10 @@ class Session {
 
     public static User getUser() {
         return user;
+    }
+
+    public static String getUserId() {
+        return (user == null) ? null : user.getId();
     }
 
     public static void setUser(User user) {

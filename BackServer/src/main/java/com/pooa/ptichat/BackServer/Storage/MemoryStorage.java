@@ -86,6 +86,11 @@ public class MemoryStorage implements IStorage {
     }
 
     @Override
+    public String[] listUserIdsInChat(String chatId) {
+        return mChatData.get(chatId).getUsers().toArray(new String[0]);
+    }
+
+    @Override
     public void userJoinsChat(String userId, String chatId) {
         mChatData.get(chatId).getUsers().add(userId);
     }

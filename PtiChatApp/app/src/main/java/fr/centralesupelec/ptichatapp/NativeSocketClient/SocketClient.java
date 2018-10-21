@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.net.Socket;
 
 import fr.centralesupelec.ptichatapp.Constants;
+import fr.centralesupelec.ptichatapp.JsonUtils;
 import fr.centralesupelec.ptichatapp.NativeSocketClient.ClientConnection.SocketClientConnection;
+import fr.centralesupelec.ptichatapp.Session;
 
 public class SocketClient {
 
@@ -33,6 +35,7 @@ public class SocketClient {
             Log.i("SCc","😻 Client reached server again");
 
             mScc = new SocketClientConnection(socket, mCtx);
+            if (Session.getUserId() != null) SendMessageTask.sendMessageAsync(mCtx, JsonUtils.announceConnection(Session.getUserId()));
             return true;
         } catch (IOException e) {
             Log.e("SCc","😿 Could not renew the PtiChat Client Socket: " + e.getMessage());

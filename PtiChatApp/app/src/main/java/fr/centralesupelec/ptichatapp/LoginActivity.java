@@ -51,7 +51,7 @@ public class LoginActivity extends AppCompatActivity {
 
         if (backIsWorking) {
             // Creates and run the Socket Client Connector, this will make the login faster  // TEMP ?
-            SendMessageTask.sendMessageAsync(this, "cc");  // TEMP ?
+            SendMessageTask.sendMessageAsync(this, JsonUtils.justTextJSON("cc"));  // TEMP ?
 
             // Register UI elements not to search them each time  // TEMP SOCKET
 //            mSocketTempTextView = findViewById(R.id.socketTempTextView);  // TEMP SOCKET
@@ -97,11 +97,11 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    /** TEMP SOCKET */
-    public void onPlopButtonClicked(View v) {
-        Log.i("MAb", "👈 Plop button clicked!");
-        SendMessageTask.sendMessageAsync(this, "PLP");
-    }
+//    /** TEMP SOCKET */
+//    public void onPlopButtonClicked(View v) {
+//        Log.i("MAb", "👈 Plop button clicked!");
+//        SendMessageTask.sendMessageAsync(this, "PLP");
+//    }
 
     /** The activity will listen for BROADCAST_NEW_MESSAGE messages from other classes */
     private void registerNewBroadcastReceiver() {

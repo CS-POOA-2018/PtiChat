@@ -123,6 +123,7 @@ public class ChatActivity extends AppCompatActivity {
                     myDataset.clear();
                     Collections.addAll(myDataset, JsonUtils.listOfMessagesJsonToMessages(json));
                     mMessagesAdapter.notifyDataSetChanged();
+                    mMessagesRecyclerView.scrollToPosition(myDataset.size() - 1);
 
                 } else if ("newMessageInChat".equals(json.getString("type"))) {
                     if (json.getString("chatId").equals(mChatId)) {
@@ -136,6 +137,7 @@ public class ChatActivity extends AppCompatActivity {
                         if (pendingMessagePosition != null) {
                             myDataset.set(pendingMessagePosition, newMessage);
                             mMessagesAdapter.notifyItemChanged(pendingMessagePosition);
+                            mPendingMessages.remove(newMessageId);
                         } else {
                             myDataset.add(newMessage);
                             mMessagesAdapter.notifyItemInserted(myDataset.size() - 1);

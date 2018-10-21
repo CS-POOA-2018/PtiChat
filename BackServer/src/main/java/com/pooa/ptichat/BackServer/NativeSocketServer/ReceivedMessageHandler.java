@@ -17,6 +17,15 @@ public class ReceivedMessageHandler implements Runnable {
         mSocketServerConnection = socketServerConnection;
     }
 
+    private void acceptUserLogin(User user) {
+        mSocketServerConnection.sendMessage(JsonUtils.loginAcceptanceJSON(user, true, ""));
+        StorageSingleton.getInstance().getConnectionsManager().registerUserInSocket(mSocketServerConnection, user.getId());
+    }
+
+    private void rejectUserLogin(User user, String message) {
+        mSocketServerConnection.sendMessage(JsonUtils.loginAcceptanceJSON(user, false, message));
+    }
+
     @Override
     public void run() {
         try {
@@ -36,30 +45,33 @@ public class ReceivedMessageHandler implements Runnable {
 
                 if (userMatch != null) {
                     foundLogin = true;
-                    if (userPassword.equals(userMatch.getPassword())) {
-                        validCredentials = true;
-                    }
+                    validCredentials = userPassword.equals(userMatch.getPassword());
                 }
+
                 if (validCredentials) {
                     System.out.println("😺 User " + userId + " exists and user gave valid credentials");
-                    mSocketServerConnection.sendMessage(JsonUtils.loginAcceptanceJSON(userMatch, true, ""));
+                    acceptUserLogin(userMatch);
+
                 } else if (foundLogin) {
                     System.out.println("🙀 User " + userId + " exists but user gave invalid credentials");
-                    mSocketServerConnection.sendMessage(JsonUtils.loginAcceptanceJSON(userMatch, false, "Invalid Credentials"));
+                    rejectUserLogin(userMatch, "Invalid Credentials");
+
                 } else {
                     if (userId.length() >= 3) {
                         System.out.println("😻 User " + userId + " does not exist, creating it");
                         user.setPseudo(userId);
                         storage.addUser(user);
-                        mSocketServerConnection.sendMessage(JsonUtils.loginAcceptanceJSON(user, true, ""));
+                        acceptUserLogin(user);
                     } else {
-                        mSocketServerConnection.sendMessage(JsonUtils.loginAcceptanceJSON(null, false, "Login too short"));
+                        rejectUserLogin(null, "Login too short");
                     }
                 }
+
             } else if ("getListOfUsers".equals(messageType)) {
-                StorageSingleton.getInstance().getConnectionsManager().checkConnectedUsers();
                 IStorage storage = StorageSingleton.getInstance().getStorage();
-                mSocketServerConnection.sendMessage(JsonUtils.sendListOfUsersJson(storage.listUsers()));
+                User[] allUsers = storage.listUsers();
+                StorageSingleton.getInstance().getConnectionsManager().checkConnectedUsers(allUsers);
+                mSocketServerConnection.sendMessage(JsonUtils.sendListOfUsersJson(allUsers));
 
             } else if ("getListOfChats".equals(messageType)) {
                 String userId = json.getString("userId");
@@ -75,9 +87,18 @@ public class ReceivedMessageHandler implements Runnable {
                 Message newMessage = JsonUtils.jsonToMessage(json.getJSONObject("message"));
                 IStorage storage = StorageSingleton.getInstance().getStorage();
                 storage.addMessage(newMessage);
-                // TODO notify all other people in chet
 
-                mSocketServerConnection.sendMessage(JsonUtils.sendNewMessageInChat(newMessage.getChatId(), newMessage));
+                // Notify all other people in chat
+                JSONObject toSend = JsonUtils.sendNewMessageInChat(newMessage.getChatId(), newMessage);
+                StorageSingleton.getInstance().getConnectionsManager().sendMessageToAllConnectedUsersInChat(newMessage.getChatId(), toSend);
+
+            } else if ("announceConnection".equals(messageType)) {
+                String userId = json.getString("userId");
+                StorageSingleton.getInstance().getConnectionsManager().registerUserInSocket(mSocketServerConnection, userId);
+
+            } else if ("justText".equals(messageType)) {
+                String content = json.getString("content");
+                System.out.println("🔤 App sent justText message: " + content);
             }
 
         } catch (JSONException e) {

@@ -22,7 +22,7 @@ public class JsonUtils {
                     chatJson.getString("chatName")
             );
         } catch (JSONException e) {
-            Log.e("LAc", "Could not make Chat from JSON: " + e.getMessage());
+            Log.e("JUe", "Could not make Chat from JSON: " + e.getMessage());
         }
         return null;
     }
@@ -38,7 +38,7 @@ public class JsonUtils {
                     messageJson.getBoolean("read")
             );
         } catch (JSONException e) {
-            Log.e("LAc", "Could not make Message from JSON: " + e.getMessage());
+            Log.e("JUe", "Could not make Message from JSON: " + e.getMessage());
         }
         return null;
     }
@@ -53,7 +53,7 @@ public class JsonUtils {
                     userJson.getBoolean("isConnected")
             );
         } catch (JSONException e) {
-            Log.e("LAc", "Could not make User from JSON: " + e.getMessage());
+            Log.e("JUe", "Could not make User from JSON: " + e.getMessage());
         }
         return null;
     }
@@ -66,7 +66,7 @@ public class JsonUtils {
             toSend.put("userId", login);
             toSend.put("password", password);
         } catch (JSONException e) {
-            Log.e("LAc", "Could not make JSON: " + e.getMessage());
+            Log.e("JUe", "Could not make JSON: " + e.getMessage());
         }
         return toSend;
     }
@@ -77,7 +77,7 @@ public class JsonUtils {
             toSend = new JSONObject();
             toSend.put("type", "getListOfUsers");
         } catch (JSONException e) {
-            Log.e("LAc", "Could not make JSON: " + e.getMessage());
+            Log.e("JUe", "Could not make JSON: " + e.getMessage());
         }
         return toSend;
     }
@@ -89,7 +89,7 @@ public class JsonUtils {
             toSend.put("type", "getListOfChats");
             toSend.put("userId", userId);
         } catch (JSONException e) {
-            Log.e("LAc", "Could not make JSON: " + e.getMessage());
+            Log.e("JUe", "Could not make JSON: " + e.getMessage());
         }
         return toSend;
     }
@@ -101,7 +101,7 @@ public class JsonUtils {
             toSend.put("type", "getListOfMessages");
             toSend.put("chatId", chatId);
         } catch (JSONException e) {
-            Log.e("LAc", "Could not make JSON: " + e.getMessage());
+            Log.e("JUe", "Could not make JSON: " + e.getMessage());
         }
         return toSend;
     }
@@ -110,7 +110,7 @@ public class JsonUtils {
         try {
             return userJsonToUser(json.getJSONObject("user"));
         } catch (JSONException e) {
-            Log.e("LAc", "Could not parse loginAcceptance json: " + e.getMessage());
+            Log.e("JUe", "Could not parse loginAcceptance json: " + e.getMessage());
         }
         return null;
     }
@@ -123,7 +123,7 @@ public class JsonUtils {
                 userList.add(userJsonToUser(userJsonArray.getJSONObject(i)));
             }
         } catch (JSONException e) {
-            Log.e("JUu", "Could not parse list of users json to users: " + e.getMessage());
+            Log.e("JUe", "Could not parse list of users json to users: " + e.getMessage());
         }
         return userList.toArray(new User[0]);
     }
@@ -136,7 +136,7 @@ public class JsonUtils {
                 chatList.add(chatJsonToChat(chatJsonArray.getJSONObject(i)));
             }
         } catch (JSONException e) {
-            Log.e("JUc", "Could not parse list of chats json to chats: " + e.getMessage());
+            Log.e("JUe", "Could not parse list of chats json to chats: " + e.getMessage());
         }
         return chatList.toArray(new Chat[0]);
     }
@@ -149,7 +149,7 @@ public class JsonUtils {
                 messageList.add(messageJsonToMessage(chatJsonArray.getJSONObject(i)));
             }
         } catch (JSONException e) {
-            Log.e("JUc", "Could not parse list of messages json to messages: " + e.getMessage());
+            Log.e("JUe", "Could not parse list of messages json to messages: " + e.getMessage());
         }
         return messageList.toArray(new Message[0]);
     }
@@ -165,7 +165,7 @@ public class JsonUtils {
             json.put("chatId", message.getChatId());
             json.put("read", message.isRead());
         } catch (JSONException e) {
-            Log.e("JUm", "Could not transform message to Json: " + e.getMessage());
+            Log.e("JUe", "Could not transform message to Json: " + e.getMessage());
         }
         return json;
     }
@@ -177,10 +177,32 @@ public class JsonUtils {
             toSend.put("type", "sendNewMessage");
             toSend.put("message", messageToJson(message));
         } catch (JSONException e) {
-            Log.e("LAc", "Could not make JSON: " + e.getMessage());
+            Log.e("JUe", "Could not make JSON: " + e.getMessage());
         }
         return toSend;
     }
 
+    public static JSONObject announceConnection(String userId) {
+        JSONObject toSend = null;
+        try {
+            toSend = new JSONObject();
+            toSend.put("type", "announceConnection");
+            toSend.put("userId", userId);
+        } catch (JSONException e) {
+            Log.e("JUe", "Could not make JSON: " + e.getMessage());
+        }
+        return toSend;
+    }
 
+    public static JSONObject justTextJSON(String text) {
+        JSONObject toSend = null;
+        try {
+            toSend = new JSONObject();
+            toSend.put("type", "justText");
+            toSend.put("content", text);
+        } catch (JSONException e) {
+            Log.e("JUe", "Could not make JSON: " + e.getMessage());
+        }
+        return toSend;
+    }
 }

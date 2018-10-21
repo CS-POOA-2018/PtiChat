@@ -13,6 +13,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class SqliteStorage implements IStorage {
 
@@ -102,7 +105,7 @@ public class SqliteStorage implements IStorage {
 
     @Override
     public void addChat(Chat chat) {
-        System.out.println("Adding chat " + chat.getId());
+//        System.out.println("Adding chat " + chat.getId());
         try (Connection conn = this.connect();
              PreparedStatement pstmt = conn.prepareStatement("INSERT INTO chats(chatId,name) VALUES(?,?)")) {
             pstmt.setString(1, chat.getId());
@@ -134,7 +137,7 @@ public class SqliteStorage implements IStorage {
 
     @Override
     public void removeChat(String chatId) {
-        System.out.println("Removing chat " + chatId);
+//        System.out.println("Removing chat " + chatId);
         try (Connection conn = this.connect();
              PreparedStatement pstmt = conn.prepareStatement("DELETE FROM chats WHERE chatId = ?");
              PreparedStatement pstmt2 = conn.prepareStatement("DELETE FROM userschats WHERE chatId = ?")) {
@@ -149,8 +152,8 @@ public class SqliteStorage implements IStorage {
 
     @Override
     public Chat[] listChats() {
-        System.out.println("Listing chats");
-        ArrayList<Chat> chatList = new ArrayList<>();
+//        System.out.println("Listing chats");
+        List<Chat> chatList = new ArrayList<>();
 
         try (Connection conn = this.connect();
              Statement stmt  = conn.createStatement();
@@ -169,10 +172,10 @@ public class SqliteStorage implements IStorage {
 
     @Override
     public Chat[] listChatsOfUser(String userId) {
-        System.out.println("Listing chats of user " + userId);
+//        System.out.println("Listing chats of user " + userId);
         String sql = "SELECT DISTINCT chats.chatId, name FROM chats INNER JOIN userschats "
                    + "ON chats.chatID = userschats.chatID where userId = ?";
-        ArrayList<Chat> chatList = new ArrayList<>();
+        List<Chat> chatList = new ArrayList<>();
 
         try (Connection conn = this.connect();
              PreparedStatement pstmt  = conn.prepareStatement(sql)){
@@ -191,7 +194,7 @@ public class SqliteStorage implements IStorage {
 
     @Override
     public void addMessage(Message message) {
-        System.out.println("Adding message " + message.getId());
+//        System.out.println("Adding message " + message.getId());
         String sql = "INSERT INTO messages(messageId,content,sendDate,senderId,chatId,read) VALUES(?,?,?,?,?,?)";
 
         try (Connection conn = this.connect();
@@ -209,7 +212,7 @@ public class SqliteStorage implements IStorage {
     }
 
     private Message[] listMessagesAux(String sqlRequest) {
-        ArrayList<Message> messageList = new ArrayList<>();
+        List<Message> messageList = new ArrayList<>();
 
         try (Connection conn = this.connect();
              Statement stmt  = conn.createStatement();
@@ -234,20 +237,20 @@ public class SqliteStorage implements IStorage {
 
     @Override
     public Message[] listMessages(String chatId, int limit) {
-        System.out.println("Listing messages of chat " + chatId + " (limit " + limit + ")");
+//        System.out.println("Listing messages of chat " + chatId + " (limit " + limit + ")");
         // TODO concat berk
         return listMessagesAux("SELECT messageId, content, sendDate, senderId, chatId, read FROM messages WHERE chatId = \"" + chatId + "\" LIMIT " + limit);
     }
 
     @Override
     public Message[] listAllMessages(String chatId) {
-        System.out.println("Listing messages of chat " + chatId);
+//        System.out.println("Listing messages of chat " + chatId);
         return listMessagesAux("SELECT messageId, content, sendDate, senderId, chatId, read FROM messages WHERE chatId = \"" + chatId + "\"");
     }
 
     @Override
     public void addUser(User user) {
-        System.out.println("Adding user " + user.getId());
+//        System.out.println("Adding user " + user.getId());
         String sql = "INSERT INTO users(userId,password,pseudo,profilePicture,status) VALUES(?,?,?,?,?)";
 
         try (Connection conn = this.connect();
@@ -289,7 +292,7 @@ public class SqliteStorage implements IStorage {
 
     @Override
     public void removeUser(String userId) {
-        System.out.println("Removing user " + userId);
+//        System.out.println("Removing user " + userId);
 
         try (Connection conn = this.connect();
              PreparedStatement pstmt = conn.prepareStatement("DELETE FROM users WHERE userId = ?");
@@ -305,9 +308,9 @@ public class SqliteStorage implements IStorage {
 
     @Override
     public User[] listUsers() {
-        System.out.println("Listing users");
+//        System.out.println("Listing users");
         String sql = "SELECT userId,password,pseudo,profilePicture,status FROM users";
-        ArrayList<User> userList = new ArrayList<>();
+        List<User> userList = new ArrayList<>();
 
         try (Connection conn = this.connect();
              Statement stmt  = conn.createStatement();
@@ -330,8 +333,28 @@ public class SqliteStorage implements IStorage {
     }
 
     @Override
+    public String[] listUserIdsInChat(String chatId) {
+        String sql = "SELECT userId FROM userschats WHERE chatId = ?";
+        Set<String> userIdSet = new HashSet<>();
+
+        try (Connection conn = this.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, chatId);
+            ResultSet rs  = pstmt.executeQuery();
+
+            while (rs.next()) {
+                userIdSet.add(rs.getString("userId"));
+            }
+
+        } catch (SQLException e) {
+            System.out.println("listUserIdsInChat failed: " + e.getMessage());
+        }
+        return userIdSet.toArray(new String[0]);
+    }
+
+    @Override
     public void userJoinsChat(String userId, String chatId) {
-        System.out.println("User " + userId + " joined chat " + chatId);
+//        System.out.println("User " + userId + " joined chat " + chatId);
         String sql = "INSERT INTO userschats(userId,chatId) VALUES(?,?)";
 
         try (Connection conn = this.connect();

@@ -6,6 +6,7 @@ package com.pooa.ptichat.BackServer.NativeSocketServer;
 import com.pooa.ptichat.BackServer.JsonUtils;
 //import com.pooa.ptichat.BackServer.StorageSingleton;
 //import org.json.JSONException;
+import com.pooa.ptichat.BackServer.StorageSingleton;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -55,6 +56,7 @@ public class SocketServerConnection implements Runnable {
             mOut = new PrintWriter(mSocket.getOutputStream());
             String messageIn;
             System.out.println("😻 SocketServerConnection started");
+            StorageSingleton.getInstance().getConnectionsManager().registerSocket(this);
 
             sendMessage(JsonUtils.justTextJSON("The server says hello to you ❤️"));
 
@@ -73,6 +75,7 @@ public class SocketServerConnection implements Runnable {
             }
             // TODO client disconnected
             System.out.println("😿 Client disconnected");
+            StorageSingleton.getInstance().getConnectionsManager().unregisterSocket(this);
 
         } catch (IOException e) {
             System.out.println("😿 Client disconnected due to error: " + e.getMessage());
