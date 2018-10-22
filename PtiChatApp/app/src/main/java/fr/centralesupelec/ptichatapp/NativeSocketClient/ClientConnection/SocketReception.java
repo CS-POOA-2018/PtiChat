@@ -10,15 +10,15 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 
 import fr.centralesupelec.ptichatapp.Constants;
-import fr.centralesupelec.ptichatapp.NativeSocketClient.SendMessageTask;
 import fr.centralesupelec.ptichatapp.NativeSocketClient.SocketSingleton;
 
-public class SocketReception implements Runnable {
+class SocketReception implements Runnable {
 
     private Context mCtx;
     private Socket mSocket;
 
     private BufferedReader mIn;
+    private boolean mClosed = false;
 
     SocketReception(Socket socket, Context ctx) {
         Log.d("SSc", "✨ Creating the SocketReception instance");
@@ -52,7 +52,7 @@ public class SocketReception implements Runnable {
             mIn = new BufferedReader(new InputStreamReader(mSocket.getInputStream()));
             String messageIn;
 
-            while (true) {  // Always listening until quitting is requested
+            while (!mClosed) {  // Always listening until connection is closed or broken
                 messageIn = receiveMessage();
 
                 if (messageIn == null) break;
@@ -60,12 +60,25 @@ public class SocketReception implements Runnable {
                 // Send the new incoming message to the other classes
                 broadcastNewMessage(messageIn);
             }
-            Log.w("CCk", "😿 Connection with the server broke up...");
-            SocketSingleton.getInstance(mCtx).setConnected(false);
-            SocketSingleton.renewSocketClient();
+            if (mClosed) {
+                Log.i("CCk", "😿 Connection with the server was closed");
+            } else {
+                Log.w("CCk", "😿 Connection with the server broke up...");
+                SocketSingleton.renewSocketClient();
+            }
 
         } catch (IOException e) {
             Log.w("CCq", "😿 Server does not respond...");
+        }
+    }
+
+    void close() {
+        mClosed = true;
+        try {
+            mIn.close();
+            mSocket.close();
+        } catch (IOException e) {
+            Log.w("SRc", "❗️Could not close mIn: " + e.getMessage());
         }
     }
 }

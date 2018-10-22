@@ -1,4 +1,9 @@
 package fr.centralesupelec.ptichatapp;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.util.Log;
+import android.util.Pair;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,5 +32,25 @@ public class Utils {
             Log.e("UTd","Could not parse stored date: " + e.getMessage());
         }
         return messageDate;
+    }
+
+    public static void writeHostInfo(final Context context, final String HOSTNAME, final int PORT) {
+        SharedPreferences.Editor editor = context.getSharedPreferences(Constants.SHARED_PREFERENCES_KEY, Context.MODE_PRIVATE).edit();
+        editor.putString("hostName", HOSTNAME);
+        editor.putInt("hostPort", PORT);
+        editor.apply();
+    }
+
+    public static Pair<String, Integer> getHostInfo(final Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(Constants.SHARED_PREFERENCES_KEY, Context.MODE_PRIVATE);
+
+        String hostName = preferences.getString("hostName", null);
+        int hostPort = preferences.getInt("hostPort", 0);
+
+        if (hostName == null || hostPort == 0) {
+            // Fallback to hardcoded constants
+            return new Pair<>(Constants.HOST_NAME, Constants.HOST_PORT);
+        }
+        return new Pair<>(hostName, hostPort);
     }
 }

@@ -7,16 +7,17 @@ import android.content.IntentFilter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 //import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import fr.centralesupelec.ptichatapp.NativeSocketClient.SendMessageTask;
+import fr.centralesupelec.ptichatapp.NativeSocketClient.SocketSingleton;
 import fr.centralesupelec.ptichatapp.PODS.User;
 
 //import android.util.Log;
@@ -32,6 +33,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText nameField;
     private EditText passwordField;
+    private EditText hostNameField;
+    private EditText hostPortField;
 
     private final NewMessageReceiver newMessageReceiver = new NewMessageReceiver();
 
@@ -47,6 +50,13 @@ public class LoginActivity extends AppCompatActivity {
         // Get fields
         nameField = findViewById(R.id.pseudoLogin);
         passwordField = findViewById(R.id.passwordLogin);
+        hostNameField = findViewById(R.id.hostNameEditText);
+        hostPortField = findViewById(R.id.hostPortEditText);
+
+        // Fill in host info EditText objects
+        Pair<String, Integer> hostInfo = Utils.getHostInfo(this);
+        hostNameField.setText(hostInfo.first);
+        hostPortField.setText(String.valueOf(hostInfo.second));
 
         if (backIsWorking) {
             // Creates and run the Socket Client Connector, this will make the login faster  // TEMP ?
@@ -93,6 +103,18 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    public void onHostNameChanged(View view) {
+        // Get host name and port
+        String hostName = hostNameField.getText().toString();
+        int hostPort = Integer.valueOf(hostPortField.getText().toString());
+        if (hostName.isEmpty() || hostPort == 0) {
+            return;
+        }
+        // Save to shared preferences
+        Utils.writeHostInfo(this, hostName, hostPort);
+        // Reconnect
+        SocketSingleton.renewSocketClient();
+    }
 
     /** The activity will listen for BROADCAST_NEW_MESSAGE messages from other classes */
     private void registerNewBroadcastReceiver() {

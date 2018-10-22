@@ -8,6 +8,9 @@ import java.net.Socket;
 public class SocketClientConnection {
 
     private SocketEmission mSocketEmission;
+    private SocketReception mSocketReception;
+
+    private Thread mReceptionThread;
 
     public void sendMessage(String message) {
         mSocketEmission.sendMessage(message);
@@ -17,9 +20,15 @@ public class SocketClientConnection {
         Log.d("SSc", "✨ Creating the SocketClientConnection instance");
 
         mSocketEmission = new SocketEmission(socket);
-        SocketReception socketReception = new SocketReception(socket, ctx);
+        mSocketReception = new SocketReception(socket, ctx);
 
-        Thread receptionThread = new Thread(socketReception);
-        receptionThread.start();
+        mReceptionThread = new Thread(mSocketReception);
+        mReceptionThread.start();
+    }
+
+    public void close() {
+        mSocketEmission.close();
+        mSocketReception.close();
+        mReceptionThread.interrupt();
     }
 }

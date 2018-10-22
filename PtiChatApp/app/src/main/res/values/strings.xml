@@ -4,4 +4,7 @@
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="avatar">Cute image of a cat</string>
+    <string name="hostname">HostName</string>
+    <string name="port">Port</string>
+    <string name="ok">OK</string>
 </resources>

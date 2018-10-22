@@ -39,14 +39,19 @@ public class SocketSingleton {
     public static void renewSocketClient() {
         Log.i("SSr", "♻️ SocketSingleton was asked for renewal");
         if (sInstance != null) {
+            sInstance.setConnected(false);
             (new Thread() {
                 public void run() {
                     while (!sInstance.isConnected()) {
-                        if (sInstance.mSocketClient.renewSocketClient()) sInstance.setConnected(true);
-                        try {
-                            Thread.sleep(3000);
-                        } catch (InterruptedException e) {
-                            Log.e("SSs", "♻️ SocketSingleton renewal interrupted?" + e.getMessage());
+                        if (sInstance.mSocketClient.renewSocketClient()) {
+                            sInstance.setConnected(true);
+                            break;
+                        } else {
+                            try {
+                                Thread.sleep(3000);
+                            } catch (InterruptedException e) {
+                                Log.e("SSs", "♻️ SocketSingleton renewal interrupted?" + e.getMessage());
+                            }
                         }
                     }
                 }
