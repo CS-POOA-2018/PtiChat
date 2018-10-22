@@ -70,6 +70,30 @@ This project has two folders: one for the back in Java 8.0 and one for the Andro
 }
 ```
 
+##### send a new message in a chat
+```json
+{
+  "type": "sendNewMessage",
+  "message": "TODO"
+}
+```
+
+##### announce who you are when you reconnect to the server without going through the login page
+```json
+{
+  "type": "announceConnection",
+  "userId": "user id"
+}
+```
+
+##### just send a message to be displayed on the other side
+```json
+{
+  "type": "justText",
+  "content": "Hello there"
+}
+```
+
 
 ### Back-end -> Front-end messages
 
@@ -109,6 +133,23 @@ This project has two folders: one for the back in Java 8.0 and one for the Andro
   "chatId": "chat id",
   "messages": [{"messageId": "message id", "content": "...", "date": "2018-10-16 14:45:09", "senderId": "senderId", "chatId": "chatId", "read": true},
                {"messageId": "message id", "content": "...", "date": "2018-10-16 21:47:00", "senderId": "senderId", "chatId": "chatId", "read": false}]
+}
+```
+
+##### new message appeared in a chat
+```json
+{
+  "type": "newMessageInChat",
+  "chatId": "chat id",
+  "message": {"messageId": "message id", "content": "...", "date": "2018-10-16 14:45:09", "senderId": "senderId", "chatId": "chatId", "read": true}
+}
+```
+
+##### just send a message to be displayed on the other side
+```json
+{
+  "type": "justText",
+  "content": "Hello there"
 }
 ```
 
