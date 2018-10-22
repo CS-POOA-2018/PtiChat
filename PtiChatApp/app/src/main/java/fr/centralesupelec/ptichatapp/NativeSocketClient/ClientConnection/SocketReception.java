@@ -36,7 +36,7 @@ public class SocketReception implements Runnable {
             }
             return messageIn;
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.w("SRr", "🚪 Could not read inbound message: " + e.getMessage());
             return null;
         }
     }
@@ -59,16 +59,6 @@ public class SocketReception implements Runnable {
 
                 // Send the new incoming message to the other classes
                 broadcastNewMessage(messageIn);
-
-//                if ("HLO".equals(messageIn)) {
-//                    Log.i("CCh", "😻 Client received HELLO! \\o/. Responding with HELLO");
-//                    SendMessageTask.sendMessageAsync(mCtx, "HLO");
-//                }
-
-                if ("QUT".equals(messageIn)) {
-                    Log.i("CCq", "😿 QUIT requested, quitting");
-                    break;
-                }
             }
             Log.w("CCk", "😿 Connection with the server broke up...");
             SocketSingleton.getInstance(mCtx).setConnected(false);

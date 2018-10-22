@@ -148,12 +148,6 @@ public class MainActivity extends AppCompatActivity {
         startActivity(selectChatIntent);
     }
 
-//    /** TEMP SOCKET */
-//    public void onPlopButtonClicked2(View v) {
-//        Log.i("MAb", "👈 Plop button clicked!");
-//        SendMessageTask.sendMessageAsync(this, "PLP");
-//    }
-
     /** The activity will listen for BROADCAST_NEW_MESSAGE messages from other classes */
     private void registerNewBroadcastReceiver() {
         IntentFilter intentFilter = new IntentFilter();

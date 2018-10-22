@@ -40,7 +40,7 @@ public class SocketServerConnection implements Runnable {
             }
             return messageIn;
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("🚪 Could not read inbound message: " + e.getMessage());
             return null;
         }
     }
@@ -59,11 +59,6 @@ public class SocketServerConnection implements Runnable {
                 messageIn = receiveMessage();
 
                 if (messageIn == null) break;
-
-                if ("QUT".equals(messageIn)) {
-                    System.out.println("😿 QUIT requested, quitting");
-                    break;
-                }
 
                 Thread handlerThread = new Thread(new ReceivedMessageHandler(messageIn, this));
                 handlerThread.start();

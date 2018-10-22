@@ -10,17 +10,11 @@ import com.pooa.ptichat.BackServer.Storage.SqliteStorage;
  */
 public class StorageSingleton {
 
-    private int mPlopCount;
     private IStorage mStorage = new SqliteStorage();
     private ConnectionsManager mConnectionsManager = new ConnectionsManager();
 
     /** Private constructor */
     private StorageSingleton() { }
-
-//    public synchronized int getNextPlop() {
-//        mPlopCount++;
-//        return mPlopCount;
-//    }
 
     public IStorage getStorage() {
         return mStorage;

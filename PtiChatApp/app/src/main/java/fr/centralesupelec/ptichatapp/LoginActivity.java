@@ -35,7 +35,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private final NewMessageReceiver newMessageReceiver = new NewMessageReceiver();
 
-//    private TextView mSocketTempTextView;  // TEMP SOCKET
     // TODO : this is a debug option plz remove for prod
     private boolean backIsWorking = true;
 
@@ -52,9 +51,6 @@ public class LoginActivity extends AppCompatActivity {
         if (backIsWorking) {
             // Creates and run the Socket Client Connector, this will make the login faster  // TEMP ?
             SendMessageTask.sendMessageAsync(this, JsonUtils.justTextJSON("cc"));  // TEMP ?
-
-            // Register UI elements not to search them each time  // TEMP SOCKET
-//            mSocketTempTextView = findViewById(R.id.socketTempTextView);  // TEMP SOCKET
 
             // Register the receiver for new incoming message
             registerNewBroadcastReceiver();
@@ -97,11 +93,6 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-//    /** TEMP SOCKET */
-//    public void onPlopButtonClicked(View v) {
-//        Log.i("MAb", "👈 Plop button clicked!");
-//        SendMessageTask.sendMessageAsync(this, "PLP");
-//    }
 
     /** The activity will listen for BROADCAST_NEW_MESSAGE messages from other classes */
     private void registerNewBroadcastReceiver() {
