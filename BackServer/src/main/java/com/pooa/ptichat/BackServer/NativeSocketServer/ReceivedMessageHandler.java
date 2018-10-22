@@ -102,7 +102,7 @@ public class ReceivedMessageHandler implements Runnable {
             }
 
         } catch (JSONException e) {
-            System.out.println("Could not parse message as JSON");
+            System.out.println("🆘 Could not parse message as JSON");
         }
 
     }

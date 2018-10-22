@@ -17,10 +17,10 @@ public class StorageSingleton {
     /** Private constructor */
     private StorageSingleton() { }
 
-    public synchronized int getNextPlop() {
-        mPlopCount++;
-        return mPlopCount;
-    }
+//    public synchronized int getNextPlop() {
+//        mPlopCount++;
+//        return mPlopCount;
+//    }
 
     public IStorage getStorage() {
         return mStorage;

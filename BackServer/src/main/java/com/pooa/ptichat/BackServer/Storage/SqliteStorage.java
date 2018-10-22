@@ -34,13 +34,13 @@ public class SqliteStorage implements IStorage {
     private static void createNewDatabase() {
         try (Connection conn = DriverManager.getConnection(url)) {
             if (conn != null) {
-                System.out.println("Connected to database");
+                System.out.println("🗄 Connected to database");
 //                DatabaseMetaData meta = conn.getMetaData();
 //                System.out.println("The driver name is " + meta.getDriverName());
 //                System.out.println("A new database has been created.");
             }
         } catch (SQLException e) {
-            System.out.println("createNewDatabase failed: " + e.getMessage());
+            System.out.println("🆘 createNewDatabase failed: " + e.getMessage());
         }
     }
 
@@ -82,7 +82,7 @@ public class SqliteStorage implements IStorage {
             stmt.execute(mk_users);
             stmt.execute(mk_userschats);
         } catch (SQLException e) {
-            System.out.println("createNewTable failed: " + e.getMessage());
+            System.out.println("🆘 createNewTable failed: " + e.getMessage());
         }
     }
 
@@ -91,7 +91,7 @@ public class SqliteStorage implements IStorage {
         try {
             conn = DriverManager.getConnection(url);
         } catch (SQLException e) {
-            System.out.println("connect failed: " + e.getMessage());
+            System.out.println("🆘 connect failed: " + e.getMessage());
         }
         return conn;
     }
@@ -113,7 +113,7 @@ public class SqliteStorage implements IStorage {
             // Chat is empty on creating, no adding of its list of users and messages
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("addChat failed: " + e.getMessage());
+            System.out.println("🆘 addChat failed: " + e.getMessage());
         }
     }
 
@@ -130,7 +130,7 @@ public class SqliteStorage implements IStorage {
                 return new Chat(rs.getString("chatId"), rs.getString("name"));
             }
         } catch (SQLException e) {
-            System.out.println("getChat failed: " + e.getMessage());
+            System.out.println("🆘 getChat failed: " + e.getMessage());
         }
         return null;
     }
@@ -146,7 +146,7 @@ public class SqliteStorage implements IStorage {
             pstmt2.setString(1, chatId);
             pstmt2.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("removeChat failed: " + e.getMessage());
+            System.out.println("🆘 removeChat failed: " + e.getMessage());
         }
     }
 
@@ -165,7 +165,7 @@ public class SqliteStorage implements IStorage {
                 chatList.add(c);
             }
         } catch (SQLException e) {
-            System.out.println("listChats failed: " + e.getMessage());
+            System.out.println("🆘 listChats failed: " + e.getMessage());
         }
         return chatList.toArray(new Chat[0]);
     }
@@ -187,7 +187,7 @@ public class SqliteStorage implements IStorage {
                 chatList.add(c);
             }
         } catch (SQLException e) {
-            System.out.println("listChatsOfUser failed: " + e.getMessage());
+            System.out.println("🆘 listChatsOfUser failed: " + e.getMessage());
         }
         return chatList.toArray(new Chat[0]);
     }
@@ -207,7 +207,7 @@ public class SqliteStorage implements IStorage {
             pstmt.setBoolean(6, message.isRead());
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("addMessage failed: " + e.getMessage());
+            System.out.println("🆘 addMessage failed: " + e.getMessage());
         }
     }
 
@@ -230,7 +230,7 @@ public class SqliteStorage implements IStorage {
                 messageList.add(m);
             }
         } catch (SQLException e) {
-            System.out.println("listMessages failed: " + e.getMessage());
+            System.out.println("🆘 listMessages failed: " + e.getMessage());
         }
         return messageList.toArray(new Message[0]);
     }
@@ -262,7 +262,7 @@ public class SqliteStorage implements IStorage {
             pstmt.setString(5, user.getStatus());
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("addUser failed: " + e.getMessage());
+            System.out.println("🆘 addUser failed: " + e.getMessage());
         }
     }
 
@@ -285,7 +285,7 @@ public class SqliteStorage implements IStorage {
                 );
             }
         } catch (SQLException e) {
-            System.out.println("getUser failed: " + e.getMessage());
+            System.out.println("🆘 getUser failed: " + e.getMessage());
         }
         return null;
     }
@@ -302,7 +302,7 @@ public class SqliteStorage implements IStorage {
             pstmt2.setString(1, userId);
             pstmt2.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("removeUser failed: " + e.getMessage());
+            System.out.println("🆘 removeUser failed: " + e.getMessage());
         }
     }
 
@@ -327,7 +327,7 @@ public class SqliteStorage implements IStorage {
                 userList.add(u);
             }
         } catch (SQLException e) {
-            System.out.println("listUsers failed: " + e.getMessage());
+            System.out.println("🆘 listUsers failed: " + e.getMessage());
         }
         return userList.toArray(new User[0]);
     }
@@ -347,7 +347,7 @@ public class SqliteStorage implements IStorage {
             }
 
         } catch (SQLException e) {
-            System.out.println("listUserIdsInChat failed: " + e.getMessage());
+            System.out.println("🆘 listUserIdsInChat failed: " + e.getMessage());
         }
         return userIdSet.toArray(new String[0]);
     }
@@ -363,7 +363,7 @@ public class SqliteStorage implements IStorage {
             pstmt.setString(2, chatId);
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("userJoinsChat failed: " + e.getMessage());
+            System.out.println("🆘 userJoinsChat failed: " + e.getMessage());
         }
     }
 }

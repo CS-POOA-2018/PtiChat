@@ -1,11 +1,6 @@
 package com.pooa.ptichat.BackServer.NativeSocketServer;
 
-//import com.pooa.ptichat.BackServer.JsonUtils;
-//import com.pooa.ptichat.BackServer.PODS.User;
-//import com.pooa.ptichat.BackServer.Storage.IStorage;
 import com.pooa.ptichat.BackServer.JsonUtils;
-//import com.pooa.ptichat.BackServer.StorageSingleton;
-//import org.json.JSONException;
 import com.pooa.ptichat.BackServer.StorageSingleton;
 import org.json.JSONObject;
 

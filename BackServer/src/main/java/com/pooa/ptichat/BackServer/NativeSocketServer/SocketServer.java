@@ -10,17 +10,17 @@ public class SocketServer {
     private void startServer() {
         try {
             ServerSocket serverSocket = new ServerSocket(PORT, 50);
-            System.out.println("PtiChat socket server open on port " + PORT);
+            System.out.println("😼 PtiChat socket server open on port " + PORT);
 
             while (true) {  // Always accept new clients while running
                 Socket socket = serverSocket.accept();
-                System.out.println("Got connection to the socket server");
+                System.out.println("😺 Got connection to the socket server: " + socket);
 
                 Thread t = new Thread(new SocketServerConnection(socket));
                 t.start();
             }
         } catch (IOException e) {
-            System.out.println("Could not start the PtiChat Socket Server: " + e);
+            System.out.println("🆘 Could not start the PtiChat Socket Server: " + e);
         }
     }
 

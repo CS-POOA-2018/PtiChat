@@ -24,7 +24,7 @@ public class Utils {
         try {
             messageDate = messageDateFormat.parse(dateString);
         } catch (ParseException e) {
-            System.out.println("Utils.stringToDate: Could not parse stored date: " + e.getMessage());
+            Log.e("UTd","Could not parse stored date: " + e.getMessage());
         }
         return messageDate;
     }

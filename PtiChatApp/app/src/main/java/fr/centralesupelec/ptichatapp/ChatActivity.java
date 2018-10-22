@@ -110,16 +110,16 @@ public class ChatActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String message = intent.getStringExtra("message");
-//            mSocketTempTextView.setText(message);
 
             try {
                 JSONObject json = new JSONObject(message);
 
                 if ("justText".equals(json.getString("type"))) {
+                    Log.i("CAt", "🗒 Got justText message: " + json.getString("content"));
                     Toast.makeText(getApplicationContext(), json.getString("content"), Toast.LENGTH_LONG).show();
 
                 } else if ("listMessagesChat".equals(json.getString("type"))) {
-                    Log.i("LAu", "🗒 Got list of messages in chat");
+                    Log.i("CAl", "🗒 Got list of messages in chat");
                     myDataset.clear();
                     Collections.addAll(myDataset, JsonUtils.listOfMessagesJsonToMessages(json));
                     mMessagesAdapter.notifyDataSetChanged();
@@ -127,7 +127,7 @@ public class ChatActivity extends AppCompatActivity {
 
                 } else if ("newMessageInChat".equals(json.getString("type"))) {
                     if (json.getString("chatId").equals(mChatId)) {
-                        Log.i("LAc", "🗒 Got new message in current chat");
+                        Log.i("CAn", "🗒 Got new message in current chat");
                         Message newMessage = JsonUtils.messageJsonToMessage(json.getJSONObject("message"));
                         if (newMessage == null) throw new JSONException("newMessage is null");
 
@@ -145,13 +145,12 @@ public class ChatActivity extends AppCompatActivity {
                         mMessagesRecyclerView.scrollToPosition(myDataset.size() - 1);
 
                     } else {
-                        Log.i("LAc", "🗒 Got new message in another chat");
+                        Log.i("CAn", "🗒 Got new message in another chat");
                     }
                 }
             } catch (JSONException e) {
-                System.out.println("Could not parse message as JSON");
+                Log.e("CAe", "🆘 Could not parse message as JSON");
             }
         }
     }
-
 }

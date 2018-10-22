@@ -51,6 +51,8 @@ public class SocketSingleton {
                     }
                 }
             }).start();
+        } else {
+            Log.i("SSr", "⭕️ Will not renew empty SocketSingleton instance");
         }
     }
 }

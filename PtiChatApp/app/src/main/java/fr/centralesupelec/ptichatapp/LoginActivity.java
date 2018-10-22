@@ -37,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
 
 //    private TextView mSocketTempTextView;  // TEMP SOCKET
     // TODO : this is a debug option plz remove for prod
-    private Boolean backIsWorking = true;
+    private boolean backIsWorking = true;
 
 
     @Override
@@ -45,7 +45,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // get fields
+        // Get fields
         nameField = findViewById(R.id.pseudoLogin);
         passwordField = findViewById(R.id.passwordLogin);
 
@@ -127,12 +127,12 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String message = intent.getStringExtra("message");
-//            mSocketTempTextView.setText(message);
 
             try {
                 JSONObject json = new JSONObject(message);
 
                 if ("justText".equals(json.getString("type"))) {
+                    Log.i("LAt", "🗒 Got justText message: " + json.getString("content"));
                     Toast.makeText(getApplicationContext(), json.getString("content"), Toast.LENGTH_LONG).show();
 
                 } else if ("loginAcceptance".equals(json.getString("type"))) {
@@ -141,15 +141,14 @@ public class LoginActivity extends AppCompatActivity {
                         // Register the user info into the Session
                         User user = JsonUtils.loginAcceptanceJsonToUser(json);
                         Session.setUser(user);
-                        Log.i("LAu", "current user: " + Session.getUser());
-                        Log.i("LAs", "✅ Login successful!");
+                        Log.i("LAs", "✅ Login successful! User: " + ((user != null) ? user : "null"));
                         // Switch activity to main
                         Intent mainActivityIntent = new Intent(context, MainActivity.class);
                         startActivity(mainActivityIntent);
                     } else {
                         // Login failed
+                        Log.i("LAr", "❌ Login failed: " + json.getString("message"));
                         Toast.makeText(getApplicationContext(), "Error: " + json.getString("message"), Toast.LENGTH_LONG).show();
-//                        mSocketTempTextView.setText(json.getString("message"));
                     }
                 }
             } catch (JSONException e) {

@@ -43,8 +43,6 @@ public class MainActivity extends AppCompatActivity {
 
     private final NewMessageReceiver newMessageReceiver = new MainActivity.NewMessageReceiver();
 
-//    private TextView mSocketTempTextView;  // TEMP SOCKET
-
     private List<User> myUserDataset = new ArrayList<>();
     private List<Chat> myChatDataset = new ArrayList<>();
 
@@ -53,12 +51,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Register UI elements not to search them each time  // TEMP SOCKET
-//        mSocketTempTextView = findViewById(R.id.socketTempTextView2);  // TEMP SOCKET
-
         // Register the receiver for new incoming message
         registerNewBroadcastReceiver();
 
+        // Register UI elements not to search them each time
         mUsersRecyclerView = findViewById(R.id.mainContactView);
         mChatsRecyclerView = findViewById(R.id.mainChatView);
 
@@ -89,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
 
         // update user
         currentUser = Session.getUser();
-        Log.i("MAu", "current user: " + Session.getUser());
+        Log.i("MAu", "😺 Current user: " + Session.getUser());
         updateUser();
 
         myUserDataset.add(new User("flx", "Felix", "pic", "Give me food", true));
@@ -133,30 +129,30 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void updateOnline(Boolean isConnected) {
+    private void updateOnline(boolean isConnected) {
         userIsOnlineTV.setText(isConnected ? "(En ligne)" : "(Hors ligne)");
     }
 
 //    public void onSelectChat(View view) {
-//        // switch activy to Chat
-//        // TODO : switch to the right chat and not just on the activity
+//        // switch activity to Chat
+//        // TO.DO : switch to the right chat and not just on the activity
 //        Intent selectChatIntent = new Intent(this, ChatActivity.class);
 //        startActivity(selectChatIntent);
 //    }
 
     public void onSelectChat(String chatId) {
-        // switch activity to Chat
+        // Switch activity to Chat
         Log.i("MAc", "👈 Selected chat " + chatId);
         Intent selectChatIntent = new Intent(this, ChatActivity.class);
         selectChatIntent.putExtra("chatId", chatId);
         startActivity(selectChatIntent);
     }
 
-    /** TEMP SOCKET */
-    public void onPlopButtonClicked2(View v) {
-        Log.i("MAb", "👈 Plop button clicked!");
-        SendMessageTask.sendMessageAsync(this, "PLP");
-    }
+//    /** TEMP SOCKET */
+//    public void onPlopButtonClicked2(View v) {
+//        Log.i("MAb", "👈 Plop button clicked!");
+//        SendMessageTask.sendMessageAsync(this, "PLP");
+//    }
 
     /** The activity will listen for BROADCAST_NEW_MESSAGE messages from other classes */
     private void registerNewBroadcastReceiver() {
@@ -170,16 +166,16 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String message = intent.getStringExtra("message");
-//            mSocketTempTextView.setText(message);
 
             try {
                 JSONObject json = new JSONObject(message);
 
                 if ("justText".equals(json.getString("type"))) {
+                    Log.i("MAt", "🗒 Got justText message: " + json.getString("content"));
                     Toast.makeText(getApplicationContext(), json.getString("content"), Toast.LENGTH_LONG).show();
 
                 } else if ("listOfUsers".equals(json.getString("type"))) {
-//                    Log.i("LAu", "🗒 Got list of users message");
+//                    Log.i("MAu", "🗒 Got list of users message");
                     myUserDataset.clear();
                     for (User u : JsonUtils.listOfUsersJsonToUsers(json)) {
                         if (!u.getId().equals(Session.getUser().getId())) {
@@ -189,14 +185,14 @@ public class MainActivity extends AppCompatActivity {
                     mUsersAdapter.notifyDataSetChanged();
 
                 } else if ("listOfChats".equals(json.getString("type"))) {
-//                    Log.i("LAc", "🗒 Got list of chats message");
+//                    Log.i("MAc", "🗒 Got list of chats message");
                     myChatDataset.clear();
                     myChatDataset.addAll(Arrays.asList(JsonUtils.listOfChatsJsonToUsers(json)));
                     mChatsAdapter.notifyDataSetChanged();
 
                 }
             } catch (JSONException e) {
-                System.out.println("Could not parse message as JSON");
+                Log.e("MAe", "🆘 Could not parse message as JSON");
             }
         }
     }

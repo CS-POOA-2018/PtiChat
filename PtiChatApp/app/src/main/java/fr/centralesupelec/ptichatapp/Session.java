@@ -8,8 +8,8 @@ public class Session {
     // TODO use a session structure that will be the interface between data that servers sends, and the display
     // Store data when it is received, serve it when asked. Think about timing problems.
 
-//    public static Boolean connect(String login, String password) {
-//        // TODO : send it to a real backend
+//    public static boolean connect(String login, String password) {
+//        // TO.DO : send it to a real backend
 //        setUser(new User(login, login, "", true));
 //        return true;
 //    }
