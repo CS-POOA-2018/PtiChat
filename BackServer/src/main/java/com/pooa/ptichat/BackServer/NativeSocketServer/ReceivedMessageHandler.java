@@ -37,6 +37,10 @@ public class ReceivedMessageHandler implements Runnable {
                 String userId = user.getId();
                 String userPassword = user.getPassword();
 
+                if (userId == null) {
+                    rejectUserLogin(null, "Login is null");
+                }
+
                 IStorage storage = StorageSingleton.getInstance().getStorage();
                 boolean foundLogin = false;
                 boolean validCredentials = false;
