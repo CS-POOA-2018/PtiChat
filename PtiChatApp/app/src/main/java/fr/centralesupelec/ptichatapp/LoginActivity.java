@@ -85,6 +85,7 @@ public class LoginActivity extends AppCompatActivity {
             // Switch activity to main
             Intent mainActivityIntent = new Intent(this, MainActivity.class);
             startActivity(mainActivityIntent);
+            finish();
         }
     }
 

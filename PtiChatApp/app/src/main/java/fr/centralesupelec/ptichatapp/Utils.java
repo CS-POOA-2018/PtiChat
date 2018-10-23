@@ -53,4 +53,18 @@ public class Utils {
         }
         return new Pair<>(hostName, hostPort);
     }
+
+    public static void writeCredentials(final Context context, final String USERNAME, final int PASSWORD) {
+        SharedPreferences.Editor editor = context.getSharedPreferences(Constants.SHARED_PREFERENCES_KEY, Context.MODE_PRIVATE).edit();
+        editor.putString("username", USERNAME);
+        editor.putInt("password", PASSWORD);
+        editor.apply();
+    }
+
+    public static Pair<String, String> getCredentials(final Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(Constants.SHARED_PREFERENCES_KEY, Context.MODE_PRIVATE);
+        String username = preferences.getString("username", null);
+        String password = preferences.getString("password", null);
+        return new Pair<>(username, password);
+    }
 }
