@@ -48,7 +48,8 @@ public class SqliteStorage implements IStorage {
         // SQL statement for creating new tables
         String mk_chats = "CREATE TABLE IF NOT EXISTS chats ("
                 + "	chatId text PRIMARY KEY,"
-                + "	name text NOT NULL"
+                + "	name text NOT NULL,"
+                + " isPrivate boolean NOT NULL"
                 + ");";
 
         String mk_messages = "CREATE TABLE IF NOT EXISTS messages ("
@@ -107,9 +108,10 @@ public class SqliteStorage implements IStorage {
     public void addChat(Chat chat) {
 //        System.out.println("Adding chat " + chat.getId());
         try (Connection conn = this.connect();
-             PreparedStatement pstmt = conn.prepareStatement("INSERT INTO chats(chatId,name) VALUES(?,?)")) {
+             PreparedStatement pstmt = conn.prepareStatement("INSERT INTO chats(chatId,name,isPrivate) VALUES(?,?,?)")) {
             pstmt.setString(1, chat.getId());
             pstmt.setString(2, chat.getName());
+            pstmt.setBoolean(3, chat.isPrivate());
             // Chat is empty on creating, no adding of its list of users and messages
             pstmt.executeUpdate();
         } catch (SQLException e) {
@@ -119,7 +121,7 @@ public class SqliteStorage implements IStorage {
 
     @Override
     public Chat getChat(String chatId) {
-        String sql = "SELECT chatId, name FROM chats WHERE chatId = ?";
+        String sql = "SELECT chatId, name, isPrivate FROM chats WHERE chatId = ?";
 
         try (Connection conn = this.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -127,7 +129,7 @@ public class SqliteStorage implements IStorage {
             ResultSet rs  = pstmt.executeQuery();
 
             if (rs.next()) {
-                return new Chat(rs.getString("chatId"), rs.getString("name"));
+                return new Chat(rs.getString("chatId"), rs.getString("name"), rs.getBoolean("isPrivate"));
             }
         } catch (SQLException e) {
             System.out.println("🆘 getChat failed: " + e.getMessage());
@@ -160,7 +162,7 @@ public class SqliteStorage implements IStorage {
 
         try (Connection conn = this.connect();
              Statement stmt  = conn.createStatement();
-             ResultSet rs    = stmt.executeQuery("SELECT chatId, name FROM chats")){
+             ResultSet rs    = stmt.executeQuery("SELECT chatId, name FROM chats WHERE isPrivate = false")){
 
             while (rs.next()) {
                 Chat c = new Chat(rs.getString("chatId"), rs.getString("name"));
@@ -177,7 +179,7 @@ public class SqliteStorage implements IStorage {
     public Chat[] listChatsOfUser(String userId) {
 //        System.out.println("Listing chats of user " + userId);
         String sql = "SELECT DISTINCT chats.chatId, name FROM chats INNER JOIN userschats "
-                   + "ON chats.chatID = userschats.chatID where userId = ?";
+                   + "ON chats.chatID = userschats.chatID WHERE isPrivate = false AND userId = ?";
         List<Chat> chatList = new ArrayList<>();
 
         try (Connection conn = this.connect();

@@ -100,6 +100,22 @@ public class ReceivedMessageHandler implements Runnable {
                 IStorage storage = StorageSingleton.getInstance().getStorage();
                 mSocketServerConnection.sendMessage(JsonUtils.sendListOfMessagesJson(chatId, storage.listAllMessages(chatId)));
 
+            } else if ("getPrivateMessages".equals(messageType)) {
+                String userId1 = json.getString("userId1");
+                String userId2 = json.getString("userId2");
+                String chatId = (userId2.compareTo(userId1) > 0) ? userId1 + "+" + userId2 : userId2 + "+" + userId1;
+                IStorage storage = StorageSingleton.getInstance().getStorage();
+                Chat chat = storage.getChat(chatId);
+                // If the chat does not exist, create it
+                if (chat == null) {
+                    String chatName = (userId2.compareTo(userId1) > 0) ? userId1 + " & " + userId2 : userId2 + " & " + userId1;
+                    chat = new Chat(chatId, chatName, true);
+                    storage.userJoinsChat(userId1, chatId);
+                    storage.userJoinsChat(userId2, chatId);
+                    storage.addChat(chat);
+                }
+                mSocketServerConnection.sendMessage(JsonUtils.sendListOfMessagesJson(chatId, storage.listAllMessages(chatId)));
+
             } else if ("sendNewMessage".equals(messageType)) {
                 Message newMessage = JsonUtils.jsonToMessage(json.getJSONObject("message"));
                 IStorage storage = StorageSingleton.getInstance().getStorage();

@@ -71,6 +71,19 @@ public class JsonUtils {
         return toSend;
     }
 
+    public static JSONObject createNewChat(String chatName, String[] userIds) {
+        JSONObject toSend = null;
+        try {
+            toSend = new JSONObject();
+            toSend.put("type", "createNewChat");
+            toSend.put("chatName", chatName);
+            toSend.put("users", new JSONArray(userIds));
+        } catch (JSONException e) {
+            Log.e("JUe", "Could not make JSON: " + e.getMessage());
+        }
+        return toSend;
+    }
+
     public static JSONObject askForListOfUsers() {
         JSONObject toSend = null;
         try {
@@ -100,6 +113,19 @@ public class JsonUtils {
             toSend = new JSONObject();
             toSend.put("type", "getListOfMessages");
             toSend.put("chatId", chatId);
+        } catch (JSONException e) {
+            Log.e("JUe", "Could not make JSON: " + e.getMessage());
+        }
+        return toSend;
+    }
+
+    public static JSONObject askForPrivateMessages(String userId1, String userId2) {
+        JSONObject toSend = null;
+        try {
+            toSend = new JSONObject();
+            toSend.put("type", "getPrivateMessages");
+            toSend.put("userId1", userId1);
+            toSend.put("userId2", userId2);
         } catch (JSONException e) {
             Log.e("JUe", "Could not make JSON: " + e.getMessage());
         }

@@ -36,7 +36,10 @@ public class ChatActivity extends AppCompatActivity {
     private RecyclerView.Adapter mMessagesAdapter;
     private RecyclerView.LayoutManager mMessagesLayoutManager;
 
+    private boolean mIsPrivateChat;
     private String mChatId;
+    private String mMyUserId;
+    private String mOtherUserId;
     private EditText newMessage;
 
     private final NewMessageReceiver newMessageReceiver = new ChatActivity.NewMessageReceiver();
@@ -44,15 +47,22 @@ public class ChatActivity extends AppCompatActivity {
     private List<Message> myDataset = new ArrayList<>();
     private Map<String, Integer> mPendingMessages = new HashMap<>();
 
+    private void applyChatInfoFromIntent() {
+        mIsPrivateChat = getIntent().getBooleanExtra("isPrivateChat", false);
+        if (mIsPrivateChat) {
+            mMyUserId = getIntent().getStringExtra("myUserId");
+            mOtherUserId = getIntent().getStringExtra("otherUserId");
+        } else {
+            mChatId = getIntent().getStringExtra("chatId");
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        mChatId = getIntent().getStringExtra("chatId");
-
-//        myDataset.add(new Message("1", "Coucou", null, sender.getId(), chat.getId(), true));
-//        myDataset.add(new Message("2", "Ca va ?", null, sender.getId(), chat.getId(), false));
+        applyChatInfoFromIntent();
 
         newMessage = findViewById(R.id.newMessage);
 
@@ -76,14 +86,17 @@ public class ChatActivity extends AppCompatActivity {
     public void onPause() {
         super.onPause();
         unregisterReceiver(newMessageReceiver);
-//        SendMessageTask.sendMessageAsync(this, "brb");  // TEMP ?
     }
 
     public void onResume() {
         super.onResume();
         registerNewBroadcastReceiver();
-//        SendMessageTask.sendMessageAsync(this, "re");  // TEMP ?
-        SendMessageTask.sendMessageAsync(this, JsonUtils.askForListOfMessages(mChatId));
+        applyChatInfoFromIntent();
+        if (mIsPrivateChat) {
+            SendMessageTask.sendMessageAsync(this, JsonUtils.askForPrivateMessages(mMyUserId, mOtherUserId));
+        } else {
+            SendMessageTask.sendMessageAsync(this, JsonUtils.askForListOfMessages(mChatId));
+        }
     }
 
     public void onSend(View view) {
@@ -127,6 +140,7 @@ public class ChatActivity extends AppCompatActivity {
 
                 } else if ("listMessagesChat".equals(json.getString("type"))) {
                     Log.i("CAl", "🗒 Got list of messages in chat");
+                    if (mChatId == null) mChatId = json.getString("chatId");
                     myDataset.clear();
                     Collections.addAll(myDataset, JsonUtils.listOfMessagesJsonToMessages(json));
                     mMessagesAdapter.notifyDataSetChanged();

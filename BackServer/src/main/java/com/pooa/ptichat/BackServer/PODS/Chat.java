@@ -7,6 +7,7 @@ import java.util.UUID;
 public class Chat {
     private String id;
     private String name;
+    private boolean isPrivate;
     private List<String> users;
     private List<String> messages;
 
@@ -20,6 +21,7 @@ public class Chat {
         UUID uuid = UUID.randomUUID();
         this.id = uuid.toString();
 
+        this.isPrivate = false;
         this.users = new ArrayList<>();
         this.messages = new ArrayList<>();
     }
@@ -32,6 +34,20 @@ public class Chat {
     public Chat(String id, String name) {
         this.id = id;
         this.name = name;
+        this.isPrivate = false;
+        this.users = new ArrayList<>();
+        this.messages = new ArrayList<>();
+    }
+
+    /**
+     * Creates a new chat object from existing chat
+     * @param id ID of the chat
+     * @param name Name of the chat
+     */
+    public Chat(String id, String name, boolean isPrivate) {
+        this.id = id;
+        this.name = name;
+        this.isPrivate = isPrivate;
         this.users = new ArrayList<>();
         this.messages = new ArrayList<>();
     }
@@ -60,6 +76,14 @@ public class Chat {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean isPrivate() {
+        return isPrivate;
+    }
+
+    public void setPrivate(boolean isPrivate) {
+        this.isPrivate = isPrivate;
     }
 
     public List<String> getUsers() {

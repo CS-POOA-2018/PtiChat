@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         mChatsRecyclerView.setLayoutManager(mChatsLayoutManager);
 
         // specify an mUsersAdapter
-        mUsersAdapter = new ContactAdapter(myUserDataset);
+        mUsersAdapter = new ContactAdapter(myUserDataset, this);
         mUsersRecyclerView.setAdapter(mUsersAdapter);
 
         // specify an mChatsAdapter
@@ -99,13 +99,12 @@ public class MainActivity extends AppCompatActivity {
     public void onPause() {
         super.onPause();
         unregisterReceiver(newMessageReceiver);
-//        SendMessageTask.sendMessageAsync(this, "brb");  // TEMP ?
     }
 
     public void onResume() {
         super.onResume();
+        currentUser = Session.getUser();
         registerNewBroadcastReceiver();
-//        SendMessageTask.sendMessageAsync(this, "re");  // TEMP ?
         SendMessageTask.sendMessageAsync(this, JsonUtils.askForListOfUsers());
         SendMessageTask.sendMessageAsync(this, JsonUtils.askForListOfChats(Session.getUser().getId()));
     }
@@ -139,10 +138,31 @@ public class MainActivity extends AppCompatActivity {
 //        startActivity(selectChatIntent);
 //    }
 
+    public void onSelectContact(String contactId) {
+        // Switch activity to Chat
+        Log.i("MAc", "👈 Selected contact " + contactId);
+
+        String myUserId = Session.getUserId();
+        if (myUserId == null) {
+            Log.w("MAc", "🆘 myUserId is null");
+            return;
+        }
+
+//        String chatId = (contactId.compareTo(myUserId) > 0) ? myUserId + contactId : contactId + myUserId;
+
+        Intent selectChatIntent = new Intent(this, ChatActivity.class);
+        selectChatIntent.putExtra("isPrivateChat", true);
+//        selectChatIntent.putExtra("chatId", chatId);
+        selectChatIntent.putExtra("myUserId", myUserId);
+        selectChatIntent.putExtra("otherUserId", contactId);
+        startActivity(selectChatIntent);
+    }
+
     public void onSelectChat(String chatId) {
         // Switch activity to Chat
         Log.i("MAc", "👈 Selected chat " + chatId);
         Intent selectChatIntent = new Intent(this, ChatActivity.class);
+        selectChatIntent.putExtra("isPrivateChat", false);
         selectChatIntent.putExtra("chatId", chatId);
         startActivity(selectChatIntent);
     }
@@ -176,12 +196,14 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                     mUsersAdapter.notifyDataSetChanged();
+                    currentUser.setConnected(true);
 
                 } else if ("listOfChats".equals(json.getString("type"))) {
 //                    Log.i("MAc", "🗒 Got list of chats message");
                     myChatDataset.clear();
                     myChatDataset.addAll(Arrays.asList(JsonUtils.listOfChatsJsonToUsers(json)));
                     mChatsAdapter.notifyDataSetChanged();
+                    currentUser.setConnected(true);
 
                 }
             } catch (JSONException e) {

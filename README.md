@@ -75,6 +75,16 @@ This project has two folders: one for the back in Java 8.0 and one for the Andro
 }
 ```
 
+##### Get list of messages in a private chat
+
+```json
+{
+  "type": "getPrivateMessages",
+  "userId1": "user id of the first user",
+  "userId2": "user id of the second user"
+}
+```
+
 #### Send a new message in a chat
 
 ```json
