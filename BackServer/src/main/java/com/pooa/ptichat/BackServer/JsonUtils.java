@@ -4,6 +4,7 @@ import com.pooa.ptichat.BackServer.PODS.Chat;
 import com.pooa.ptichat.BackServer.PODS.Message;
 import com.pooa.ptichat.BackServer.PODS.User;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -110,7 +111,7 @@ public class JsonUtils {
         return json;
     }
 
-    public static Chat jsonToChat(JSONObject json) {
+    public static Chat jsonToChat(JSONObject json) throws JSONException {
         Chat c = new Chat(json.getString("chatName"));
         JSONArray usersJsonArray = new JSONArray(json.getString("users"));
         List<String> userList = new ArrayList<>();
@@ -121,11 +122,20 @@ public class JsonUtils {
         return c;
     }
 
-    public static Message jsonToMessage(JSONObject json) {
+    public static List<String> newChatJsonToUserIdList(JSONObject json) throws JSONException {
+        JSONArray userJsonArray = json.getJSONArray("users");
+        List<String> users = new ArrayList<>();
+        for (int i = 0; i < userJsonArray.length(); i++) {
+            users.add(userJsonArray.getString(i));
+        }
+        return users;
+    }
+
+    public static Message jsonToMessage(JSONObject json) throws JSONException {
         return new Message(json.getString("messageId"), json.getString("content"), json.getString("senderId"), json.getString("chatId"));
     }
 
-    public static User jsonToUser(JSONObject json) {
-        return new User(json.getString("userId"), json.getString("password"), null);
+    public static User jsonToUser(JSONObject json) throws JSONException {
+        return new User(json.getString("userId").toLowerCase(), json.getString("password"), null);
     }
 }

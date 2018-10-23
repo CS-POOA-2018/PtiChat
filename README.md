@@ -80,7 +80,7 @@ This project has two folders: one for the back in Java 8.0 and one for the Andro
 ```json
 {
   "type": "sendNewMessage",
-  "message": "TODO"
+  "message": {"messageId": "message id", "content": "...", "date": "2018-10-16 14:45:09", "senderId": "senderId", "chatId": "chatId", "read": true}
 }
 ```
 

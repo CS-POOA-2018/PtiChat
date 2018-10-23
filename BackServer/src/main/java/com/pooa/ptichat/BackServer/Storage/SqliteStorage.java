@@ -140,11 +140,14 @@ public class SqliteStorage implements IStorage {
 //        System.out.println("Removing chat " + chatId);
         try (Connection conn = this.connect();
              PreparedStatement pstmt = conn.prepareStatement("DELETE FROM chats WHERE chatId = ?");
-             PreparedStatement pstmt2 = conn.prepareStatement("DELETE FROM userschats WHERE chatId = ?")) {
+             PreparedStatement pstmt2 = conn.prepareStatement("DELETE FROM userschats WHERE chatId = ?");
+             PreparedStatement pstmt3 = conn.prepareStatement("DELETE FROM messages WHERE chatId = ?")) {
             pstmt.setString(1, chatId);
             pstmt.executeUpdate();
             pstmt2.setString(1, chatId);
             pstmt2.executeUpdate();
+            pstmt3.setString(1, chatId);
+            pstmt3.executeUpdate();
         } catch (SQLException e) {
             System.out.println("🆘 removeChat failed: " + e.getMessage());
         }

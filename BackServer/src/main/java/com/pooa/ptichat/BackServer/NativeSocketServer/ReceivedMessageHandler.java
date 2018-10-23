@@ -1,6 +1,7 @@
 package com.pooa.ptichat.BackServer.NativeSocketServer;
 
 import com.pooa.ptichat.BackServer.JsonUtils;
+import com.pooa.ptichat.BackServer.PODS.Chat;
 import com.pooa.ptichat.BackServer.PODS.Message;
 import com.pooa.ptichat.BackServer.PODS.User;
 import com.pooa.ptichat.BackServer.Storage.IStorage;
@@ -37,8 +38,9 @@ public class ReceivedMessageHandler implements Runnable {
                 String userId = user.getId();
                 String userPassword = user.getPassword();
 
-                if (userId == null) {
-                    rejectUserLogin(null, "Login is null");
+                if (userId == null || userId.contains("+")) {
+                    rejectUserLogin(null, "Invalid login");
+                    return;
                 }
 
                 IStorage storage = StorageSingleton.getInstance().getStorage();
@@ -69,6 +71,17 @@ public class ReceivedMessageHandler implements Runnable {
                     } else {
                         rejectUserLogin(null, "Login too short");
                     }
+                }
+
+            } else if ("createNewChat".equals(messageType)) {
+                String chatName = json.getString("chatName");
+                Chat newChat = new Chat(chatName);
+                String chatId = newChat.getId();
+
+                IStorage storage = StorageSingleton.getInstance().getStorage();
+                storage.addChat(newChat);
+                for (String uid : JsonUtils.newChatJsonToUserIdList(json)) {
+                    storage.userJoinsChat(uid, chatId);
                 }
 
             } else if ("getListOfUsers".equals(messageType)) {
