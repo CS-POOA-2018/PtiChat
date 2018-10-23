@@ -14,12 +14,12 @@ This project has two folders: one for the back in Java 8.0 and one for the Andro
 
 // TODO (work in progress)
 
-
 ## API specification
 
 ### Front-end -> Back-end messages
 
-##### new user
+#### New user
+
 ```json
 {
   "type": "createNewUser",
@@ -28,7 +28,8 @@ This project has two folders: one for the back in Java 8.0 and one for the Andro
 }
 ```
 
-##### new chat
+#### New chat
+
 ```json
 {
   "type": "createNewChat",
@@ -37,7 +38,8 @@ This project has two folders: one for the back in Java 8.0 and one for the Andro
 }
 ```
 
-##### new message
+#### New message
+
 ```json
 {
   "type": "createNewMessage",
@@ -47,14 +49,16 @@ This project has two folders: one for the back in Java 8.0 and one for the Andro
 }
 ```
 
-##### get list of users
+#### Get list of users
+
 ```json
 {
   "type": "getListOfUsers"
 }
 ```
 
-##### get list of chats
+#### Get list of chats
+
 ```json
 {
   "type": "getListOfChats",
@@ -62,7 +66,8 @@ This project has two folders: one for the back in Java 8.0 and one for the Andro
 }
 ```
 
-##### get list of messages in one chat
+#### Get list of messages in one chat
+
 ```json
 {
   "type": "getListOfMessages",
@@ -70,7 +75,8 @@ This project has two folders: one for the back in Java 8.0 and one for the Andro
 }
 ```
 
-##### send a new message in a chat
+#### Send a new message in a chat
+
 ```json
 {
   "type": "sendNewMessage",
@@ -78,7 +84,8 @@ This project has two folders: one for the back in Java 8.0 and one for the Andro
 }
 ```
 
-##### announce who you are when you reconnect to the server without going through the login page
+#### Announce who you are when you reconnect to the server without going through the login page
+
 ```json
 {
   "type": "announceConnection",
@@ -86,7 +93,8 @@ This project has two folders: one for the back in Java 8.0 and one for the Andro
 }
 ```
 
-##### just send a message to be displayed on the other side
+#### Just send a message to be displayed on the other side
+
 ```json
 {
   "type": "justText",
@@ -94,10 +102,10 @@ This project has two folders: one for the back in Java 8.0 and one for the Andro
 }
 ```
 
-
 ### Back-end -> Front-end messages
 
-##### send "you are connected"
+#### Send "you are connected"
+
 ```json
 {
   "type": "loginAcceptance",
@@ -107,7 +115,8 @@ This project has two folders: one for the back in Java 8.0 and one for the Andro
 }
 ```
 
-##### send list of users
+#### Send list of users
+
 ```json
 {
   "type": "listOfUsers",
@@ -116,7 +125,8 @@ This project has two folders: one for the back in Java 8.0 and one for the Andro
 }
 ```
 
-##### send list of chats
+#### Send list of chats
+
 ```json
 {
   "type": "listOfChats",
@@ -126,7 +136,8 @@ This project has two folders: one for the back in Java 8.0 and one for the Andro
 }
 ```
 
-##### send list of messages in one chat
+#### Send list of messages in one chat
+
 ```json
 {
   "type": "listMessagesChat",
@@ -136,7 +147,8 @@ This project has two folders: one for the back in Java 8.0 and one for the Andro
 }
 ```
 
-##### new message appeared in a chat
+#### New message appeared in a chat
+
 ```json
 {
   "type": "newMessageInChat",
@@ -145,14 +157,14 @@ This project has two folders: one for the back in Java 8.0 and one for the Andro
 }
 ```
 
-##### just send a message to be displayed on the other side
+#### Just send a message to be displayed on the other side
+
 ```json
 {
   "type": "justText",
   "content": "Hello there"
 }
 ```
-
 
 ## Built With
 
