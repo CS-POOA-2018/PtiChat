@@ -79,6 +79,15 @@ public class JsonUtils {
         return json;
     }
 
+    public static JSONObject editAcceptance(User user, boolean accepted, String message) {
+        JSONObject json = new JSONObject();
+        json.put("type", "editAcceptance");
+        json.put("user", (user != null) ? userToJson(user) : "");
+        json.put("value", accepted);
+        json.put("message", message);
+        return json;
+    }
+
     public static JSONObject sendListOfChatsJson(String userId, Chat[] chats) {
         JSONObject json = new JSONObject();
         json.put("type", "listOfChats");
@@ -125,7 +134,11 @@ public class JsonUtils {
         return new Message(json.getString("messageId"), json.getString("content"), json.getString("senderId"), json.getString("chatId"));
     }
 
-    public static User jsonToUser(JSONObject json) {
+    public static User jsonToNewUser(JSONObject json) {
         return new User(json.getString("userId"), json.getString("password"), null);
+    }
+
+    public static User jsonToUser(JSONObject json) {
+        return new User(json.getString("userId"), null, json.getString("pseudo"), null, json.getString("status"));
     }
 }

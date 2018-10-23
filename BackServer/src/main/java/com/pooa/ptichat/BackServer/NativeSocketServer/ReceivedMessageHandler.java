@@ -33,7 +33,7 @@ public class ReceivedMessageHandler implements Runnable {
             String messageType = json.getString("type");
 
             if ("createNewUser".equals(messageType)) {
-                User user = JsonUtils.jsonToUser(json);
+                User user = JsonUtils.jsonToNewUser(json);
                 String userId = user.getId();
                 String userPassword = user.getPassword();
 
@@ -65,6 +65,36 @@ public class ReceivedMessageHandler implements Runnable {
                     } else {
                         rejectUserLogin(null, "Login too short");
                     }
+                }
+
+            } else if ("editUser".equals(messageType)) {
+                User newUser = JsonUtils.jsonToUser(json);
+                String userId = newUser.getId();
+
+                IStorage storage = StorageSingleton.getInstance().getStorage();
+                User userMatch = storage.getUser(userId);
+
+                if (userMatch != null) {
+                    System.out.println("😺 User " + userId + " exists and can be edited");
+
+                    String newPseudo = newUser.getPseudo();
+                    if (newPseudo != null) {
+                        System.out.println("😺 User " + userId + " has a new pseudo : " + newPseudo);
+                    } else {
+                        newUser.setPseudo(userMatch.getPseudo());
+                    }
+
+                    String newStatus = newUser.getStatus();
+                    if (newStatus != null) {
+                        System.out.println("😺 User " + userId + " has a new status : " + newStatus + " !" );
+                    } else {
+                        newUser.setStatus(userMatch.getStatus());
+                    }
+
+                    storage.editUser(newUser);
+                    mSocketServerConnection.sendMessage(JsonUtils.editAcceptance(newUser, true, ""));
+                } else {
+                    mSocketServerConnection.sendMessage(JsonUtils.editAcceptance(newUser, false, "User " + userId + " not found."));
                 }
 
             } else if ("getListOfUsers".equals(messageType)) {
