@@ -16,6 +16,7 @@ public interface IStorage {
     Message[] listAllMessages(String chatId);
 
     void addUser(User user);
+    void editUser(User user);
     User getUser(String userId);
     void removeUser(String userId);
     User[] listUsers();

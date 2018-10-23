@@ -71,6 +71,11 @@ public class MemoryStorage implements IStorage {
     }
 
     @Override
+    public void editUser(User user) {
+        mUserData.put(user.getId(), user);
+    }
+
+    @Override
     public User getUser(String userId) {
         return mUserData.get(userId);
     }

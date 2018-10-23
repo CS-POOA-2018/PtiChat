@@ -1,5 +1,6 @@
 package fr.centralesupelec.ptichatapp;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -8,8 +9,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -56,6 +61,9 @@ public class LoginActivity extends AppCompatActivity {
             // Register the receiver for new incoming message
             registerNewBroadcastReceiver();
         }
+
+        // Input password listens for the Enter key
+        setupEnterListener(this);
     }
 
     public void onPause() {
@@ -142,5 +150,24 @@ public class LoginActivity extends AppCompatActivity {
                 Log.e("LAe", "🆘 Could not parse message as JSON: " + e.getMessage());
             }
         }
+    }
+
+    /** The password input will listen for the Enter key, and try to connect if the user uses it */
+    public void setupEnterListener(Activity activity) {
+        TextView.OnEditorActionListener enterListener = new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEND ||
+                        (event.getKeyCode() == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN)) {
+                    onConnect(passwordField);
+                    return true;
+                }
+                return false;
+            }
+        };
+        passwordField.setOnEditorActionListener(enterListener);
+        passwordField.requestFocus();
+
+        activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     }
 }

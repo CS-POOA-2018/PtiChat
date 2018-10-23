@@ -1,5 +1,6 @@
 package fr.centralesupelec.ptichatapp;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,8 +10,12 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -64,6 +69,8 @@ public class ChatActivity extends AppCompatActivity {
         // specify an adapter
         mMessagesAdapter = new MessageAdapter(myDataset);
         mMessagesRecyclerView.setAdapter(mMessagesAdapter);
+
+        setupEnterListener(this, newMessage);
     }
 
     public void onPause() {
@@ -80,21 +87,21 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     public void onSend(View view) {
-        // get text content
+        // get text content and empty the input field
         String textContent = newMessage.getText().toString();
         if (textContent.isEmpty()) return;
         newMessage.setText("");
 
-        // add message
+        // Create and display the new message immediately
         Message newMessage = new Message(textContent, Session.getUser().getId(), mChatId);
         myDataset.add(newMessage);
+
         int positionInserted = myDataset.size() - 1;
-//        myDataset.add(new Message("3", textContent, null, "moi", chat.getId(), false));
         mMessagesAdapter.notifyItemInserted(positionInserted);
         mMessagesRecyclerView.scrollToPosition(positionInserted);
 
+        // Send the message to the back
         mPendingMessages.put(newMessage.getId(), positionInserted);
-
         SendMessageTask.sendMessageAsync(this, JsonUtils.sendNewMessageJson(newMessage));
     }
 
@@ -152,5 +159,24 @@ public class ChatActivity extends AppCompatActivity {
                 Log.e("CAe", "🆘 Could not parse message as JSON");
             }
         }
+    }
+
+    /** The message box will listen for the Enter key, and send the message if the user uses it */
+    public void setupEnterListener(Activity activity, EditText messageBox) {
+        TextView.OnEditorActionListener enterListener = new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEND ||
+                        (event.getKeyCode() == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN)) {
+                    onSend(newMessage);
+                    return true;
+                }
+                return false;
+            }
+        };
+        messageBox.setOnEditorActionListener(enterListener);
+        messageBox.requestFocus();
+
+        activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     }
 }
