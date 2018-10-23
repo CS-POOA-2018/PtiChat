@@ -54,10 +54,10 @@ public class Utils {
         return new Pair<>(hostName, hostPort);
     }
 
-    public static void writeCredentials(final Context context, final String USERNAME, final int PASSWORD) {
+    public static void writeCredentials(final Context context, final String USERNAME, final String PASSWORD) {
         SharedPreferences.Editor editor = context.getSharedPreferences(Constants.SHARED_PREFERENCES_KEY, Context.MODE_PRIVATE).edit();
         editor.putString("username", USERNAME);
-        editor.putInt("password", PASSWORD);
+        editor.putString("password", PASSWORD);
         editor.apply();
     }
 

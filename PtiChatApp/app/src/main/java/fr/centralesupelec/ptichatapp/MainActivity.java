@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -131,15 +132,15 @@ public class MainActivity extends AppCompatActivity {
         userIsOnlineTV.setText(isConnected ? "(En ligne)" : "(Hors ligne)");
     }
 
-//    public void onSelectChat(View view) {
-//        // switch activity to Chat
-//        // TO.DO : switch to the right chat and not just on the activity
-//        Intent selectChatIntent = new Intent(this, ChatActivity.class);
-//        startActivity(selectChatIntent);
-//    }
+    public void onLogout(View view) {
+        // Switch activity to Login
+        Log.i("MAc", "👈 Clicked on Logout button");
+        Intent loginIntent = new Intent(this, LoginActivity.class);
+        startActivity(loginIntent);
+    }
 
     public void onSelectContact(String contactId) {
-        // Switch activity to Chat
+        // Switch activity to Chat, using the contact name
         Log.i("MAc", "👈 Selected contact " + contactId);
 
         String myUserId = Session.getUserId();
@@ -148,18 +149,15 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-//        String chatId = (contactId.compareTo(myUserId) > 0) ? myUserId + contactId : contactId + myUserId;
-
         Intent selectChatIntent = new Intent(this, ChatActivity.class);
         selectChatIntent.putExtra("isPrivateChat", true);
-//        selectChatIntent.putExtra("chatId", chatId);
         selectChatIntent.putExtra("myUserId", myUserId);
         selectChatIntent.putExtra("otherUserId", contactId);
         startActivity(selectChatIntent);
     }
 
     public void onSelectChat(String chatId) {
-        // Switch activity to Chat
+        // Switch activity to Chat, using the chat id
         Log.i("MAc", "👈 Selected chat " + chatId);
         Intent selectChatIntent = new Intent(this, ChatActivity.class);
         selectChatIntent.putExtra("isPrivateChat", false);

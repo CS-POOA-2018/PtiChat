@@ -53,7 +53,7 @@ public class HelloActivity extends AppCompatActivity {
                 finish();
                 startActivity(loginActivityIntent);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                Log.i("HAi", "HelloActivity sleep interrupted");
             }
 
         }
@@ -71,11 +71,11 @@ public class HelloActivity extends AppCompatActivity {
 
     public void onConnect() {
         // Get login and password
-
         Pair<String, String> credentials = Utils.getCredentials(this);
-            // Send User connection to Backend
-            JSONObject toSend = JsonUtils.userInfoToNewUserJson("", "");
-            SendMessageTask.sendMessageAsync(this, toSend);
+
+        // Send User connection to Backend
+        JSONObject toSend = JsonUtils.userInfoToNewUserJson(credentials.first, credentials.second);
+        SendMessageTask.sendMessageAsync(this, toSend);
     }
 
     /**
@@ -114,6 +114,7 @@ public class HelloActivity extends AppCompatActivity {
                         running.interrupt();
                         finish();
                         startActivity(mainActivityIntent);
+                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                     } else {
                         // Login failed
                         Log.i("LAr", "❌ Login failed: " + json.getString("message"));
@@ -121,6 +122,7 @@ public class HelloActivity extends AppCompatActivity {
                         running.interrupt();
                         finish();
                         startActivity(loginActivityIntent);
+                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                     }
                 }
             } catch (JSONException e) {

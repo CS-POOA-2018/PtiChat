@@ -83,6 +83,9 @@ public class LoginActivity extends AppCompatActivity {
         String login = nameField.getText().toString();
         String password = passwordField.getText().toString();
 
+        // Write them into phone storage
+        Utils.writeCredentials(this, login, password);
+
         if (backIsWorking) {
             // Send User connection to Backend
             JSONObject toSend = JsonUtils.userInfoToNewUserJson(login, password);
@@ -166,7 +169,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         };
         passwordField.setOnEditorActionListener(enterListener);
-        passwordField.requestFocus();
+//        passwordField.requestFocus();
 
         activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     }
