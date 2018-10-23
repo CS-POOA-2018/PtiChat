@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -19,7 +21,7 @@
         app:srcCompat="@drawable/avatar1"
         tools:srcCompat="@tools:sample/avatars[14]" />
 
-    <TextView
+    <EditText
         android:id="@+id/mainName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -30,7 +32,8 @@
         android:textStyle="normal|bold"
         app:layout_constraintStart_toEndOf="@+id/mainAvatar"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Garfield" />
+        tools:text="Garfield"
+        android:background="@android:color/transparent" />
 
     <TextView
         android:id="@+id/mainIsOnline"
@@ -44,7 +47,7 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="(en ligne)" />
 
-    <TextView
+    <EditText
         android:id="@+id/mainStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -53,7 +56,8 @@
         android:text="Tapez votre message perso"
         app:layout_constraintStart_toEndOf="@+id/mainAvatar"
         app:layout_constraintTop_toBottomOf="@+id/mainName"
-        tools:text="Tapez votre message perso" />
+        tools:text="Tapez votre message perso"
+        android:background="@android:color/transparent" />
 
     <View
         android:id="@+id/greyLine"

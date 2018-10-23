@@ -1,5 +1,6 @@
 package fr.centralesupelec.ptichatapp;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -8,9 +9,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
+import android.view.KeyEvent;
 import android.view.View;
-//import android.widget.Button;
+import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -20,16 +24,8 @@ import fr.centralesupelec.ptichatapp.NativeSocketClient.SendMessageTask;
 import fr.centralesupelec.ptichatapp.NativeSocketClient.SocketSingleton;
 import fr.centralesupelec.ptichatapp.PODS.User;
 
-//import android.util.Log;
-//import android.widget.Button;
-//
-//import ua.naiksoftware.stomp.Stomp;
-//import ua.naiksoftware.stomp.client.StompClient;
 
 public class LoginActivity extends AppCompatActivity {
-
-//    private Button connect;
-//    private StompClient mStompClient;
 
     private EditText nameField;
     private EditText passwordField;
@@ -64,13 +60,10 @@ public class LoginActivity extends AppCompatActivity {
 
             // Register the receiver for new incoming message
             registerNewBroadcastReceiver();
-
-//            // Set the listener on the button
-//            connect = findViewById(R.id.button2);
-//            connect.setOnClickListener(v -> {
-//                stompTest();
-//            });
         }
+
+        // Input password listens for the Enter key
+        setupEnterListener(this);
     }
 
     public void onPause() {
@@ -123,18 +116,6 @@ public class LoginActivity extends AppCompatActivity {
         registerReceiver(newMessageReceiver, intentFilter);
     }
 
-//    /** Test the stomp connexion **/
-//    public void stompTest() {
-//        mStompClient = Stomp.over(Stomp.ConnectionProvider.JWS, "ws://localhost:8080/chat");
-//        mStompClient.connect();
-//
-//        mStompClient.topic("/topic/messages").subscribe(topicMessage -> {
-//            System.out.println(topicMessage.getPayload());
-//        });
-//        mStompClient.send("/app/chat", "{\"from\":\"from\", \"text\":\"text\"}").subscribe();
-//        Log.e("MAISLOL", "this is running");
-//    }
-
     /** Receive messages from the socket interface. If login is accepted, go to main activity */
     public class NewMessageReceiver extends BroadcastReceiver {
         @Override
@@ -168,5 +149,24 @@ public class LoginActivity extends AppCompatActivity {
                 Log.e("LAe", "🆘 Could not parse message as JSON: " + e.getMessage());
             }
         }
+    }
+
+    /** The password input will listen for the Enter key, and try to connect if the user uses it */
+    public void setupEnterListener(Activity activity) {
+        TextView.OnEditorActionListener enterListener = new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEND ||
+                        (event.getKeyCode() == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN)) {
+                    onConnect(passwordField);
+                    return true;
+                }
+                return false;
+            }
+        };
+        passwordField.setOnEditorActionListener(enterListener);
+        passwordField.requestFocus();
+
+        activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     }
 }
