@@ -1,8 +1,14 @@
+### Miscellaneous ###
 *.iml
 .gradle
 .idea
-/local.properties
 .DS_Store
+.externalNativeBuild
+.project
+.settings
+.classpath
+
+### Folders ####
+/local.properties
 /build
 /captures
-.externalNativeBuild

@@ -272,6 +272,22 @@ public class SqliteStorage implements IStorage {
     }
 
     @Override
+    public void editUser(User user) {
+//        System.out.println("Adding user " + user.getId());
+        String sql = "UPDATE users SET pseudo = ?, status = ? WHERE userId = ?";
+
+        try (Connection conn = this.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, user.getPseudo());
+            pstmt.setString(2, user.getStatus());
+            pstmt.setString(3, user.getId());
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("🆘 editUser failed: " + e.getMessage());
+        }
+    }
+
+    @Override
     public User getUser(String userId) {
         String sql = "SELECT userId,password,pseudo,profilePicture,status FROM users WHERE userId = ?";
 
