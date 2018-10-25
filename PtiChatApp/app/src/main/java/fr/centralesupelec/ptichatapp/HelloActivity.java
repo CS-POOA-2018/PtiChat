@@ -33,8 +33,8 @@ public class HelloActivity extends AppCompatActivity {
         // Register the receiver for new incoming message
         registerNewBroadcastReceiver();
 
-        this.onConnect();
         running.start();
+        onConnect();
     }
 
     private class Waiter implements Runnable {
@@ -49,13 +49,10 @@ public class HelloActivity extends AppCompatActivity {
         public void run() {
             try {
                 Thread.sleep(5000);
-                Intent loginActivityIntent = new Intent(mHelloActivity, LoginActivity.class);
-                finish();
-                startActivity(loginActivityIntent);
+                onFailedLogin(mHelloActivity);
             } catch (InterruptedException e) {
                 Log.i("HAi", "HelloActivity sleep interrupted");
             }
-
         }
     }
 
@@ -73,9 +70,31 @@ public class HelloActivity extends AppCompatActivity {
         // Get login and password
         Pair<String, String> credentials = Utils.getCredentials(this);
 
-        // Send User connection to Backend
-        JSONObject toSend = JsonUtils.userInfoToNewUserJson(credentials.first, credentials.second);
-        SendMessageTask.sendMessageAsync(this, toSend);
+        if (credentials.first == null || credentials.second == null) {
+            onFailedLogin(this);
+        } else {
+            // Send User connection to Backend
+            JSONObject toSend = JsonUtils.userInfoToNewUserJson(credentials.first, credentials.second);
+            SendMessageTask.sendMessageAsync(this, toSend);
+        }
+    }
+
+    private void onSuccessfulLogin(Context context) {
+        // Switch activity to main
+        Intent mainActivityIntent = new Intent(context, MainActivity.class);
+        running.interrupt();
+        startActivity(mainActivityIntent);
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        finish();
+    }
+
+    private void onFailedLogin(Context context) {
+        // Switch activity to login page
+        Intent loginActivityIntent = new Intent(context, LoginActivity.class);
+        running.interrupt();
+        startActivity(loginActivityIntent);
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        finish();
     }
 
     /**
@@ -109,20 +128,11 @@ public class HelloActivity extends AppCompatActivity {
                         User user = JsonUtils.loginAcceptanceJsonToUser(json);
                         Session.setUser(user);
                         Log.i("LAs", "✅ Login successful! User: " + ((user != null) ? user : "null"));
-                        // Switch activity to main
-                        Intent mainActivityIntent = new Intent(context, MainActivity.class);
-                        running.interrupt();
-                        finish();
-                        startActivity(mainActivityIntent);
-                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                        onSuccessfulLogin(context);
                     } else {
                         // Login failed
                         Log.i("LAr", "❌ Login failed: " + json.getString("message"));
-                        Intent loginActivityIntent = new Intent(context, LoginActivity.class);
-                        running.interrupt();
-                        finish();
-                        startActivity(loginActivityIntent);
-                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                        onFailedLogin(context);
                     }
                 }
             } catch (JSONException e) {

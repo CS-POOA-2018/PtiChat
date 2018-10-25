@@ -143,6 +143,7 @@ public class LoginActivity extends AppCompatActivity {
                         // Switch activity to main
                         Intent mainActivityIntent = new Intent(context, MainActivity.class);
                         startActivity(mainActivityIntent);
+                        finish();
                     } else {
                         // Login failed
                         Log.i("LAr", "❌ Login failed: " + json.getString("message"));

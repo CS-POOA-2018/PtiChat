@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
         currentUser = Session.getUser();
         registerNewBroadcastReceiver();
         SendMessageTask.sendMessageAsync(this, JsonUtils.askForListOfUsers());
-        SendMessageTask.sendMessageAsync(this, JsonUtils.askForListOfChats(Session.getUser().getId()));
+        SendMessageTask.sendMessageAsync(this, JsonUtils.askForListOfChats(Session.getUserId()));
     }
 
     private void updateUser() {
@@ -141,6 +141,7 @@ public class MainActivity extends AppCompatActivity {
 
         Intent loginIntent = new Intent(this, LoginActivity.class);
         startActivity(loginIntent);
+        finish();
     }
 
     public void onSelectContact(String contactId) {
@@ -193,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
 //                    Log.i("MAu", "🗒 Got list of users message");
                     myUserDataset.clear();
                     for (User u : JsonUtils.listOfUsersJsonToUsers(json)) {
-                        if (!u.getId().equals(Session.getUser().getId())) {
+                        if (!u.getId().equals(Session.getUserId())) {
                             myUserDataset.add(u);
                         }
                     }

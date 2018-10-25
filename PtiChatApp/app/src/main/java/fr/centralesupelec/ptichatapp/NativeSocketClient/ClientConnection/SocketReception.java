@@ -75,7 +75,7 @@ class SocketReception implements Runnable {
     void close() {
         mClosed = true;
         try {
-            mIn.close();
+            if (mIn != null) mIn.close();
             mSocket.close();
         } catch (IOException e) {
             Log.w("SRc", "❗️Could not close mIn: " + e.getMessage());
