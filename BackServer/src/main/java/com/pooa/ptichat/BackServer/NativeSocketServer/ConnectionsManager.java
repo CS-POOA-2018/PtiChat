@@ -5,7 +5,9 @@ import com.pooa.ptichat.BackServer.Storage.IStorage;
 import com.pooa.ptichat.BackServer.StorageSingleton;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ConnectionsManager {
@@ -14,25 +16,42 @@ public class ConnectionsManager {
     // and to send them messages if their are in one updated chat (or when someone becomes connected,...)
 
     private Map<SocketServerConnection, String> mActiveSocketsToUserId = new HashMap<>();
-    private Map<String, SocketServerConnection> mUserIdToActiveSockets = new HashMap<>();
+    private Map<String, List<SocketServerConnection>> mUserIdToActiveSockets = new HashMap<>();
 
     public void registerSocket(SocketServerConnection scc) {
-//        System.out.println("CM: registering socket " + scc);
-        mActiveSocketsToUserId.put(scc, "");
-        mUserIdToActiveSockets.put("", scc);
+        registerUserInSocket(scc, "");
     }
 
     public void registerUserInSocket(SocketServerConnection scc, String userId) {
 //        System.out.println("CM: registering socket " + scc + ", with user " + userId);
         mActiveSocketsToUserId.put(scc, userId);
-        mUserIdToActiveSockets.put(userId, scc);
+
+        mUserIdToActiveSockets.computeIfAbsent(userId, k -> new ArrayList<>());
+        if (!mUserIdToActiveSockets.get(userId).contains(scc)) mUserIdToActiveSockets.get(userId).add(scc);
+    }
+
+    public void unregisterUserInSocket(SocketServerConnection scc, String userId) {
+//        System.out.println("CM: unregistering socket " + scc + " for user " + userId);
+        mActiveSocketsToUserId.put(scc, "");
+
+        if (mUserIdToActiveSockets.get(userId) != null) {
+            mUserIdToActiveSockets.get(userId).remove(scc);
+            if (mUserIdToActiveSockets.get(userId).size() == 0) {
+                mUserIdToActiveSockets.remove(userId);
+            }
+        }
     }
 
     public void unregisterSocket(SocketServerConnection scc) {
         String userId = mActiveSocketsToUserId.get(scc);
 //        System.out.println("CM: unregistering socket " + scc + ", was assigned to " + userId);
+
+        unregisterUserInSocket(scc, userId);
         mActiveSocketsToUserId.remove(scc);
-        mUserIdToActiveSockets.remove(userId);
+    }
+
+    public String getUserOfSocket(SocketServerConnection scc) {
+        return mActiveSocketsToUserId.get(scc);
     }
 
     private boolean isUserConnected(String userId) {
@@ -47,9 +66,8 @@ public class ConnectionsManager {
     }
 
     public void sendMessageToAllConnectedUsers(JSONObject json) {
-        for (User u : StorageSingleton.getInstance().getStorage().listUsers()) {
-            if (isUserConnected(u.getId())) {
-                SocketServerConnection userScc = mUserIdToActiveSockets.get(u.getId());
+        for (SocketServerConnection userScc : mActiveSocketsToUserId.keySet()) {
+            if (!mActiveSocketsToUserId.get(userScc).isEmpty()) {
                 userScc.sendMessage(json);
             }
         }
@@ -59,8 +77,9 @@ public class ConnectionsManager {
         IStorage storage = StorageSingleton.getInstance().getStorage();
         for (String userId : storage.listUserIdsInChat(chatId)) {
             if (isUserConnected(userId)) {
-                SocketServerConnection userScc = mUserIdToActiveSockets.get(userId);
-                userScc.sendMessage(json);
+                for (SocketServerConnection userScc : mUserIdToActiveSockets.get(userId)) {
+                    userScc.sendMessage(json);
+                }
             }
         }
     }
