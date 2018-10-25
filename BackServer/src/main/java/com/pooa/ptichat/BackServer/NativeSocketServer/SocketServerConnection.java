@@ -63,9 +63,12 @@ public class SocketServerConnection implements Runnable {
                 Thread handlerThread = new Thread(new ReceivedMessageHandler(messageIn, this));
                 handlerThread.start();
             }
-            // TODO client disconnected
             System.out.println("😿 Client disconnected");
-            StorageSingleton.getInstance().getConnectionsManager().unregisterSocket(this);
+
+            ConnectionsManager cm = StorageSingleton.getInstance().getConnectionsManager();
+            String userWhoWasConnected = cm.getUserOfSocket(this);
+            if (userWhoWasConnected != null) cm.sendMessageToAllConnectedUsers(JsonUtils.announceConnection(userWhoWasConnected, false));
+            cm.unregisterSocket(this);
 
         } catch (IOException e) {
             System.out.println("😿 Client disconnected due to error: " + e.getMessage());

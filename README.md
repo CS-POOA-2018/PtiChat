@@ -99,9 +99,11 @@ This project has two folders: one for the back in Java 8.0 and one for the Andro
 ```json
 {
   "type": "announceConnection",
+  "connection": true,
   "userId": "user id"
 }
 ```
+(`connection` is `true` to announce a connection with the id `userId`, `false` for a disconnection)
 
 #### Just send a message to be displayed on the other side
 
@@ -164,6 +166,16 @@ This project has two folders: one for the back in Java 8.0 and one for the Andro
   "type": "newMessageInChat",
   "chatId": "chat id",
   "message": {"messageId": "message id", "content": "...", "date": "2018-10-16 14:45:09", "senderId": "senderId", "chatId": "chatId", "read": true}
+}
+```
+
+#### Notify the user that someone is now online or offline
+
+```json
+{
+  "type": "announceConnection",
+  "connection": true,
+  "userId": "user id"
 }
 ```
 

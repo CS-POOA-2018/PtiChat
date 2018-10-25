@@ -51,7 +51,7 @@ public class SocketClient {
             Log.i("SCc","😻 Client reached server again");
 
             mScc = new SocketClientConnection(mSocket, mCtx);
-            if (Session.getUserId() != null) SendMessageTask.sendMessageAsync(mCtx, JsonUtils.announceConnection(Session.getUserId()));
+            if (Session.getUserId() != null) SendMessageTask.sendMessageAsync(mCtx, JsonUtils.announceConnection(Session.getUserId(), true));
             return true;
         } catch (IOException e) {
             Log.e("SCc","😿 Could not renew the PtiChat Client Socket: " + e.getMessage());

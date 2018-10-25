@@ -135,6 +135,10 @@ public class MainActivity extends AppCompatActivity {
     public void onLogout(View view) {
         // Switch activity to Login
         Log.i("MAc", "👈 Clicked on Logout button");
+        if (Session.getUserId() != null) SendMessageTask.sendMessageAsync(this, JsonUtils.announceConnection(Session.getUserId(), false));
+        Session.setUser(null);
+        Utils.writeCredentials(this, null, null);
+
         Intent loginIntent = new Intent(this, LoginActivity.class);
         startActivity(loginIntent);
     }
@@ -202,6 +206,19 @@ public class MainActivity extends AppCompatActivity {
                     myChatDataset.addAll(Arrays.asList(JsonUtils.listOfChatsJsonToUsers(json)));
                     mChatsAdapter.notifyDataSetChanged();
                     currentUser.setConnected(true);
+
+                } else if ("announceConnection".equals(json.getString("type"))) {
+                    boolean connection = json.getBoolean("connection");
+                    String userId = json.getString("userId");
+                    for (int i = 0; i < myUserDataset.size(); i++) {
+                        User u = myUserDataset.get(i);
+                        if (u.getId().equals(userId)) {
+                            if (u.isConnected() != connection) {
+                                u.setConnected(connection);
+                                mUsersAdapter.notifyItemChanged(i);
+                            }
+                        }
+                    }
 
                 }
             } catch (JSONException e) {

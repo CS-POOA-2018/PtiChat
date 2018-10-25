@@ -20,7 +20,10 @@ public class ReceivedMessageHandler implements Runnable {
 
     private void acceptUserLogin(User user) {
         mSocketServerConnection.sendMessage(JsonUtils.loginAcceptanceJSON(user, true, ""));
-        StorageSingleton.getInstance().getConnectionsManager().registerUserInSocket(mSocketServerConnection, user.getId());
+
+        ConnectionsManager cm = StorageSingleton.getInstance().getConnectionsManager();
+        cm.registerUserInSocket(mSocketServerConnection, user.getId());
+        cm.sendMessageToAllConnectedUsers(JsonUtils.announceConnection(user.getId(), true));
     }
 
     private void rejectUserLogin(User user, String message) {
@@ -157,7 +160,14 @@ public class ReceivedMessageHandler implements Runnable {
 
             } else if ("announceConnection".equals(messageType)) {
                 String userId = json.getString("userId");
-                StorageSingleton.getInstance().getConnectionsManager().registerUserInSocket(mSocketServerConnection, userId);
+                ConnectionsManager cm = StorageSingleton.getInstance().getConnectionsManager();
+                if (json.getBoolean("connection")) {
+                    cm.registerUserInSocket(mSocketServerConnection, userId);
+                    cm.sendMessageToAllConnectedUsers(JsonUtils.announceConnection(userId, true));
+                } else {
+                    cm.unregisterUserInSocket(mSocketServerConnection, userId);
+                    cm.sendMessageToAllConnectedUsers(JsonUtils.announceConnection(userId, false));
+                }
 
             } else if ("justText".equals(messageType)) {
                 String content = json.getString("content");

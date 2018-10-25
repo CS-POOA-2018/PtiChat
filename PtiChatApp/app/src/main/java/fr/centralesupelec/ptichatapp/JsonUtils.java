@@ -208,11 +208,12 @@ public class JsonUtils {
         return toSend;
     }
 
-    public static JSONObject announceConnection(String userId) {
+    public static JSONObject announceConnection(String userId, boolean connection) {
         JSONObject toSend = null;
         try {
             toSend = new JSONObject();
             toSend.put("type", "announceConnection");
+            toSend.put("connection", connection);
             toSend.put("userId", userId);
         } catch (JSONException e) {
             Log.e("JUe", "Could not make JSON: " + e.getMessage());

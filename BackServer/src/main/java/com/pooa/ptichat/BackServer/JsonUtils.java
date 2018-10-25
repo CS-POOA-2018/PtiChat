@@ -120,6 +120,14 @@ public class JsonUtils {
         return json;
     }
 
+    public static JSONObject announceConnection(String userId, boolean connection) {
+        JSONObject json = new JSONObject();
+        json.put("type", "announceConnection");
+        json.put("connection", connection);
+        json.put("userId", userId);
+        return json;
+    }
+
     public static Chat jsonToChat(JSONObject json) throws JSONException {
         Chat c = new Chat(json.getString("chatName"));
         JSONArray usersJsonArray = new JSONArray(json.getString("users"));
