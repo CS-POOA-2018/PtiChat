@@ -54,7 +54,7 @@ public abstract class StorageTests {
         u0.setPseudo("Piplouf");
         mStorage.editUser(u0);
         User newU0 = mStorage.getUser(u0.getId());
-        assert u0.getPseudo() == newU0.getPseudo();
+        assert u0.getPseudo().equals(newU0.getPseudo());
 
         mStorage.removeUser(u0.getId());
         User[] userArray2 = mStorage.listUsers();
