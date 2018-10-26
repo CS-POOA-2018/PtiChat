@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
+    android:id = "@+id/main"
     android:focusable="true"
     android:focusableInTouchMode="true"
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -27,13 +28,15 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
-        android:text="Garfield"
+        android:background="@android:color/transparent"
+        android:hint="@string/username"
+        android:inputType="text"
         android:textSize="24sp"
         android:textStyle="normal|bold"
+        android:imeOptions="actionDone"
         app:layout_constraintStart_toEndOf="@+id/mainAvatar"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Garfield"
-        android:background="@android:color/transparent" />
+        tools:text="Garfield" />
 
     <TextView
         android:id="@+id/mainIsOnline"
@@ -41,7 +44,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="36dp"
-        android:text="(en ligne)"
         android:textSize="18sp"
         app:layout_constraintStart_toEndOf="@+id/mainName"
         app:layout_constraintTop_toTopOf="parent"
@@ -53,11 +55,14 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="Tapez votre message perso"
+        android:background="@android:color/transparent"
+        android:hint="@string/status"
+        android:inputType="text"
+        android:text="@string/status"
+        android:imeOptions="actionDone"
         app:layout_constraintStart_toEndOf="@+id/mainAvatar"
         app:layout_constraintTop_toBottomOf="@+id/mainName"
-        tools:text="Tapez votre message perso"
-        android:background="@android:color/transparent" />
+        tools:text="@string/status" />
 
     <View
         android:id="@+id/greyLine"
@@ -70,11 +75,7 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/mainContactView"
         android:layout_width="0dp"
-        android:layout_height="128dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_height="144dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/greyLine" />
@@ -83,7 +84,6 @@
         android:id="@+id/greyLine2"
         android:layout_width="fill_parent"
         android:layout_height="2dp"
-        android:layout_marginTop="16dp"
         android:background="#c0c0c0"
         app:layout_constraintTop_toBottomOf="@+id/mainContactView" />
 
@@ -91,10 +91,6 @@
         android:id="@+id/mainChatView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -110,7 +106,7 @@
         android:layout_marginEnd="8dp"
         android:minHeight="0dp"
         android:onClick="onLogout"
-        android:text="Logout"
+        android:text="@string/logout"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textSize="8sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -129,30 +125,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_chat_24dp"
         android:focusable="true" />
-
-    <!--TEMP SOCKET-->
-    <!--<Button-->
-        <!--android:id="@+id/socketTempPlopButton2"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginBottom="16dp"-->
-        <!--android:layout_marginEnd="16dp"-->
-        <!--android:onClick="onPlopButtonClicked2"-->
-        <!--android:text="Plop"-->
-        <!--app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--app:layout_constraintEnd_toEndOf="parent" />-->
-
-    <!--<TextView-->
-        <!--android:id="@+id/socketTempTextView2"-->
-        <!--android:layout_width="0dp"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginBottom="16dp"-->
-        <!--android:layout_marginEnd="16dp"-->
-        <!--android:layout_marginStart="16dp"-->
-        <!--android:text="Socket debug text"-->
-        <!--app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--app:layout_constraintEnd_toEndOf="parent"-->
-        <!--app:layout_constraintStart_toStartOf="parent" />-->
-    <!--END TEMP SOCKET-->
 
 </android.support.constraint.ConstraintLayout>

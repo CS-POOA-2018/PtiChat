@@ -1,5 +1,6 @@
 package fr.centralesupelec.ptichatapp;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,8 +13,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setupUI(findViewById(R.id.main));
 
         // Register the receiver for new incoming message
         registerNewBroadcastReceiver();
@@ -100,6 +107,9 @@ public class MainActivity extends AppCompatActivity {
         myChatDataset.add(new Chat("id000", "First Chat"));
         myChatDataset.add(new Chat("id001", "Second Chat"));
         mChatsAdapter.notifyDataSetChanged();
+
+        // set up the listeners
+        setupEnterListener(this);
     }
 
     public void onPause() {
@@ -287,6 +297,59 @@ public class MainActivity extends AppCompatActivity {
                 }
             } catch (JSONException e) {
                 Log.e("MAe", "🆘 Could not parse message as JSON");
+            }
+        }
+    }
+
+    /** The Pseudo and Status input will listen for the Enter key, and try to update the user data */
+    public void setupEnterListener(final Activity activity) {
+        TextView.OnEditorActionListener enterListener = new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean pressedEnter = actionId == EditorInfo.IME_ACTION_SEND || actionId == EditorInfo.IME_ACTION_DONE;
+                if (event != null) {
+                    pressedEnter = pressedEnter || (event.getKeyCode() == KeyEvent.KEYCODE_ENTER
+                            && event.getAction() == KeyEvent.ACTION_DOWN);
+                }
+                if (pressedEnter) {
+                    Log.w("PIZZA", "Hello");
+                    hideSoftKeyboard(activity);
+                    findViewById(R.id.main).requestFocus();
+                    return true;
+                }
+                return false;
+            }
+        };
+        userNameTV.setOnEditorActionListener(enterListener);
+        userStatusTV.setOnEditorActionListener(enterListener);
+        activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+    }
+
+    public static void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+    }
+
+    /** Sets a touch listener on every view of the main activity that isn't an EditText, using recursion */
+    public void setupUI(View view) {
+        // Set up touch listener for non-text box views to hide keyboard.
+        if (!(view instanceof EditText)) {
+            final Activity activity = this;
+            view.setOnTouchListener(new TextView.OnTouchListener() {
+                public boolean onTouch(View v, MotionEvent event) {
+                    Log.w("PIZZA", "Touchy !");
+                    hideSoftKeyboard(activity);
+                    v.requestFocus();
+                    return false;
+                }
+            });
+        }
+
+        // If a layout container, iterate over children and seed recursion.
+        if (view instanceof ViewGroup) {
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+                View innerView = ((ViewGroup) view).getChildAt(i);
+                setupUI(innerView);
             }
         }
     }

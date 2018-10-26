@@ -2,11 +2,14 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/chatRow"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="3dp">
+    android:padding="3dp"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp">
 
     <ImageView
         android:id="@+id/chatIcon"
@@ -14,6 +17,7 @@
         android:layout_height="24dp"
         android:layout_marginTop="3dp"
         android:layout_marginBottom="3dp"
+        android:contentDescription="@string/avatar"
         app:srcCompat="@drawable/ic_chat_24dp" />
 
     <TextView
@@ -21,7 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="30dp"
         android:layout_marginStart="10dp"
-        app:layout_constraintStart_toEndOf="@+id/iconContact"
         android:gravity="center_vertical"
-        android:text="This is a chat" />
+        app:layout_constraintStart_toEndOf="@+id/iconContact"
+        tools:text="This is a chat" />
 </LinearLayout>
