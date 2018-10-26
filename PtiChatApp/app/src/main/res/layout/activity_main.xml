@@ -70,11 +70,7 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/mainContactView"
         android:layout_width="0dp"
-        android:layout_height="128dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_height="144dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/greyLine" />
@@ -83,7 +79,6 @@
         android:id="@+id/greyLine2"
         android:layout_width="fill_parent"
         android:layout_height="2dp"
-        android:layout_marginTop="16dp"
         android:background="#c0c0c0"
         app:layout_constraintTop_toBottomOf="@+id/mainContactView" />
 
@@ -91,10 +86,6 @@
         android:id="@+id/mainChatView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -116,29 +107,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!--TEMP SOCKET-->
-    <!--<Button-->
-        <!--android:id="@+id/socketTempPlopButton2"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginBottom="16dp"-->
-        <!--android:layout_marginEnd="16dp"-->
-        <!--android:onClick="onPlopButtonClicked2"-->
-        <!--android:text="Plop"-->
-        <!--app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--app:layout_constraintEnd_toEndOf="parent" />-->
-
-    <!--<TextView-->
-        <!--android:id="@+id/socketTempTextView2"-->
-        <!--android:layout_width="0dp"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginBottom="16dp"-->
-        <!--android:layout_marginEnd="16dp"-->
-        <!--android:layout_marginStart="16dp"-->
-        <!--android:text="Socket debug text"-->
-        <!--app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--app:layout_constraintEnd_toEndOf="parent"-->
-        <!--app:layout_constraintStart_toStartOf="parent" />-->
-    <!--END TEMP SOCKET-->
 
 </android.support.constraint.ConstraintLayout>
