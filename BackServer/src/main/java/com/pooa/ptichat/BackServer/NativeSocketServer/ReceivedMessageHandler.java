@@ -9,6 +9,8 @@ import com.pooa.ptichat.BackServer.StorageSingleton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
+
 public class ReceivedMessageHandler implements Runnable {
     private String mMessage;
     private SocketServerConnection mSocketServerConnection;
@@ -19,6 +21,7 @@ public class ReceivedMessageHandler implements Runnable {
     }
 
     private void acceptUserLogin(User user) {
+        user.setConnected(true);
         mSocketServerConnection.sendMessage(JsonUtils.loginAcceptanceJSON(user, true, ""));
 
         ConnectionsManager cm = StorageSingleton.getInstance().getConnectionsManager();
@@ -83,9 +86,12 @@ public class ReceivedMessageHandler implements Runnable {
 
                 IStorage storage = StorageSingleton.getInstance().getStorage();
                 storage.addChat(newChat);
-                for (String uid : JsonUtils.newChatJsonToUserIdList(json)) {
+                List<String> userIdsInChat = JsonUtils.newChatJsonToUserIdList(json);
+                for (String uid : userIdsInChat) {
                     storage.userJoinsChat(uid, chatId);
                 }
+                String userId = userIdsInChat.get(0);
+                mSocketServerConnection.sendMessage(JsonUtils.sendListOfChatsJson(userId, storage.listChatsOfUser(userId)));
 
             } else if ("editUser".equals(messageType)) {
                 User newUser = JsonUtils.jsonToUser(json);
