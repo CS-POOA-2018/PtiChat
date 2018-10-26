@@ -34,9 +34,9 @@ public class SocketClient {
     }
 
     private void close() {
-        mScc.close();
+        if (mScc != null) { mScc.close(); }
         try {
-            mSocket.close();
+            if (mSocket != null) { mSocket.close(); }
         } catch (IOException e) {
             Log.w("SCc", "❗️Could not close mSocket: " + e.getMessage());
         }
