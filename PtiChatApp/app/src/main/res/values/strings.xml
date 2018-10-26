@@ -17,7 +17,7 @@
     <!-- Descriptions -->
     <string name="avatar">Cute image of a cat</string>
     <string name="status">Tapez votre message ici</string>
-    <string name="message">Tapez votre message ici pour l'envoyer</string>
+    <string name="message">Tapez votre message ici pour l\'envoyer</string>
 
     <!-- Other -->
     <string name="says">says :</string>
