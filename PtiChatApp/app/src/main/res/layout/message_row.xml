@@ -28,9 +28,8 @@
             android:layout_height="match_parent"
             android:layout_marginStart="5dp"
             android:gravity="center_vertical"
-            android:text="Someone"
-            tools:text="Someone"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            tools:text="Someone" />
 
         <TextView
             android:id="@+id/saysText"
@@ -38,8 +37,7 @@
             android:layout_height="match_parent"
             android:layout_marginStart="5dp"
             android:gravity="center_vertical"
-            android:text="says :"
-            tools:text="says :"
+            android:text="@string/says"
             android:textSize="12sp" />
 
     </LinearLayout>
@@ -49,7 +47,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
-        android:text="TextView"
         tools:text="TextView" />
 
 </LinearLayout>

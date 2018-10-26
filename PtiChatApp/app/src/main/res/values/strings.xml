@@ -1,10 +1,23 @@
 <resources>
+    <!-- Titles -->
     <string name="app_name">PtiChatApp</string>
-    <string name="connexion">Connexion</string>
+
+    <!-- Labels -->
     <string name="username">Username</string>
     <string name="password">Password</string>
-    <string name="avatar">Cute image of a cat</string>
     <string name="hostname">HostName</string>
     <string name="port">Port</string>
+
+    <!-- Buttons -->
+    <string name="connexion">Connexion</string>
     <string name="ok">OK</string>
+    <string name="logout">Logout</string>
+    <string name="send">Send</string>
+
+    <!-- Descriptions -->
+    <string name="avatar">Cute image of a cat</string>
+    <string name="status">Tapez votre message ici</string>
+
+    <!-- Other -->
+    <string name="says">says :</string>
 </resources>

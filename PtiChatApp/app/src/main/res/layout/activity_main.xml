@@ -27,13 +27,13 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
-        android:text="Garfield"
+        android:background="@android:color/transparent"
+        android:inputType="text"
         android:textSize="24sp"
         android:textStyle="normal|bold"
         app:layout_constraintStart_toEndOf="@+id/mainAvatar"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Garfield"
-        android:background="@android:color/transparent" />
+        tools:text="Garfield" />
 
     <TextView
         android:id="@+id/mainIsOnline"
@@ -41,7 +41,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="36dp"
-        android:text="(en ligne)"
         android:textSize="18sp"
         app:layout_constraintStart_toEndOf="@+id/mainName"
         app:layout_constraintTop_toTopOf="parent"
@@ -53,11 +52,12 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="Tapez votre message perso"
+        android:background="@android:color/transparent"
+        android:inputType="text"
+        android:text="@string/status"
         app:layout_constraintStart_toEndOf="@+id/mainAvatar"
         app:layout_constraintTop_toBottomOf="@+id/mainName"
-        tools:text="Tapez votre message perso"
-        android:background="@android:color/transparent" />
+        tools:text="@string/status" />
 
     <View
         android:id="@+id/greyLine"
@@ -110,7 +110,7 @@
         android:layout_marginEnd="8dp"
         android:minHeight="0dp"
         android:onClick="onLogout"
-        android:text="Logout"
+        android:text="@string/logout"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textSize="8sp"
         app:layout_constraintEnd_toEndOf="parent"
