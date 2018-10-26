@@ -2,14 +2,19 @@ package fr.centralesupelec.ptichatapp;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -142,6 +147,64 @@ public class MainActivity extends AppCompatActivity {
         Intent loginIntent = new Intent(this, LoginActivity.class);
         startActivity(loginIntent);
         finish();
+    }
+
+    public void onNewChatPressed(View view) {
+        // Switch activity to Login
+        Log.i("MAc", "👈 Clicked on New Chat button");
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+        final EditText chatNameEditText = new EditText(MainActivity.this);
+        chatNameEditText.setHint("Chat name...");
+        chatNameEditText.setInputType(InputType.TYPE_CLASS_TEXT);
+        chatNameEditText.setMaxLines(1);
+        chatNameEditText.requestFocus();
+        chatNameEditText.setImeOptions(EditorInfo.IME_ACTION_SEND);
+
+        final User[] users = myUserDataset.toArray(new User[0]);
+        List<String> userInfoList = new ArrayList<>();
+        for (User u : users) {
+            userInfoList.add(u.getId() + " - " + u.getPseudo());
+        }
+        final String[] userInfo = userInfoList.toArray(new String[0]);
+        final boolean[] usersChecked = new boolean[userInfo.length];
+        final Context maContext = this;
+
+        alertDialogBuilder.setIcon(R.drawable.ic_chat_24dp);
+        alertDialogBuilder.setTitle("Select contacts to add");
+        alertDialogBuilder.setView(chatNameEditText);
+        alertDialogBuilder.setMultiChoiceItems(userInfo, usersChecked, new DialogInterface.OnMultiChoiceClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which, boolean isChecked) { }
+        });
+        alertDialogBuilder.setCancelable(false);
+        alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                List<String> selectedUserIds = new ArrayList<>();
+                selectedUserIds.add(currentUser.getId());
+                boolean atLeastOne = false;
+                for (int i = 0; i < usersChecked.length; i++) {
+                    if (usersChecked[i]) {
+                        selectedUserIds.add(users[i].getId());
+                        atLeastOne = true;
+                    }
+                }
+                if (!atLeastOne) {
+                    Toast.makeText(getApplicationContext(), "You need to add at least one person", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                JSONObject toSend = JsonUtils.createNewChat(chatNameEditText.getText().toString(), selectedUserIds.toArray(new String[0]));
+                SendMessageTask.sendMessageAsync(maContext, toSend);
+            }
+        });
+
+        alertDialogBuilder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) { }
+        });
+        AlertDialog dialog = alertDialogBuilder.create();
+        dialog.show();
     }
 
     public void onSelectContact(String contactId) {
