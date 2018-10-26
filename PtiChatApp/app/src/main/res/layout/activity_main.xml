@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
+    android:id = "@+id/main"
     android:focusable="true"
     android:focusableInTouchMode="true"
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -32,6 +33,7 @@
         android:inputType="text"
         android:textSize="24sp"
         android:textStyle="normal|bold"
+        android:imeOptions="actionDone"
         app:layout_constraintStart_toEndOf="@+id/mainAvatar"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Garfield" />
@@ -57,6 +59,7 @@
         android:hint="@string/status"
         android:inputType="text"
         android:text="@string/status"
+        android:imeOptions="actionDone"
         app:layout_constraintStart_toEndOf="@+id/mainAvatar"
         app:layout_constraintTop_toBottomOf="@+id/mainName"
         tools:text="@string/status" />
