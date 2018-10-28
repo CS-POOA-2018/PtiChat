@@ -38,24 +38,19 @@ import fr.centralesupelec.ptichatapp.PODS.User;
 
 public class MainActivity extends AppCompatActivity {
 
-    private RecyclerView mUsersRecyclerView;
     private RecyclerView.Adapter mUsersAdapter;
-    private RecyclerView.LayoutManager mUsersLayoutManager;
-
-    private RecyclerView mChatsRecyclerView;
     private RecyclerView.Adapter mChatsAdapter;
-    private RecyclerView.LayoutManager mChatsLayoutManager;
 
     private TextView userNameTV;
     private TextView userStatusTV;
     private TextView userIsOnlineTV;
 
-    private User currentUser;
+    private User mCurrentUser;
 
     private final NewMessageReceiver newMessageReceiver = new MainActivity.NewMessageReceiver();
 
-    private List<User> myUserDataset = new ArrayList<>();
-    private List<Chat> myChatDataset = new ArrayList<>();
+    private List<User> mUserDataset = new ArrayList<>();
+    private List<Chat> mChatDataset = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,28 +62,28 @@ public class MainActivity extends AppCompatActivity {
         registerNewBroadcastReceiver();
 
         // Register UI elements not to search them each time
-        mUsersRecyclerView = findViewById(R.id.mainContactView);
-        mChatsRecyclerView = findViewById(R.id.mainChatView);
+        RecyclerView usersRecyclerView = findViewById(R.id.mainContactView);
+        RecyclerView chatsRecyclerView = findViewById(R.id.mainChatView);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
-        mUsersRecyclerView.setHasFixedSize(true);
-        mChatsRecyclerView.setHasFixedSize(true);
+        usersRecyclerView.setHasFixedSize(true);
+        chatsRecyclerView.setHasFixedSize(true);
 
         // use a linear layout manager
-        mUsersLayoutManager = new LinearLayoutManager(this);
-        mUsersRecyclerView.setLayoutManager(mUsersLayoutManager);
+        RecyclerView.LayoutManager usersLayoutManager = new LinearLayoutManager(this);
+        usersRecyclerView.setLayoutManager(usersLayoutManager);
 
-        mChatsLayoutManager = new LinearLayoutManager(this);
-        mChatsRecyclerView.setLayoutManager(mChatsLayoutManager);
+        RecyclerView.LayoutManager chatsLayoutManager = new LinearLayoutManager(this);
+        chatsRecyclerView.setLayoutManager(chatsLayoutManager);
 
         // specify an mUsersAdapter
-        mUsersAdapter = new ContactAdapter(myUserDataset, this);
-        mUsersRecyclerView.setAdapter(mUsersAdapter);
+        mUsersAdapter = new ContactAdapter(mUserDataset, this);
+        usersRecyclerView.setAdapter(mUsersAdapter);
 
         // specify an mChatsAdapter
-        mChatsAdapter = new ChatAdapter(myChatDataset, this);
-        mChatsRecyclerView.setAdapter(mChatsAdapter);
+        mChatsAdapter = new ChatAdapter(mChatDataset, this);
+        chatsRecyclerView.setAdapter(mChatsAdapter);
 
         // get the textViews
         userNameTV = findViewById(R.id.mainName);
@@ -96,14 +91,14 @@ public class MainActivity extends AppCompatActivity {
         userIsOnlineTV = findViewById(R.id.mainIsOnline);
 
         // update user
-        currentUser = Session.getUser();
+        mCurrentUser = Session.getUser();
         Log.i("MAu", "😺 Current user: " + Session.getUser());
         updateUser();
 
-        myUserDataset.add(new User("not_a_user", "Loading users...", "", "", false));
+        mUserDataset.add(new User("not_a_user", "Loading users...", "", "", false));
         mUsersAdapter.notifyDataSetChanged();
 
-        myChatDataset.add(new Chat("not_a_chat", "Loading chats..."));
+        mChatDataset.add(new Chat("not_a_chat", "Loading chats..."));
         mChatsAdapter.notifyDataSetChanged();
 
         // set up the listeners
@@ -117,16 +112,16 @@ public class MainActivity extends AppCompatActivity {
 
     public void onResume() {
         super.onResume();
-        currentUser = Session.getUser();
+        mCurrentUser = Session.getUser();
         registerNewBroadcastReceiver();
         SendMessageTask.sendMessageAsync(this, JsonUtils.askForListOfUsers());
         SendMessageTask.sendMessageAsync(this, JsonUtils.askForListOfChats(Session.getUserId()));
     }
 
     private void updateUser() {
-        updateName(currentUser.getPseudo());
-        updateStatus(currentUser.getStatus());
-        updateOnline(currentUser.isConnected());
+        updateName(mCurrentUser.getPseudo());
+        updateStatus(mCurrentUser.getStatus());
+        updateOnline(mCurrentUser.isConnected());
     }
 
     private void updateName(String pseudo) {
@@ -167,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
         chatNameEditText.setMaxLines(1);
         chatNameEditText.setImeOptions(EditorInfo.IME_ACTION_SEND);
 
-        final User[] users = myUserDataset.toArray(new User[0]);
+        final User[] users = mUserDataset.toArray(new User[0]);
         List<String> userInfoList = new ArrayList<>();
         for (User u : users) {
             userInfoList.add(u.getId() + " - " + u.getPseudo());
@@ -188,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 List<String> selectedUserIds = new ArrayList<>();
-                selectedUserIds.add(currentUser.getId());
+                selectedUserIds.add(mCurrentUser.getId());
                 boolean atLeastOne = false;
                 for (int i = 0; i < usersChecked.length; i++) {
                     if (usersChecked[i]) {
@@ -261,27 +256,27 @@ public class MainActivity extends AppCompatActivity {
 
                 } else if ("listOfUsers".equals(json.getString("type"))) {
 //                    Log.i("MAu", "🗒 Got list of users message");
-                    myUserDataset.clear();
+                    mUserDataset.clear();
                     for (User u : JsonUtils.listOfUsersJsonToUsers(json)) {
                         if (!u.getId().equals(Session.getUserId())) {
-                            myUserDataset.add(u);
+                            mUserDataset.add(u);
                         }
                     }
                     mUsersAdapter.notifyDataSetChanged();
-                    currentUser.setConnected(true);
+                    mCurrentUser.setConnected(true);
 
                 } else if ("listOfChats".equals(json.getString("type"))) {
 //                    Log.i("MAc", "🗒 Got list of chats message");
-                    myChatDataset.clear();
-                    myChatDataset.addAll(Arrays.asList(JsonUtils.listOfChatsJsonToUsers(json)));
+                    mChatDataset.clear();
+                    mChatDataset.addAll(Arrays.asList(JsonUtils.listOfChatsJsonToUsers(json)));
                     mChatsAdapter.notifyDataSetChanged();
-                    currentUser.setConnected(true);
+                    mCurrentUser.setConnected(true);
 
                 } else if ("announceConnection".equals(json.getString("type"))) {
                     boolean connection = json.getBoolean("connection");
                     String userId = json.getString("userId");
-                    for (int i = 0; i < myUserDataset.size(); i++) {
-                        User u = myUserDataset.get(i);
+                    for (int i = 0; i < mUserDataset.size(); i++) {
+                        User u = mUserDataset.get(i);
                         if (u.getId().equals(userId)) {
                             if (u.isConnected() != connection) {
                                 u.setConnected(connection);
