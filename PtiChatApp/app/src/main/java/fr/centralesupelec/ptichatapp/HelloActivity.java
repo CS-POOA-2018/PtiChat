@@ -60,6 +60,13 @@ public class HelloActivity extends AppCompatActivity {
         unregisterReceiver(newMessageReceiver);
     }
 
+    public void onDestroy() {
+        super.onDestroy();
+        try {
+            unregisterReceiver(newMessageReceiver);
+        } catch (IllegalArgumentException ignored) { }
+    }
+
     public void onResume() {
         super.onResume();
         registerNewBroadcastReceiver();
