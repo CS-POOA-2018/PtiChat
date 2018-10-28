@@ -100,12 +100,10 @@ public class MainActivity extends AppCompatActivity {
         Log.i("MAu", "😺 Current user: " + Session.getUser());
         updateUser();
 
-        myUserDataset.add(new User("flx", "Felix", "pic", "Give me food", true));
-        myUserDataset.add(new User("rwl", "Raoul", "pic", "I like fish", false));
+        myUserDataset.add(new User("not_a_user", "Loading users...", "", "", false));
         mUsersAdapter.notifyDataSetChanged();
 
-        myChatDataset.add(new Chat("id000", "First Chat"));
-        myChatDataset.add(new Chat("id001", "Second Chat"));
+        myChatDataset.add(new Chat("not_a_chat", "Loading chats..."));
         mChatsAdapter.notifyDataSetChanged();
 
         // set up the listeners
@@ -163,12 +161,10 @@ public class MainActivity extends AppCompatActivity {
         // Switch activity to Login
         Log.i("MAc", "👈 Clicked on New Chat button");
 
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
         final EditText chatNameEditText = new EditText(MainActivity.this);
         chatNameEditText.setHint("Chat name...");
         chatNameEditText.setInputType(InputType.TYPE_CLASS_TEXT);
         chatNameEditText.setMaxLines(1);
-        chatNameEditText.requestFocus();
         chatNameEditText.setImeOptions(EditorInfo.IME_ACTION_SEND);
 
         final User[] users = myUserDataset.toArray(new User[0]);
@@ -180,6 +176,7 @@ public class MainActivity extends AppCompatActivity {
         final boolean[] usersChecked = new boolean[userInfo.length];
         final Context maContext = this;
 
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
         alertDialogBuilder.setIcon(R.drawable.ic_chat_24dp);
         alertDialogBuilder.setTitle("Select contacts to add");
         alertDialogBuilder.setView(chatNameEditText);
@@ -187,7 +184,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which, boolean isChecked) { }
         });
-        alertDialogBuilder.setCancelable(false);
         alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -208,13 +204,13 @@ public class MainActivity extends AppCompatActivity {
                 SendMessageTask.sendMessageAsync(maContext, toSend);
             }
         });
-
         alertDialogBuilder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) { }
         });
         AlertDialog dialog = alertDialogBuilder.create();
         dialog.show();
+        chatNameEditText.requestFocus();
     }
 
     public void onSelectContact(String contactId) {
