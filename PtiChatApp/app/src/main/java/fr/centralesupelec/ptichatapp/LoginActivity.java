@@ -1,6 +1,5 @@
 package fr.centralesupelec.ptichatapp;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +10,6 @@ import android.util.Log;
 import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -49,6 +47,13 @@ public class LoginActivity extends AppCompatActivity {
         hostNameField = findViewById(R.id.hostNameEditText);
         hostPortField = findViewById(R.id.hostPortEditText);
 
+        // Fill in login EditText objects
+        Pair<String, String> credentials = Utils.getCredentials(this);
+        if (credentials.first != null && credentials.second != null) {
+            nameField.setText(credentials.first);
+            passwordField.setText(credentials.second);
+        }
+
         // Fill in host info EditText objects
         Pair<String, Integer> hostInfo = Utils.getHostInfo(this);
         hostNameField.setText(hostInfo.first);
@@ -63,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         // Input password listens for the Enter key
-        setupEnterListener(this);
+        setupEnterListener();
     }
 
     public void onPause() {
@@ -157,7 +162,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /** The password input will listen for the Enter key, and try to connect if the user uses it */
-    public void setupEnterListener(Activity activity) {
+    public void setupEnterListener() {
         TextView.OnEditorActionListener enterListener = new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -174,7 +179,5 @@ public class LoginActivity extends AppCompatActivity {
             }
         };
         passwordField.setOnEditorActionListener(enterListener);
-
-        // activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     }
 }

@@ -19,7 +19,6 @@ import fr.centralesupelec.ptichatapp.PODS.User;
 
 public class HelloActivity extends AppCompatActivity {
 
-
     private final NewMessageReceiver newMessageReceiver = new NewMessageReceiver();
     private Thread running = new Thread(new Waiter(this));
 
@@ -41,14 +40,14 @@ public class HelloActivity extends AppCompatActivity {
 
         private HelloActivity mHelloActivity;
 
-        public Waiter(HelloActivity ha) {
+        private Waiter(HelloActivity ha) {
             mHelloActivity = ha;
         }
 
         @Override
         public void run() {
             try {
-                Thread.sleep(5000);
+                Thread.sleep(3000);
                 onFailedLogin(mHelloActivity);
             } catch (InterruptedException e) {
                 Log.i("HAi", "HelloActivity sleep interrupted");
@@ -70,7 +69,7 @@ public class HelloActivity extends AppCompatActivity {
         // Get login and password
         Pair<String, String> credentials = Utils.getCredentials(this);
 
-        if (credentials.first == null || credentials.second == null) {
+        if (credentials.first == null || credentials.second == null || credentials.first.isEmpty() || credentials.second.isEmpty()) {
             onFailedLogin(this);
         } else {
             // Send User connection to Backend
