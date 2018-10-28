@@ -9,20 +9,21 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center">
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/avatarLogin"
                 android:layout_width="128dp"
                 android:layout_height="128dp"
-                android:layout_marginBottom="24dp"
                 android:layout_marginTop="48dp"
+                android:layout_marginBottom="24dp"
                 android:contentDescription="@string/avatar"
                 app:layout_constraintBottom_toTopOf="@+id/pseudoLogin"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -38,6 +39,7 @@
                 android:hint="@string/username"
                 android:imeOptions="actionNext"
                 android:inputType="textPersonName"
+                android:singleLine="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -53,6 +55,7 @@
                 android:hint="@string/password"
                 android:imeOptions="actionDone"
                 android:inputType="textPassword"
+                android:singleLine="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/pseudoLogin" />
@@ -67,48 +70,58 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/passwordLogin" />
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginTop="48dp">
-            <EditText
-                android:id="@+id/hostNameEditText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginBottom="16dp"
-                android:ems="8"
-                android:hint="@string/hostname"
-                android:imeOptions="actionNext"
-                android:inputType="textNoSuggestions"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
 
-            <EditText
-                android:id="@+id/hostPortEditText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginBottom="16dp"
-                android:ems="3"
-                android:hint="@string/port"
-                android:imeOptions="actionDone"
-                android:inputType="number"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/hostNameEditText" />
+            <View
+                android:layout_weight="1"
+                android:layout_height="0sp"
+                android:layout_width="fill_parent" />
 
-            <Button
-                android:id="@+id/hostNameButton"
-                style="@style/Widget.AppCompat.Button.Small"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginBottom="16dp"
-                android:onClick="onHostNameChanged"
-                android:text="@string/ok"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/hostPortEditText" />
-        </LinearLayout>
+                android:layout_marginBottom="8dp">
+
+                <EditText
+                    android:id="@+id/hostNameEditText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:ems="12"
+                    android:hint="@string/hostname"
+                    android:imeOptions="actionNext"
+                    android:inputType="textNoSuggestions"
+                    android:singleLine="true"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <EditText
+                    android:id="@+id/hostPortEditText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:ems="4"
+                    android:hint="@string/port"
+                    android:imeOptions="actionDone"
+                    android:inputType="number"
+                    android:singleLine="true"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/hostNameEditText" />
+
+                <Button
+                    android:id="@+id/hostNameButton"
+                    style="@style/Widget.AppCompat.Button.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:onClick="onHostNameChanged"
+                    android:text="@string/ok"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/hostPortEditText" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 
