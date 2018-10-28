@@ -76,7 +76,16 @@ public class ChatActivity extends AppCompatActivity {
         mMessagesAdapter = new MessageAdapter(myDataset);
         mMessagesRecyclerView.setAdapter(mMessagesAdapter);
 
-        setupEnterListener(this, newMessage);
+        // Set up listener for layout size change (keyboard appears)
+        mMessagesRecyclerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right,int bottom, int oldLeft, int oldTop,int oldRight, int oldBottom) {
+                mMessagesRecyclerView.scrollToPosition(myDataset.size()-1);
+            }
+        });
+
+        // Set up listener for enter key
+        setupEnterListener(newMessage);
     }
 
     public void onPause() {
