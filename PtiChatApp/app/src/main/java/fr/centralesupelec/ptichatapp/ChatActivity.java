@@ -1,6 +1,5 @@
 package fr.centralesupelec.ptichatapp;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +11,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -34,7 +32,6 @@ public class ChatActivity extends AppCompatActivity {
 
     private RecyclerView mMessagesRecyclerView;
     private RecyclerView.Adapter mMessagesAdapter;
-    private RecyclerView.LayoutManager mMessagesLayoutManager;
 
     private boolean mIsPrivateChat;
     private String mChatId;
@@ -65,7 +62,6 @@ public class ChatActivity extends AppCompatActivity {
         applyChatInfoFromIntent();
 
         newMessage = findViewById(R.id.newMessage);
-
         mMessagesRecyclerView = findViewById(R.id.chatView);
 
         // use this setting to improve performance if you know that changes
@@ -73,8 +69,8 @@ public class ChatActivity extends AppCompatActivity {
         mMessagesRecyclerView.setHasFixedSize(true);
 
         // use a linear layout manager
-        mMessagesLayoutManager = new LinearLayoutManager(this);
-        mMessagesRecyclerView.setLayoutManager(mMessagesLayoutManager);
+        RecyclerView.LayoutManager messagesLayoutManager = new LinearLayoutManager(this);
+        mMessagesRecyclerView.setLayoutManager(messagesLayoutManager);
 
         // specify an adapter
         mMessagesAdapter = new MessageAdapter(myDataset);
@@ -176,7 +172,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     /** The message box will listen for the Enter key, and send the message if the user uses it */
-    public void setupEnterListener(Activity activity, EditText messageBox) {
+    public void setupEnterListener(EditText messageBox) {
         TextView.OnEditorActionListener enterListener = new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -193,7 +189,5 @@ public class ChatActivity extends AppCompatActivity {
             }
         };
         messageBox.setOnEditorActionListener(enterListener);
-
-        // activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     }
 }

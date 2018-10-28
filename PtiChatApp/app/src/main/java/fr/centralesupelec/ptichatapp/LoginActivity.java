@@ -35,7 +35,6 @@ public class LoginActivity extends AppCompatActivity {
     // TODO : this is a debug option plz remove for prod
     private boolean backIsWorking = true;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
