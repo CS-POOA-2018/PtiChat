@@ -14,9 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -41,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView.Adapter mUsersAdapter;
     private RecyclerView.Adapter mChatsAdapter;
 
+    private View mMainView;
     private TextView userNameTV;
     private TextView userStatusTV;
     private TextView userIsOnlineTV;
@@ -56,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setupUI(findViewById(R.id.main));
 
         // Register the receiver for new incoming message
         registerNewBroadcastReceiver();
@@ -64,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
         // Register UI elements not to search them each time
         RecyclerView usersRecyclerView = findViewById(R.id.mainContactView);
         RecyclerView chatsRecyclerView = findViewById(R.id.mainChatView);
+        mMainView = findViewById(R.id.main);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
@@ -303,16 +302,30 @@ public class MainActivity extends AppCompatActivity {
                             && event.getAction() == KeyEvent.ACTION_DOWN);
                 }
                 if (pressedEnter) {
-                    Log.w("PIZZA", "Hello");
-                    hideSoftKeyboard(activity);
-                    findViewById(R.id.main).requestFocus();
+                    mMainView.requestFocus();  // This will also trigger the focus change below
                     return true;
                 }
                 return false;
             }
         };
+        TextView.OnFocusChangeListener focusChangeListener = new TextView.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if (!userNameTV.hasFocus() && !userStatusTV.hasFocus()) {
+                    // Both profile edition texts have lost focus, this count as validation
+                    mMainView.requestFocus();
+                    hideSoftKeyboard(activity);
+                    // TODO do stuff when profile edition is validated
+                }
+            }
+        };
+
         userNameTV.setOnEditorActionListener(enterListener);
+        userNameTV.setOnFocusChangeListener(focusChangeListener);
+
         userStatusTV.setOnEditorActionListener(enterListener);
+        userStatusTV.setOnFocusChangeListener(focusChangeListener);
+
         activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
@@ -324,29 +337,5 @@ public class MainActivity extends AppCompatActivity {
         if (currentFocus == null) return;
 
         inputMethodManager.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
-    }
-
-    /** Sets a touch listener on every view of the main activity that isn't an EditText, using recursion */
-    public void setupUI(View view) {
-        // Set up touch listener for non-text box views to hide keyboard.
-        if (!(view instanceof EditText)) {
-            final Activity activity = this;
-            view.setOnTouchListener(new TextView.OnTouchListener() {
-                public boolean onTouch(View v, MotionEvent event) {
-                    Log.w("PIZZA", "Touchy !");
-                    hideSoftKeyboard(activity);
-                    v.requestFocus();
-                    return false;
-                }
-            });
-        }
-
-        // If a layout container, iterate over children and seed recursion.
-        if (view instanceof ViewGroup) {
-            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
-                View innerView = ((ViewGroup) view).getChildAt(i);
-                setupUI(innerView);
-            }
-        }
     }
 }
