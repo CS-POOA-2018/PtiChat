@@ -22,6 +22,7 @@ public class SocketServerConnection implements Runnable {
     }
 
     private void sendMessage(String message) {
+        System.out.println("📧 Sending message: " + message);
         mOut.println(message);
         mOut.flush();
     }
