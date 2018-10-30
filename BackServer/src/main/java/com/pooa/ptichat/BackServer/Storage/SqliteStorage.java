@@ -375,7 +375,8 @@ public class SqliteStorage implements IStorage {
 
     @Override
     public User[] listUsersInChat(String chatId) {
-        String sql = "SELECT userId, pseudo, status FROM userschats WHERE chatId = ?";
+        String sql = "SELECT DISTINCT users.userId, users.pseudo, users.status FROM users INNER JOIN userschats "
+                   + "ON users.userId = userschats.userId WHERE isPrivate = false AND userId = ?";
         Set<User> userSet = new HashSet<>();
 
         try (Connection conn = this.connect();
