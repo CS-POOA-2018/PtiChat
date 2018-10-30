@@ -109,6 +109,18 @@ public class JsonUtils {
         return toSend;
     }
 
+    public static JSONObject askForListOfChatMembers(String chatId) {
+        JSONObject toSend = null;
+        try {
+            toSend = new JSONObject();
+            toSend.put("type", "getGroupMembers");
+            toSend.put("chatId", chatId);
+        } catch (JSONException e) {
+            Log.e("JUe", "Could not make JSON: " + e.getMessage());
+        }
+        return toSend;
+    }
+
     public static JSONObject askForListOfChats(String userId) {
         JSONObject toSend = null;
         try {

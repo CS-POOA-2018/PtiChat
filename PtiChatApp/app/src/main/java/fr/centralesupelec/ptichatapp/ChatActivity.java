@@ -88,6 +88,9 @@ public class ChatActivity extends AppCompatActivity {
         mMemberAdapter = new MemberAdapter(memberDataset);
         mMemberRecyclerView.setAdapter(mMemberAdapter);
 
+        // request list of members
+        SendMessageTask.sendMessageAsync(this, JsonUtils.askForListOfChatMembers(mChatId));
+
         // set recyclerView for messages
         newMessage = findViewById(R.id.newMessage);
         mMessagesRecyclerView = findViewById(R.id.chatView);
@@ -170,7 +173,13 @@ public class ChatActivity extends AppCompatActivity {
                     Log.i("CAt", "🗒 Got justText message: " + json.getString("content"));
                     Toast.makeText(getApplicationContext(), json.getString("content"), Toast.LENGTH_LONG).show();
 
-                } else if ("listMessagesChat".equals(json.getString("type"))) {
+                } else if ("listOfChatMember".equals(json.getString("type"))) {
+                    Log.i("CAl", "🗒 Got list of members in chat");
+                    memberDataset.clear();
+                    Collections.addAll(memberDataset, JsonUtils.listOfUsersJsonToUsers(json));
+                    mMemberAdapter.notifyDataSetChanged();
+
+                } else  if ("listMessagesChat".equals(json.getString("type"))) {
                     Log.i("CAl", "🗒 Got list of messages in chat");
                     if (mChatId == null) mChatId = json.getString("chatId");
                     messageDataset.clear();
