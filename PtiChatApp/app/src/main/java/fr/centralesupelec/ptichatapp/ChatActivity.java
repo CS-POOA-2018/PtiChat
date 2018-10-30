@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
+import android.os.VibrationEffect;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,6 +17,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.os.Vibrator;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -79,8 +82,8 @@ public class ChatActivity extends AppCompatActivity {
         // Set up listener for layout size change (keyboard appears)
         mMessagesRecyclerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
-            public void onLayoutChange(View v, int left, int top, int right,int bottom, int oldLeft, int oldTop,int oldRight, int oldBottom) {
-                mMessagesRecyclerView.scrollToPosition(myDataset.size()-1);
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                mMessagesRecyclerView.scrollToPosition(myDataset.size() - 1);
             }
         });
 
@@ -123,14 +126,18 @@ public class ChatActivity extends AppCompatActivity {
         SendMessageTask.sendMessageAsync(this, JsonUtils.sendNewMessageJson(newMessage));
     }
 
-    /** The activity will listen for BROADCAST_NEW_MESSAGE messages from other classes */
+    /**
+     * The activity will listen for BROADCAST_NEW_MESSAGE messages from other classes
+     */
     private void registerNewBroadcastReceiver() {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.BROADCAST_NEW_MESSAGE);
         registerReceiver(newMessageReceiver, intentFilter);
     }
 
-    /** Receive messages from the socket interface. If login is accepted, go to main activity */
+    /**
+     * Receive messages from the socket interface. If login is accepted, go to main activity
+     */
     public class NewMessageReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -169,7 +176,6 @@ public class ChatActivity extends AppCompatActivity {
                             mMessagesAdapter.notifyItemInserted(myDataset.size() - 1);
                         }
                         mMessagesRecyclerView.scrollToPosition(myDataset.size() - 1);
-
                     } else {
                         Log.i("CAn", "🗒 Got new message in another chat");
                     }
@@ -180,7 +186,9 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
-    /** The message box will listen for the Enter key, and send the message if the user uses it */
+    /**
+     * The message box will listen for the Enter key, and send the message if the user uses it
+     */
     public void setupEnterListener(EditText messageBox) {
         TextView.OnEditorActionListener enterListener = new TextView.OnEditorActionListener() {
             @Override

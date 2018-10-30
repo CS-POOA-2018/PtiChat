@@ -99,9 +99,10 @@ public class MainActivity extends AppCompatActivity {
 
         mChatDataset.add(new Chat("not_a_chat", "Loading chats..."));
         mChatsAdapter.notifyDataSetChanged();
-
         // set up the listeners
         setupEnterListener(this);
+        Intent intent = new Intent(this, BackgroundListener.class);
+        startService(intent);
     }
 
     public void onPause() {
