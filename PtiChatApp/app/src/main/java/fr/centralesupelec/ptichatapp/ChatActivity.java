@@ -77,8 +77,16 @@ public class ChatActivity extends AppCompatActivity {
             chanImage.setImageResource(R.drawable.cat_set);
         }
 
+        // request list of members
+        if (mIsPrivateChat) {
+            // TODO : get pseudo and not ID of other user
+            User otherUser = new User(mOtherUserId, mOtherUserId, null, null, true);
+            memberDataset.add(otherUser);
+        } else {
+            SendMessageTask.sendMessageAsync(this, JsonUtils.askForListOfChatMembers(mChatId));
+        }
+
         // set recyclerView for members
-        memberDataset.add(Session.getUser());
         mMemberRecyclerView = findViewById(R.id.listOfMembers);
         mMemberRecyclerView.setHasFixedSize(true);
 
@@ -87,9 +95,6 @@ public class ChatActivity extends AppCompatActivity {
 
         mMemberAdapter = new MemberAdapter(memberDataset);
         mMemberRecyclerView.setAdapter(mMemberAdapter);
-
-        // request list of members
-        SendMessageTask.sendMessageAsync(this, JsonUtils.askForListOfChatMembers(mChatId));
 
         // set recyclerView for messages
         newMessage = findViewById(R.id.newMessage);
@@ -173,13 +178,13 @@ public class ChatActivity extends AppCompatActivity {
                     Log.i("CAt", "🗒 Got justText message: " + json.getString("content"));
                     Toast.makeText(getApplicationContext(), json.getString("content"), Toast.LENGTH_LONG).show();
 
-                } else if ("listOfChatMember".equals(json.getString("type"))) {
+                } else if ("listOfChatMembers".equals(json.getString("type"))) {
                     Log.i("CAl", "🗒 Got list of members in chat");
                     memberDataset.clear();
                     Collections.addAll(memberDataset, JsonUtils.listOfUsersJsonToUsers(json));
                     mMemberAdapter.notifyDataSetChanged();
 
-                } else  if ("listMessagesChat".equals(json.getString("type"))) {
+                } else if ("listMessagesChat".equals(json.getString("type"))) {
                     Log.i("CAl", "🗒 Got list of messages in chat");
                     if (mChatId == null) mChatId = json.getString("chatId");
                     messageDataset.clear();
