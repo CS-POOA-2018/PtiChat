@@ -31,8 +31,12 @@ import java.util.Map;
 
 import fr.centralesupelec.ptichatapp.NativeSocketClient.SendMessageTask;
 import fr.centralesupelec.ptichatapp.PODS.Message;
+import fr.centralesupelec.ptichatapp.PODS.User;
 
 public class ChatActivity extends AppCompatActivity {
+
+    private RecyclerView mMemberRecyclerView;
+    private RecyclerView.Adapter mMemberAdapter;
 
     private RecyclerView mMessagesRecyclerView;
     private RecyclerView.Adapter mMessagesAdapter;
@@ -45,8 +49,10 @@ public class ChatActivity extends AppCompatActivity {
 
     private final NewMessageReceiver newMessageReceiver = new ChatActivity.NewMessageReceiver();
 
-    private List<Message> myDataset = new ArrayList<>();
+    private List<Message> messageDataset = new ArrayList<>();
     private Map<String, Integer> mPendingMessages = new HashMap<>();
+
+    private List<User> memberDataset = new ArrayList<>();
 
     private void applyChatInfoFromIntent() {
         mIsPrivateChat = getIntent().getBooleanExtra("isPrivateChat", false);
@@ -71,26 +77,33 @@ public class ChatActivity extends AppCompatActivity {
             chanImage.setImageResource(R.drawable.cat_set);
         }
 
+        // set recyclerView for members
+        memberDataset.add(Session.getUser());
+        mMemberRecyclerView = findViewById(R.id.listOfMembers);
+        mMemberRecyclerView.setHasFixedSize(true);
+
+        RecyclerView.LayoutManager memberLayoutManager = new LinearLayoutManager(this);
+        mMemberRecyclerView.setLayoutManager(memberLayoutManager);
+
+        mMemberAdapter = new MemberAdapter(memberDataset);
+        mMemberRecyclerView.setAdapter(mMemberAdapter);
+
+        // set recyclerView for messages
         newMessage = findViewById(R.id.newMessage);
         mMessagesRecyclerView = findViewById(R.id.chatView);
-
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
         mMessagesRecyclerView.setHasFixedSize(true);
 
-        // use a linear layout manager
         RecyclerView.LayoutManager messagesLayoutManager = new LinearLayoutManager(this);
         mMessagesRecyclerView.setLayoutManager(messagesLayoutManager);
 
-        // specify an adapter
-        mMessagesAdapter = new MessageAdapter(myDataset);
+        mMessagesAdapter = new MessageAdapter(messageDataset);
         mMessagesRecyclerView.setAdapter(mMessagesAdapter);
 
         // Set up listener for layout size change (keyboard appears)
         mMessagesRecyclerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                mMessagesRecyclerView.scrollToPosition(myDataset.size() - 1);
+                mMessagesRecyclerView.scrollToPosition(messageDataset.size() - 1);
             }
         });
 
@@ -122,9 +135,9 @@ public class ChatActivity extends AppCompatActivity {
 
         // Create and display the new message immediately
         Message newMessage = new Message(textContent, Session.getUser().getId(), mChatId);
-        myDataset.add(newMessage);
+        messageDataset.add(newMessage);
 
-        int positionInserted = myDataset.size() - 1;
+        int positionInserted = messageDataset.size() - 1;
         mMessagesAdapter.notifyItemInserted(positionInserted);
         mMessagesRecyclerView.scrollToPosition(positionInserted);
 
@@ -160,10 +173,10 @@ public class ChatActivity extends AppCompatActivity {
                 } else if ("listMessagesChat".equals(json.getString("type"))) {
                     Log.i("CAl", "🗒 Got list of messages in chat");
                     if (mChatId == null) mChatId = json.getString("chatId");
-                    myDataset.clear();
-                    Collections.addAll(myDataset, JsonUtils.listOfMessagesJsonToMessages(json));
+                    messageDataset.clear();
+                    Collections.addAll(messageDataset, JsonUtils.listOfMessagesJsonToMessages(json));
                     mMessagesAdapter.notifyDataSetChanged();
-                    mMessagesRecyclerView.scrollToPosition(myDataset.size() - 1);
+                    mMessagesRecyclerView.scrollToPosition(messageDataset.size() - 1);
 
                 } else if ("newMessageInChat".equals(json.getString("type"))) {
                     if (json.getString("chatId").equals(mChatId)) {
@@ -175,14 +188,14 @@ public class ChatActivity extends AppCompatActivity {
                         Integer pendingMessagePosition = mPendingMessages.get(newMessageId);
 
                         if (pendingMessagePosition != null) {
-                            myDataset.set(pendingMessagePosition, newMessage);
+                            messageDataset.set(pendingMessagePosition, newMessage);
                             mMessagesAdapter.notifyItemChanged(pendingMessagePosition);
                             mPendingMessages.remove(newMessageId);
                         } else {
-                            myDataset.add(newMessage);
-                            mMessagesAdapter.notifyItemInserted(myDataset.size() - 1);
+                            messageDataset.add(newMessage);
+                            mMessagesAdapter.notifyItemInserted(messageDataset.size() - 1);
                         }
-                        mMessagesRecyclerView.scrollToPosition(myDataset.size() - 1);
+                        mMessagesRecyclerView.scrollToPosition(messageDataset.size() - 1);
                     } else {
                         Log.i("CAn", "🗒 Got new message in another chat");
                     }
