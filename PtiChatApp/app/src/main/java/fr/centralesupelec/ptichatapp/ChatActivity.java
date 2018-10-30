@@ -13,6 +13,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,6 +61,12 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
 
         applyChatInfoFromIntent();
+
+        // set the right image for the chan depending on the private/public parameter
+        ImageView chanImage = findViewById(R.id.chatAvatar);
+        if (!mIsPrivateChat) {
+            chanImage.setImageResource(R.drawable.cat_set);
+        }
 
         newMessage = findViewById(R.id.newMessage);
         mMessagesRecyclerView = findViewById(R.id.chatView);
