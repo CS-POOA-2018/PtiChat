@@ -11,120 +11,135 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <ImageView
-        android:id="@+id/mainAvatar"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:contentDescription="@string/avatar"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/avatar1"
-        tools:srcCompat="@tools:sample/avatars[14]" />
-
-    <EditText
-        android:id="@+id/mainName"
-        android:layout_width="wrap_content"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/main_toolbar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
-        android:background="@android:color/transparent"
-        android:hint="@string/username"
-        android:inputType="text"
-        android:textSize="24sp"
-        android:textStyle="normal|bold"
-        android:imeOptions="actionDone"
-        app:layout_constraintStart_toEndOf="@+id/mainAvatar"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Garfield" />
+        android:minHeight="?android:attr/actionBarSize"
+        android:background="?android:attr/colorPrimary"
+        android:theme="@style/MyActionBarTheme" />
 
-    <TextView
-        android:id="@+id/mainIsOnline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="36dp"
-        android:textSize="18sp"
-        app:layout_constraintStart_toEndOf="@+id/mainName"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="(en ligne)" />
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?android:attr/actionBarSize" >
 
-    <EditText
-        android:id="@+id/mainStatus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:background="@android:color/transparent"
-        android:hint="@string/status"
-        android:inputType="text"
-        android:text="@string/status"
-        android:imeOptions="actionDone"
-        app:layout_constraintStart_toEndOf="@+id/mainAvatar"
-        app:layout_constraintTop_toBottomOf="@+id/mainName"
-        tools:text="@string/status" />
+        <ImageView
+            android:id="@+id/mainAvatar"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:contentDescription="@string/avatar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/avatar1"
+            tools:srcCompat="@tools:sample/avatars[14]" />
 
-    <View
-        android:id="@+id/greyLine"
-        android:layout_width="fill_parent"
-        android:layout_height="2dp"
-        android:layout_marginTop="16dp"
-        android:background="#c0c0c0"
-        app:layout_constraintTop_toBottomOf="@+id/mainAvatar" />
+        <EditText
+            android:id="@+id/mainName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:background="@android:color/transparent"
+            android:hint="@string/username"
+            android:inputType="text"
+            android:textSize="24sp"
+            android:textStyle="normal|bold"
+            android:imeOptions="actionDone"
+            app:layout_constraintStart_toEndOf="@+id/mainAvatar"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Garfield" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/mainContactView"
-        android:layout_width="0dp"
-        android:layout_height="144dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/greyLine" />
+        <TextView
+            android:id="@+id/mainIsOnline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="36dp"
+            android:textSize="18sp"
+            app:layout_constraintStart_toEndOf="@+id/mainName"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="(en ligne)" />
 
-    <View
-        android:id="@+id/greyLine2"
-        android:layout_width="fill_parent"
-        android:layout_height="2dp"
-        android:background="#c0c0c0"
-        app:layout_constraintTop_toBottomOf="@+id/mainContactView" />
+        <EditText
+            android:id="@+id/mainStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:background="@android:color/transparent"
+            android:hint="@string/status"
+            android:inputType="text"
+            android:text="@string/status"
+            android:imeOptions="actionDone"
+            app:layout_constraintStart_toEndOf="@+id/mainAvatar"
+            app:layout_constraintTop_toBottomOf="@+id/mainName"
+            tools:text="@string/status" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/mainChatView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/greyLine2" />
+        <View
+            android:id="@+id/greyLine"
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="16dp"
+            android:background="#c0c0c0"
+            app:layout_constraintTop_toBottomOf="@+id/mainAvatar" />
 
-    <Button
-        android:id="@+id/button"
-        style="@style/Widget.AppCompat.Button.Small"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|end"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:minHeight="0dp"
-        android:onClick="onLogout"
-        android:text="@string/logout"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        android:textSize="8sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/mainContactView"
+            android:layout_width="0dp"
+            android:layout_height="144dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/greyLine" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingActionButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:clickable="true"
-        android:onClick="onNewChatPressed"
-        app:backgroundTint="#e0e0e0"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_chat_24dp"
-        android:focusable="true" />
+        <View
+            android:id="@+id/greyLine2"
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:background="#c0c0c0"
+            app:layout_constraintTop_toBottomOf="@+id/mainContactView" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/mainChatView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/greyLine2" />
+
+        <Button
+            android:id="@+id/button"
+            style="@style/Widget.AppCompat.Button.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:minHeight="0dp"
+            android:onClick="onLogout"
+            android:text="@string/logout"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textSize="8sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/floatingActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:clickable="true"
+            android:onClick="onNewChatPressed"
+            app:backgroundTint="#e0e0e0"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/ic_chat_24dp"
+            android:focusable="true" />
+
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>

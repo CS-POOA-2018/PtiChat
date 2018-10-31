@@ -4,12 +4,16 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
@@ -59,6 +63,14 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
+        // Add the toolbar
+        Toolbar myToolbar = findViewById(R.id.chat_toolbar);
+        setSupportActionBar(myToolbar);
+
+        // Add the return arrow
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) actionBar.setDisplayHomeAsUpEnabled(true);
+
         applyChatInfoFromIntent();
 
         newMessage = findViewById(R.id.newMessage);
@@ -86,6 +98,28 @@ public class ChatActivity extends AppCompatActivity {
 
         // Set up listener for enter key
         setupEnterListener(newMessage);
+    }
+
+    /** Menu icons are inflated just as they were with actionbar */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_chat, menu);
+        return true;
+    }
+
+    /** One of the menu icons has been clicked */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+
+            case R.id.action_delete_chat:
+                Log.i("CAa", "Chat deletion asked");
+                return true;
+
+            default:
+                // Not recognized, invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     public void onPause() {

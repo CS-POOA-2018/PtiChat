@@ -13,6 +13,7 @@
     <string name="ok">OK</string>
     <string name="logout">Logout</string>
     <string name="send">Send</string>
+    <string name="delete_chat">Delete Chat</string>
 
     <!-- Descriptions -->
     <string name="avatar">Cute image of a cat</string>
