@@ -58,6 +58,20 @@ public class JsonUtils {
         return null;
     }
 
+    public static JSONObject userToJson(User user) {
+        JSONObject toSend = null;
+        try {
+            toSend = new JSONObject();
+            toSend.put("type", "editUser");
+            toSend.put("userId", user.getId());
+            toSend.put("pseudo", user.getPseudo());
+            toSend.put("status", user.getStatus());
+        } catch (JSONException e) {
+            Log.e("JUe", "Could not make JSON: " + e.getMessage());
+        }
+        return toSend;
+    }
+
     public static JSONObject userInfoToNewUserJson(String login, String password) {
         JSONObject toSend = null;
         try {
@@ -89,6 +103,18 @@ public class JsonUtils {
         try {
             toSend = new JSONObject();
             toSend.put("type", "getListOfUsers");
+        } catch (JSONException e) {
+            Log.e("JUe", "Could not make JSON: " + e.getMessage());
+        }
+        return toSend;
+    }
+
+    public static JSONObject askForListOfChatMembers(String chatId) {
+        JSONObject toSend = null;
+        try {
+            toSend = new JSONObject();
+            toSend.put("type", "getGroupMembers");
+            toSend.put("chatId", chatId);
         } catch (JSONException e) {
             Log.e("JUe", "Could not make JSON: " + e.getMessage());
         }

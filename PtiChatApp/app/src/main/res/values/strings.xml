@@ -22,4 +22,6 @@
 
     <!-- Other -->
     <string name="says">says :</string>
+    <string name="channel_description">Notification Messages</string>
+    <string name="channel_name">PtiChat</string>
 </resources>

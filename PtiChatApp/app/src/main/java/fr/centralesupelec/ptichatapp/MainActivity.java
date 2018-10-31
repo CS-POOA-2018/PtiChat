@@ -105,9 +105,10 @@ public class MainActivity extends AppCompatActivity {
 
         mChatDataset.add(new Chat("not_a_chat", "Loading chats..."));
         mChatsAdapter.notifyDataSetChanged();
-
         // set up the listeners
         setupEnterListener(this);
+        Intent intent = new Intent(this, BackgroundListener.class);
+        startService(intent);
     }
 
     public void onPause() {
@@ -143,6 +144,23 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateOnline(boolean isConnected) {
         userIsOnlineTV.setText(isConnected ? "(En ligne)" : "(Hors ligne)");
+    }
+
+    private void updateUserInfo() {
+        // update the user object
+        String newPseudo = userNameTV.getText().toString();
+        String newStatus = userStatusTV.getText().toString();
+        Log.i("PIZZA", "new infos : " + newPseudo + " ; " + newStatus);
+        if (!mCurrentUser.getPseudo().equals(newPseudo)) {
+            mCurrentUser.setPseudo(newPseudo);
+        }
+        if (!mCurrentUser.getStatus().equals(newStatus)) {
+            mCurrentUser.setStatus(newStatus);
+        }
+
+        // send the new data via the API
+        JSONObject toSend = JsonUtils.userToJson(mCurrentUser);
+        if (toSend != null) SendMessageTask.sendMessageAsync(this, toSend);
     }
 
     public void onLogout(View view) {
@@ -290,6 +308,13 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
 
+                } else if ("editAcceptance".equals(json.getString("type"))) {
+                    boolean editSuccess = json.getBoolean("value");
+                    if (editSuccess) {
+                        Toast.makeText(getApplicationContext(), "Successfully edited profile !", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Couldn't edit profile...", Toast.LENGTH_LONG).show();
+                    }
                 }
             } catch (JSONException e) {
                 Log.e("MAe", "🆘 Could not parse message as JSON");
@@ -321,7 +346,7 @@ public class MainActivity extends AppCompatActivity {
                     // Both profile edition texts have lost focus, this count as validation
                     mMainView.requestFocus();
                     hideSoftKeyboard(activity);
-                    // TODO do stuff when profile edition is validated
+                    updateUserInfo();
                 }
             }
         };

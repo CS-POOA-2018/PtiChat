@@ -21,6 +21,7 @@ public interface IStorage {
     void removeUser(String userId);
     User[] listUsers();
     String[] listUserIdsInChat(String chatId);
+    User[] listUsersInChat(String chatId);
 
     void userJoinsChat(String userId, String chatId);
 }

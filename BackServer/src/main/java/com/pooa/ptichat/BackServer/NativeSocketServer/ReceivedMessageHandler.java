@@ -134,6 +134,11 @@ public class ReceivedMessageHandler implements Runnable {
                 IStorage storage = StorageSingleton.getInstance().getStorage();
                 mSocketServerConnection.sendMessage(JsonUtils.sendListOfChatsJson(userId, storage.listChatsOfUser(userId)));
 
+            } else if ("getGroupMembers".equals(messageType)) {
+                String chatId = json.getString("chatId");
+                IStorage storage = StorageSingleton.getInstance().getStorage();
+                mSocketServerConnection.sendMessage(JsonUtils.sendListOfChatMembersJson(chatId, storage.listUsersInChat(chatId)));
+
             } else if ("getListOfMessages".equals(messageType)) {
                 String chatId = json.getString("chatId");
                 IStorage storage = StorageSingleton.getInstance().getStorage();

@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,8 +32,12 @@ import java.util.Map;
 
 import fr.centralesupelec.ptichatapp.NativeSocketClient.SendMessageTask;
 import fr.centralesupelec.ptichatapp.PODS.Message;
+import fr.centralesupelec.ptichatapp.PODS.User;
 
 public class ChatActivity extends AppCompatActivity {
+
+    private RecyclerView mMemberRecyclerView;
+    private RecyclerView.Adapter mMemberAdapter;
 
     private RecyclerView mMessagesRecyclerView;
     private RecyclerView.Adapter mMessagesAdapter;
@@ -45,8 +50,10 @@ public class ChatActivity extends AppCompatActivity {
 
     private final NewMessageReceiver newMessageReceiver = new ChatActivity.NewMessageReceiver();
 
-    private List<Message> myDataset = new ArrayList<>();
+    private List<Message> messageDataset = new ArrayList<>();
     private Map<String, Integer> mPendingMessages = new HashMap<>();
+
+    private List<User> memberDataset = new ArrayList<>();
 
     private void applyChatInfoFromIntent() {
         mIsPrivateChat = getIntent().getBooleanExtra("isPrivateChat", false);
@@ -73,26 +80,47 @@ public class ChatActivity extends AppCompatActivity {
 
         applyChatInfoFromIntent();
 
+        // set the right image for the chan depending on the private/public parameter
+        ImageView chanImage = findViewById(R.id.chatAvatar);
+        if (!mIsPrivateChat) {
+            chanImage.setImageResource(R.drawable.cat_set);
+        }
+
+        // request list of members
+        if (mIsPrivateChat) {
+            // TODO : get pseudo and not ID of other user
+            User otherUser = new User(mOtherUserId, mOtherUserId, null, null, true);
+            memberDataset.add(otherUser);
+        } else {
+            SendMessageTask.sendMessageAsync(this, JsonUtils.askForListOfChatMembers(mChatId));
+        }
+
+        // set recyclerView for members
+        mMemberRecyclerView = findViewById(R.id.listOfMembers);
+        mMemberRecyclerView.setHasFixedSize(true);
+
+        RecyclerView.LayoutManager memberLayoutManager = new LinearLayoutManager(this);
+        mMemberRecyclerView.setLayoutManager(memberLayoutManager);
+
+        mMemberAdapter = new MemberAdapter(memberDataset);
+        mMemberRecyclerView.setAdapter(mMemberAdapter);
+
+        // set recyclerView for messages
         newMessage = findViewById(R.id.newMessage);
         mMessagesRecyclerView = findViewById(R.id.chatView);
-
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
         mMessagesRecyclerView.setHasFixedSize(true);
 
-        // use a linear layout manager
         RecyclerView.LayoutManager messagesLayoutManager = new LinearLayoutManager(this);
         mMessagesRecyclerView.setLayoutManager(messagesLayoutManager);
 
-        // specify an adapter
-        mMessagesAdapter = new MessageAdapter(myDataset);
+        mMessagesAdapter = new MessageAdapter(messageDataset);
         mMessagesRecyclerView.setAdapter(mMessagesAdapter);
 
         // Set up listener for layout size change (keyboard appears)
         mMessagesRecyclerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
-            public void onLayoutChange(View v, int left, int top, int right,int bottom, int oldLeft, int oldTop,int oldRight, int oldBottom) {
-                mMessagesRecyclerView.scrollToPosition(myDataset.size()-1);
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                mMessagesRecyclerView.scrollToPosition(messageDataset.size() - 1);
             }
         });
 
@@ -146,9 +174,9 @@ public class ChatActivity extends AppCompatActivity {
 
         // Create and display the new message immediately
         Message newMessage = new Message(textContent, Session.getUser().getId(), mChatId);
-        myDataset.add(newMessage);
+        messageDataset.add(newMessage);
 
-        int positionInserted = myDataset.size() - 1;
+        int positionInserted = messageDataset.size() - 1;
         mMessagesAdapter.notifyItemInserted(positionInserted);
         mMessagesRecyclerView.scrollToPosition(positionInserted);
 
@@ -157,14 +185,18 @@ public class ChatActivity extends AppCompatActivity {
         SendMessageTask.sendMessageAsync(this, JsonUtils.sendNewMessageJson(newMessage));
     }
 
-    /** The activity will listen for BROADCAST_NEW_MESSAGE messages from other classes */
+    /**
+     * The activity will listen for BROADCAST_NEW_MESSAGE messages from other classes
+     */
     private void registerNewBroadcastReceiver() {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.BROADCAST_NEW_MESSAGE);
         registerReceiver(newMessageReceiver, intentFilter);
     }
 
-    /** Receive messages from the socket interface. If login is accepted, go to main activity */
+    /**
+     * Receive messages from the socket interface. If login is accepted, go to main activity
+     */
     public class NewMessageReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -177,13 +209,19 @@ public class ChatActivity extends AppCompatActivity {
                     Log.i("CAt", "🗒 Got justText message: " + json.getString("content"));
                     Toast.makeText(getApplicationContext(), json.getString("content"), Toast.LENGTH_LONG).show();
 
+                } else if ("listOfChatMembers".equals(json.getString("type"))) {
+                    Log.i("CAl", "🗒 Got list of members in chat");
+                    memberDataset.clear();
+                    Collections.addAll(memberDataset, JsonUtils.listOfUsersJsonToUsers(json));
+                    mMemberAdapter.notifyDataSetChanged();
+
                 } else if ("listMessagesChat".equals(json.getString("type"))) {
                     Log.i("CAl", "🗒 Got list of messages in chat");
                     if (mChatId == null) mChatId = json.getString("chatId");
-                    myDataset.clear();
-                    Collections.addAll(myDataset, JsonUtils.listOfMessagesJsonToMessages(json));
+                    messageDataset.clear();
+                    Collections.addAll(messageDataset, JsonUtils.listOfMessagesJsonToMessages(json));
                     mMessagesAdapter.notifyDataSetChanged();
-                    mMessagesRecyclerView.scrollToPosition(myDataset.size() - 1);
+                    mMessagesRecyclerView.scrollToPosition(messageDataset.size() - 1);
 
                 } else if ("newMessageInChat".equals(json.getString("type"))) {
                     if (json.getString("chatId").equals(mChatId)) {
@@ -195,15 +233,14 @@ public class ChatActivity extends AppCompatActivity {
                         Integer pendingMessagePosition = mPendingMessages.get(newMessageId);
 
                         if (pendingMessagePosition != null) {
-                            myDataset.set(pendingMessagePosition, newMessage);
+                            messageDataset.set(pendingMessagePosition, newMessage);
                             mMessagesAdapter.notifyItemChanged(pendingMessagePosition);
                             mPendingMessages.remove(newMessageId);
                         } else {
-                            myDataset.add(newMessage);
-                            mMessagesAdapter.notifyItemInserted(myDataset.size() - 1);
+                            messageDataset.add(newMessage);
+                            mMessagesAdapter.notifyItemInserted(messageDataset.size() - 1);
                         }
-                        mMessagesRecyclerView.scrollToPosition(myDataset.size() - 1);
-
+                        mMessagesRecyclerView.scrollToPosition(messageDataset.size() - 1);
                     } else {
                         Log.i("CAn", "🗒 Got new message in another chat");
                     }
@@ -214,7 +251,9 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
-    /** The message box will listen for the Enter key, and send the message if the user uses it */
+    /**
+     * The message box will listen for the Enter key, and send the message if the user uses it
+     */
     public void setupEnterListener(EditText messageBox) {
         TextView.OnEditorActionListener enterListener = new TextView.OnEditorActionListener() {
             @Override

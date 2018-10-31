@@ -374,6 +374,33 @@ public class SqliteStorage implements IStorage {
     }
 
     @Override
+    public User[] listUsersInChat(String chatId) {
+        String sql = "SELECT DISTINCT users.userId, users.pseudo, users.status FROM users INNER JOIN userschats "
+                   + "ON users.userId = userschats.userId WHERE userschats.chatId = ?";
+        Set<User> userSet = new HashSet<>();
+
+        try (Connection conn = this.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, chatId);
+            ResultSet rs  = pstmt.executeQuery();
+
+            while (rs.next()) {
+                userSet.add(new User(
+                    rs.getString("userId"),
+                    null,
+                    rs.getString("pseudo"),
+                    null,
+                    rs.getString("status")
+                ));
+            }
+
+        } catch (SQLException e) {
+            System.out.println("🆘 listUsersInChat failed: " + e.getMessage());
+        }
+        return userSet.toArray(new User[0]);
+    }
+
+    @Override
     public void userJoinsChat(String userId, String chatId) {
 //        System.out.println("User " + userId + " joined chat " + chatId);
         String sql = "INSERT INTO userschats(userId,chatId) VALUES(?,?)";

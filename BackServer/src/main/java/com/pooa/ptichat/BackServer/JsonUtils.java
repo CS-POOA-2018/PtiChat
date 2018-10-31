@@ -104,6 +104,14 @@ public class JsonUtils {
         return json;
     }
 
+    public static JSONObject sendListOfChatMembersJson(String chatId, User[] users) {
+        JSONObject json = new JSONObject();
+        json.put("type", "listOfChatMembers");
+        json.put("chat", chatId);
+        json.put("users", userArrayToJsonArray(users));
+        return json;
+    }
+
     public static JSONObject sendListOfMessagesJson(String chatId, Message[] messages) {
         JSONObject json = new JSONObject();
         json.put("type", "listMessagesChat");
