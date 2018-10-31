@@ -141,7 +141,10 @@ public class ChatActivity extends AppCompatActivity {
         switch (item.getItemId()) {
 
             case R.id.action_delete_chat:
-                Log.i("CAa", "Chat deletion asked");
+                Log.i("CAa", "Chat deletion asked for chatId " + mChatId);
+                JSONObject toSend = JsonUtils.deleteChatJson(mChatId);
+                if (toSend != null) SendMessageTask.sendMessageAsync(this, toSend);
+                finish();
                 return true;
 
             default:
@@ -153,6 +156,13 @@ public class ChatActivity extends AppCompatActivity {
     public void onPause() {
         super.onPause();
         unregisterReceiver(newMessageReceiver);
+    }
+
+    public void onDestroy() {
+        super.onDestroy();
+        try {
+            unregisterReceiver(newMessageReceiver);
+        } catch (IllegalArgumentException ignored) { }
     }
 
     public void onResume() {

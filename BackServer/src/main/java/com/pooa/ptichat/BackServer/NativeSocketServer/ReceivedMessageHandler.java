@@ -79,6 +79,11 @@ public class ReceivedMessageHandler implements Runnable {
                     }
                 }
 
+            } else if ("deleteUser".equals(messageType)) {
+                String userId = json.getString("userId");
+                IStorage storage = StorageSingleton.getInstance().getStorage();
+                storage.removeUser(userId);
+
             } else if ("createNewChat".equals(messageType)) {
                 String chatName = json.getString("chatName");
                 Chat newChat = new Chat(chatName);
@@ -92,6 +97,11 @@ public class ReceivedMessageHandler implements Runnable {
                 }
                 String userId = userIdsInChat.get(0);
                 mSocketServerConnection.sendMessage(JsonUtils.sendListOfChatsJson(userId, storage.listChatsOfUser(userId)));
+
+            } else if ("deleteChat".equals(messageType)) {
+                String chatId = json.getString("chatId");
+                IStorage storage = StorageSingleton.getInstance().getStorage();
+                storage.removeChat(chatId);
 
             } else if ("editUser".equals(messageType)) {
                 User newUser = JsonUtils.jsonToUser(json);

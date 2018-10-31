@@ -124,6 +124,32 @@ public class MainActivity extends AppCompatActivity {
         SendMessageTask.sendMessageAsync(this, JsonUtils.askForListOfChats(Session.getUserId()));
     }
 
+
+    /** Menu icons are inflated just as they were with actionbar */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    /** One of the menu icons has been clicked */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+
+            case R.id.action_delete_user:
+                Log.i("CAa", "User deletion asked for user " + mCurrentUser.getId());
+                JSONObject toSend = JsonUtils.deleteUserJson(mCurrentUser.getId());
+                if (toSend != null) SendMessageTask.sendMessageAsync(this, toSend);
+                onLogout(null);
+                return true;
+
+            default:
+                // Not recognized, invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     private void updateUser() {
         updateName(mCurrentUser.getPseudo());
         updateStatus(mCurrentUser.getStatus());
