@@ -58,7 +58,7 @@ public class JsonUtils {
         return null;
     }
 
-    public static JSONObject userToJson(User user) {
+    public static JSONObject editUserJson(User user) {
         JSONObject toSend = null;
         try {
             toSend = new JSONObject();

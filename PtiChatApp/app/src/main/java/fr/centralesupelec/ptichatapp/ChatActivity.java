@@ -36,7 +36,6 @@ import fr.centralesupelec.ptichatapp.PODS.User;
 
 public class ChatActivity extends AppCompatActivity {
 
-    private RecyclerView mMemberRecyclerView;
     private RecyclerView.Adapter mMemberAdapter;
 
     private RecyclerView mMessagesRecyclerView;
@@ -96,14 +95,14 @@ public class ChatActivity extends AppCompatActivity {
         }
 
         // set recyclerView for members
-        mMemberRecyclerView = findViewById(R.id.listOfMembers);
-        mMemberRecyclerView.setHasFixedSize(true);
+        RecyclerView memberRecyclerView = findViewById(R.id.listOfMembers);
+        memberRecyclerView.setHasFixedSize(true);
 
         RecyclerView.LayoutManager memberLayoutManager = new LinearLayoutManager(this);
-        mMemberRecyclerView.setLayoutManager(memberLayoutManager);
+        memberRecyclerView.setLayoutManager(memberLayoutManager);
 
         mMemberAdapter = new MemberAdapter(memberDataset);
-        mMemberRecyclerView.setAdapter(mMemberAdapter);
+        memberRecyclerView.setAdapter(mMemberAdapter);
 
         // set recyclerView for messages
         newMessage = findViewById(R.id.newMessage);

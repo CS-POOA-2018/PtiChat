@@ -33,51 +33,51 @@ public class BackgroundListener extends Service {
         createNotificationChannel();
     }
 
+    public void onDestroy() {
+        super.onDestroy();
+        try {
+            unregisterReceiver(newMessageReceiver);
+        } catch (IllegalArgumentException ignored) { }
+    }
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
 
-
-    /**
-     * Creates a Background Listener.
-     */
+    /** Creates a Background Listener */
     public BackgroundListener() {
         super();
     }
 
-
-    /***
-     Allows to make the phone vibrate when a wizz is received
-     ***/
+    /** Allows to make the phone vibrate when a wizz is received */
     private void wizz() {
         Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        if (v == null) return;
+
         // Vibrate for 500 milliseconds
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
         } else {
-            //deprecated in API 26
+            // deprecated in API 26
             v.vibrate(500);
         }
     }
 
-    /**
-     * The activity will listen for BROADCAST_NEW_MESSAGE messages from other classes
-     */
+    /** The activity will listen for BROADCAST_NEW_MESSAGE messages from other classes */
     private void registerNewBroadcastReceiver() {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.BROADCAST_NEW_MESSAGE);
         registerReceiver(newMessageReceiver, intentFilter);
     }
 
-    /**
-     * Receive messages from the socket interface. If login is accepted, go to main activity
-     */
-
     private void createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            if (notificationManager == null) return;
+
             CharSequence name = getString(R.string.channel_name);
             String description = getString(R.string.channel_description);
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
@@ -85,11 +85,11 @@ public class BackgroundListener extends Service {
             channel.setDescription(description);
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
     }
 
+    /** Receive messages from the socket controller */
     public class NewMessageReceiver extends BroadcastReceiver {
         public BackgroundListener backgroundListener;
 
@@ -110,11 +110,10 @@ public class BackgroundListener extends Service {
                         if (!newMessage.getSenderId().equals(Session.getUserId())) {
                             Intent redirect = new Intent(backgroundListener, ChatActivity.class);
                             redirect.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            /*
-                             * Check if chat is private or not and gives info about it to the incoming activity
-                             */
+
+                            // Check if chat is private or not and gives info about it to the incoming activity
                             redirect.putExtra("isPrivateChat", !newMessage.getChatId().contains("+"));
-                            if(newMessage.getChatId().contains("+")){
+                            if (newMessage.getChatId().contains("+")){
                                 redirect.putExtra("chatId", newMessage.getChatId());
                             } else {
                                 redirect.putExtra("myUserId", Session.getUserId());
@@ -129,7 +128,8 @@ public class BackgroundListener extends Service {
                                     .setContentIntent(pendingIntent)
                                     .setAutoCancel(true);
                             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(backgroundListener);
-                            // NotificationId is a int for each notification. If it is the same it replace notif...
+
+                            // NotificationId is a int for each notification. If it is the same it replaces notif...
                             notificationManager.notify(newMessage.getChatId().hashCode(), mBuilder.build());
                         }
                         if (newMessageContent.equals(":wizz:")) {

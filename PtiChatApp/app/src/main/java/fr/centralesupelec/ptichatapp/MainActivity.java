@@ -176,17 +176,22 @@ public class MainActivity extends AppCompatActivity {
         // update the user object
         String newPseudo = userNameTV.getText().toString();
         String newStatus = userStatusTV.getText().toString();
-        Log.i("PIZZA", "new infos : " + newPseudo + " ; " + newStatus);
+
+        boolean somethingChanged = false;
         if (!mCurrentUser.getPseudo().equals(newPseudo)) {
             mCurrentUser.setPseudo(newPseudo);
+            somethingChanged = true;
         }
         if (!mCurrentUser.getStatus().equals(newStatus)) {
             mCurrentUser.setStatus(newStatus);
+            somethingChanged = true;
         }
-
-        // send the new data via the API
-        JSONObject toSend = JsonUtils.userToJson(mCurrentUser);
-        if (toSend != null) SendMessageTask.sendMessageAsync(this, toSend);
+        if (somethingChanged) {
+            Log.i("MAu", "New User info: " + newPseudo + " ; " + newStatus);
+            // send the new data via the API
+            JSONObject toSend = JsonUtils.editUserJson(mCurrentUser);
+            if (toSend != null) SendMessageTask.sendMessageAsync(this, toSend);
+        }
     }
 
     public void onLogout(View view) {
