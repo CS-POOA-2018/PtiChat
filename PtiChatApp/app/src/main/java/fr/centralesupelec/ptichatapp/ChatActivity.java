@@ -56,8 +56,8 @@ public class ChatActivity extends AppCompatActivity {
 
     private void applyChatInfoFromIntent() {
         mIsPrivateChat = getIntent().getBooleanExtra("isPrivateChat", false);
+        mMyUserId = getIntent().getStringExtra("myUserId");
         if (mIsPrivateChat) {
-            mMyUserId = getIntent().getStringExtra("myUserId");
             mOtherUserId = getIntent().getStringExtra("otherUserId");
         } else {
             mChatId = getIntent().getStringExtra("chatId");
@@ -112,7 +112,7 @@ public class ChatActivity extends AppCompatActivity {
         RecyclerView.LayoutManager messagesLayoutManager = new LinearLayoutManager(this);
         mMessagesRecyclerView.setLayoutManager(messagesLayoutManager);
 
-        mMessagesAdapter = new MessageAdapter(messageDataset);
+        mMessagesAdapter = new MessageAdapter(messageDataset, this);
         mMessagesRecyclerView.setAdapter(mMessagesAdapter);
 
         // Set up listener for layout size change (keyboard appears)
@@ -175,6 +175,10 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
+    String getMyUserId() {
+        return mMyUserId;
+    }
+
     public void onSend(View view) {
         // get text content and empty the input field
         String textContent = newMessage.getText().toString();
@@ -182,7 +186,7 @@ public class ChatActivity extends AppCompatActivity {
         newMessage.setText("");
 
         // Create and display the new message immediately
-        Message newMessage = new Message(textContent, Session.getUser().getId(), mChatId);
+        Message newMessage = new Message(textContent, mMyUserId, mChatId);
         messageDataset.add(newMessage);
 
         int positionInserted = messageDataset.size() - 1;

@@ -284,6 +284,7 @@ public class MainActivity extends AppCompatActivity {
         Log.i("MAc", "👈 Selected chat " + chatId);
         Intent selectChatIntent = new Intent(this, ChatActivity.class);
         selectChatIntent.putExtra("isPrivateChat", false);
+        selectChatIntent.putExtra("myUserId", Session.getUserId());
         selectChatIntent.putExtra("chatId", chatId);
         startActivity(selectChatIntent);
     }
