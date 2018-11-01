@@ -21,7 +21,7 @@ public class SocketServerConnection implements Runnable {
         mSocket = socket;
     }
 
-    private void sendMessage(String message) {
+    void sendMessage(String message) {
         System.out.println("📧 Sending message: " + message);
         mOut.println(message);
         mOut.flush();

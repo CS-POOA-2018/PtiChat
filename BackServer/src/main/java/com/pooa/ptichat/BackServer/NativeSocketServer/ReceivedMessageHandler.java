@@ -36,6 +36,11 @@ public class ReceivedMessageHandler implements Runnable {
     @Override
     public void run() {
         try {
+            if (mMessage.equals("heartBeat")) {
+                mSocketServerConnection.sendMessage("heartBeat");
+                return;
+            }
+
             JSONObject json = new JSONObject(mMessage);
             String messageType = json.getString("type");
 

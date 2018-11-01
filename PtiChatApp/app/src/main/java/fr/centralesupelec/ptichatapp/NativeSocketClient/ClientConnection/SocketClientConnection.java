@@ -9,8 +9,10 @@ public class SocketClientConnection {
 
     private SocketEmission mSocketEmission;
     private SocketReception mSocketReception;
+    private SocketHeartBeat mSocketHeartBeat;
 
     private Thread mReceptionThread;
+    private Thread mHeartBeatThread;
 
     public void sendMessage(String message) {
         mSocketEmission.sendMessage(message);
@@ -21,14 +23,20 @@ public class SocketClientConnection {
 
         mSocketEmission = new SocketEmission(socket);
         mSocketReception = new SocketReception(socket, ctx);
+        mSocketHeartBeat = new SocketHeartBeat(mSocketEmission);
 
         mReceptionThread = new Thread(mSocketReception);
         mReceptionThread.start();
+
+        mHeartBeatThread = new Thread(mSocketHeartBeat);
+        mHeartBeatThread.start();
     }
 
     public void close() {
         mSocketEmission.close();
         mSocketReception.close();
         mReceptionThread.interrupt();
+        mSocketHeartBeat.close();
+        mHeartBeatThread.interrupt();
     }
 }
