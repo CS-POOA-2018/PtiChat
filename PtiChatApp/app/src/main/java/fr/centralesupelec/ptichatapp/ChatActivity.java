@@ -176,7 +176,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     String getMyUserId() {
-        return mMyUserId;
+        return (mMyUserId == null) ? Session.getUserId() : mMyUserId;
     }
 
     public void onSend(View view) {
@@ -186,7 +186,7 @@ public class ChatActivity extends AppCompatActivity {
         newMessage.setText("");
 
         // Create and display the new message immediately
-        Message newMessage = new Message(textContent, mMyUserId, mChatId);
+        Message newMessage = new Message(textContent, getMyUserId(), mChatId);
         messageDataset.add(newMessage);
 
         int positionInserted = messageDataset.size() - 1;
