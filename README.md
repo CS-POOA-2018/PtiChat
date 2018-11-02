@@ -18,6 +18,15 @@ This project has two folders: one for the back in Java 8.0 and one for the Andro
 
 ### Front-end -> Back-end messages
 
+#### Just send a message to be displayed on the other side
+
+```json
+{
+  "type": "justText",
+  "content": "Hello there"
+}
+```
+
 #### New user
 
 ```json
@@ -25,6 +34,26 @@ This project has two folders: one for the back in Java 8.0 and one for the Andro
   "type": "createNewUser",
   "userId": "user id",
   "password": "user password"
+}
+```
+
+#### Edit user
+
+```json
+{
+  "type": "editUser",
+  "userId": "user id",
+  "pseudo": "user (new?) pseudo",
+  "status": "user (new?) status"
+}
+```
+
+#### Delete user
+
+```json
+{
+  "type": "deleteUser",
+  "userId": "user id"
 }
 ```
 
@@ -38,13 +67,11 @@ This project has two folders: one for the back in Java 8.0 and one for the Andro
 }
 ```
 
-#### New message
+#### Delete chat
 
 ```json
 {
-  "type": "createNewMessage",
-  "content": "Message content",
-  "senderId": "sender id",
+  "type": "deleteChat",
   "chatId": "chat id"
 }
 ```
@@ -54,6 +81,15 @@ This project has two folders: one for the back in Java 8.0 and one for the Andro
 ```json
 {
   "type": "getListOfUsers"
+}
+```
+
+#### Get list of users in a chat
+
+```json
+{
+  "type": "getGroupMembers",
+  "chatId": "chat id"
 }
 ```
 
@@ -105,6 +141,9 @@ This project has two folders: one for the back in Java 8.0 and one for the Andro
 ```
 (`connection` is `true` to announce a connection with the id `userId`, `false` for a disconnection)
 
+
+### Back-end -> Front-end messages
+
 #### Just send a message to be displayed on the other side
 
 ```json
@@ -114,13 +153,22 @@ This project has two folders: one for the back in Java 8.0 and one for the Andro
 }
 ```
 
-### Back-end -> Front-end messages
-
 #### Send "you are connected"
 
 ```json
 {
   "type": "loginAcceptance",
+  "user": {"userId": "user id", "pseudo": "pseudo", "profilePicture": "...", "status": "...", "isConnected": true},
+  "value": true,
+  "message": ""
+}
+```
+
+#### Validate profile edition
+
+```json
+{
+  "type": "editAcceptance",
   "user": {"userId": "user id", "pseudo": "pseudo", "profilePicture": "...", "status": "...", "isConnected": true},
   "value": true,
   "message": ""
@@ -143,8 +191,19 @@ This project has two folders: one for the back in Java 8.0 and one for the Andro
 {
   "type": "listOfChats",
   "userId": "user id",
-  "chats": [{"chatId": "chat id", "chatName": "chat display name"},
-            {"chatId": "chat id", "chatName": "chat display name"}]
+  "chats": [{"chatId": "chat id", "chatName": "chat display name", "isPrivate": false},
+            {"chatId": "chat id", "chatName": "chat display name", "isPrivate": false}]
+}
+```
+
+#### Send list of users in a given chat
+
+```json
+{
+  "type": "listOfChatMembers",
+  "chatId": "chat id",
+  "users": [{"userId": "user id", "pseudo": "pseudo", "profilePicture": "...", "status": "...", "isConnected": true},
+            {"userId": "user id", "pseudo": "pseudo", "profilePicture": "...", "status": "...", "isConnected": false}]
 }
 ```
 
@@ -164,7 +223,7 @@ This project has two folders: one for the back in Java 8.0 and one for the Andro
 ```json
 {
   "type": "newMessageInChat",
-  "chatId": "chat id",
+  "chat": {"chatId": "chat id", "chatName": "chat display name", "isPrivate": false},
   "message": {"messageId": "message id", "content": "...", "date": "2018-10-16 14:45:09", "senderId": "senderId", "chatId": "chatId", "read": true}
 }
 ```
@@ -179,14 +238,6 @@ This project has two folders: one for the back in Java 8.0 and one for the Andro
 }
 ```
 
-#### Just send a message to be displayed on the other side
-
-```json
-{
-  "type": "justText",
-  "content": "Hello there"
-}
-```
 
 ## Built With
 

@@ -180,9 +180,10 @@ public class ReceivedMessageHandler implements Runnable {
                 Message newMessage = JsonUtils.jsonToMessage(json.getJSONObject("message"));
                 IStorage storage = StorageSingleton.getInstance().getStorage();
                 storage.addMessage(newMessage);
+                Chat chat = storage.getChat(newMessage.getChatId());
 
                 // Notify all other people in chat
-                JSONObject toSend = JsonUtils.sendNewMessageInChat(newMessage.getChatId(), newMessage);
+                JSONObject toSend = JsonUtils.sendNewMessageInChat(chat, newMessage);
                 StorageSingleton.getInstance().getConnectionsManager().sendMessageToAllConnectedUsersInChat(newMessage.getChatId(), toSend);
 
             } else if ("announceConnection".equals(messageType)) {

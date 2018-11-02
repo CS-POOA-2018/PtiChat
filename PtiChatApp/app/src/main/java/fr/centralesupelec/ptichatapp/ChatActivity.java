@@ -240,7 +240,7 @@ public class ChatActivity extends AppCompatActivity {
                     mMessagesRecyclerView.scrollToPosition(messageDataset.size() - 1);
 
                 } else if ("newMessageInChat".equals(json.getString("type"))) {
-                    if (json.getString("chatId").equals(mChatId)) {
+                    if (json.getJSONObject("chat").getString("chatId").equals(mChatId)) {
                         Log.i("CAn", "🗒 Got new message in current chat");
                         Message newMessage = JsonUtils.messageJsonToMessage(json.getJSONObject("message"));
                         if (newMessage == null) throw new JSONException("newMessage is null");

@@ -103,8 +103,9 @@ public class MainActivity extends AppCompatActivity {
         mUserDataset.add(new User("not_a_user", "Loading users...", "", "", false));
         mUsersAdapter.notifyDataSetChanged();
 
-        mChatDataset.add(new Chat("not_a_chat", "Loading chats..."));
+        mChatDataset.add(new Chat("not_a_chat", "Loading chats...", false));
         mChatsAdapter.notifyDataSetChanged();
+
         // set up the listeners
         setupEnterListener(this);
         Intent intent = new Intent(this, BackgroundListener.class);
@@ -333,7 +334,7 @@ public class MainActivity extends AppCompatActivity {
                 } else if ("listOfChats".equals(json.getString("type"))) {
 //                    Log.i("MAc", "🗒 Got list of chats message");
                     mChatDataset.clear();
-                    mChatDataset.addAll(Arrays.asList(JsonUtils.listOfChatsJsonToUsers(json)));
+                    mChatDataset.addAll(Arrays.asList(JsonUtils.listOfChatsJsonToChats(json)));
                     mChatsAdapter.notifyDataSetChanged();
                     mCurrentUser.setConnected(true);
 

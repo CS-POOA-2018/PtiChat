@@ -108,7 +108,7 @@ public class JsonUtils {
     public static JSONObject sendListOfChatMembersJson(String chatId, User[] users) {
         JSONObject json = new JSONObject();
         json.put("type", "listOfChatMembers");
-        json.put("chat", chatId);
+        json.put("chatId", chatId);
         json.put("users", userArrayToJsonArray(users));
         return json;
     }
@@ -121,10 +121,10 @@ public class JsonUtils {
         return json;
     }
 
-    public static JSONObject sendNewMessageInChat(String chatId, Message message) {
+    public static JSONObject sendNewMessageInChat(Chat chat, Message message) {
         JSONObject json = new JSONObject();
         json.put("type", "newMessageInChat");
-        json.put("chatId", chatId);
+        json.put("chat", chatToJson(chat));
         json.put("message", messageToJson(message));
         return json;
     }
