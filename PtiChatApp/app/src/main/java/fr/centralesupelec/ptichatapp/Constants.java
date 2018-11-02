@@ -1,7 +1,8 @@
 package fr.centralesupelec.ptichatapp;
 
 public class Constants {
-    public static final String BROADCAST_NEW_MESSAGE = "broadcast_new_message";
+    public static final String BROADCAST_NEW_MESSAGE = "fr.centralesupelec.ptichatapp.BROADCAST_SOCKET_MESSAGE";
+
     public static final String DATE_PATTERN = "yyyy-MM-dd HH:mm:ss";
 
     // Fallback server address if not found in local shared preferences

@@ -124,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
         SendMessageTask.sendMessageAsync(this, JsonUtils.askForListOfChats(Session.getUserId()));
     }
 
+    // ----- ACTION BAR ----- //
 
     /** Menu icons are inflated just as they were with actionbar */
     @Override
@@ -138,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
 
             case R.id.action_delete_user:
-                Log.i("CAa", "User deletion asked for user " + mCurrentUser.getId());
+                Log.i("CAa", "💥 User deletion asked for user " + mCurrentUser.getId());
                 JSONObject toSend = JsonUtils.deleteUserJson(mCurrentUser.getId());
                 if (toSend != null) SendMessageTask.sendMessageAsync(this, toSend);
                 onLogout(null);
@@ -149,6 +150,8 @@ public class MainActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    // ----- UI EDITION ----- //
 
     private void updateUser() {
         updateName(mCurrentUser.getPseudo());
@@ -187,25 +190,16 @@ public class MainActivity extends AppCompatActivity {
             somethingChanged = true;
         }
         if (somethingChanged) {
-            Log.i("MAu", "New User info: " + newPseudo + " ; " + newStatus);
+            Log.i("MAu", "🌱 New User info: " + newPseudo + " ; " + newStatus);
             // send the new data via the API
             JSONObject toSend = JsonUtils.editUserJson(mCurrentUser);
             if (toSend != null) SendMessageTask.sendMessageAsync(this, toSend);
         }
     }
 
-    public void onLogout(View view) {
-        // Switch activity to Login
-        Log.i("MAc", "👈 Clicked on Logout button");
-        if (Session.getUserId() != null) SendMessageTask.sendMessageAsync(this, JsonUtils.announceConnection(Session.getUserId(), false));
-        Session.setUser(null);
-        Utils.writeCredentials(this, null, null);
+    // ----- CREATE NEW CHAT DIALOG ----- //
 
-        Intent loginIntent = new Intent(this, LoginActivity.class);
-        startActivity(loginIntent);
-        finish();
-    }
-
+    /** When "new chat" button is pressed, show dialog to choose contacts and set chat name */
     public void onNewChatPressed(View view) {
         // Switch activity to Login
         Log.i("MAc", "👈 Clicked on New Chat button");
@@ -262,6 +256,20 @@ public class MainActivity extends AppCompatActivity {
         chatNameEditText.requestFocus();
     }
 
+    // ----- NAVIGATION TO OTHER ACTIVITIES ----- //
+
+    public void onLogout(View view) {
+        // Switch activity to Login
+        Log.i("MAc", "👈 Clicked on Logout button");
+        if (Session.getUserId() != null) SendMessageTask.sendMessageAsync(this, JsonUtils.announceConnection(Session.getUserId(), false));
+        Session.setUser(null);
+        Utils.writeCredentials(this, null, null);
+
+        Intent loginIntent = new Intent(this, LoginActivity.class);
+        startActivity(loginIntent);
+        finish();
+    }
+
     public void onSelectContact(String contactId) {
         // Switch activity to Chat, using the contact name
         Log.i("MAc", "👈 Selected contact " + contactId);
@@ -288,6 +296,8 @@ public class MainActivity extends AppCompatActivity {
         selectChatIntent.putExtra("chatId", chatId);
         startActivity(selectChatIntent);
     }
+
+    // ----- RECEIVER FOR MESSAGES FROM THE SOCKET ----- //
 
     /** The activity will listen for BROADCAST_NEW_MESSAGE messages from other classes */
     private void registerNewBroadcastReceiver() {
@@ -353,6 +363,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+    // ----- ACTIONS WITH THE KEYBOARD ----- //
 
     /** The Pseudo and Status input will listen for the Enter key, and try to update the user data */
     public void setupEnterListener(final Activity activity) {

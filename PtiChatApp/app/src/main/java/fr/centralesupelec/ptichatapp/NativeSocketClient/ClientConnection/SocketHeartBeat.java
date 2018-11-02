@@ -19,7 +19,7 @@ public class SocketHeartBeat implements Runnable {
                 Thread.sleep(30000);
                 mSocketEmission.sendMessage("heartBeat");
             } catch (InterruptedException e) {
-                Log.w("HBi", "HeartBeat interrupted </3");
+                Log.w("HBi", "💔 HeartBeat interrupted");
             }
         }
     }

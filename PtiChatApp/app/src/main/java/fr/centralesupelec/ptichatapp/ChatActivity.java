@@ -79,7 +79,7 @@ public class ChatActivity extends AppCompatActivity {
 
         applyChatInfoFromIntent();
 
-        // set the right image for the chan depending on the private/public parameter
+        // Set the right image for the chan depending on the private/public parameter
         ImageView chanImage = findViewById(R.id.chatAvatar);
         if (!mIsPrivateChat) {
             chanImage.setImageResource(R.drawable.cat_set);
@@ -94,7 +94,7 @@ public class ChatActivity extends AppCompatActivity {
             SendMessageTask.sendMessageAsync(this, JsonUtils.askForListOfChatMembers(mChatId));
         }
 
-        // set recyclerView for members
+        // Set recyclerView for members
         RecyclerView memberRecyclerView = findViewById(R.id.listOfMembers);
         memberRecyclerView.setHasFixedSize(true);
 
@@ -104,7 +104,7 @@ public class ChatActivity extends AppCompatActivity {
         mMemberAdapter = new MemberAdapter(memberDataset);
         memberRecyclerView.setAdapter(mMemberAdapter);
 
-        // set recyclerView for messages
+        // Set recyclerView for messages
         newMessage = findViewById(R.id.newMessage);
         mMessagesRecyclerView = findViewById(R.id.chatView);
         mMessagesRecyclerView.setHasFixedSize(true);
@@ -112,6 +112,7 @@ public class ChatActivity extends AppCompatActivity {
         RecyclerView.LayoutManager messagesLayoutManager = new LinearLayoutManager(this);
         mMessagesRecyclerView.setLayoutManager(messagesLayoutManager);
 
+        messageDataset.add(new Message("Loading messages...", "system", mChatId));
         mMessagesAdapter = new MessageAdapter(messageDataset, this);
         mMessagesRecyclerView.setAdapter(mMessagesAdapter);
 
@@ -168,6 +169,8 @@ public class ChatActivity extends AppCompatActivity {
         super.onResume();
         registerNewBroadcastReceiver();
         applyChatInfoFromIntent();
+
+        // Request list of messages
         if (mIsPrivateChat) {
             SendMessageTask.sendMessageAsync(this, JsonUtils.askForPrivateMessages(mMyUserId, mOtherUserId));
         } else {
@@ -242,6 +245,7 @@ public class ChatActivity extends AppCompatActivity {
                         Message newMessage = JsonUtils.messageJsonToMessage(json.getJSONObject("message"));
                         if (newMessage == null) throw new JSONException("newMessage is null");
 
+                        // Check if the message is one of the pending ones (sent by current user)
                         String newMessageId = newMessage.getId();
                         Integer pendingMessagePosition = mPendingMessages.get(newMessageId);
 

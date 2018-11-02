@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.IBinder;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
@@ -33,13 +34,16 @@ public class BackgroundListener extends Service {
         createNotificationChannel();
     }
 
+    @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.w("BLs", "😡 BackgroundListener stopped!");
         try {
             unregisterReceiver(newMessageReceiver);
         } catch (IllegalArgumentException ignored) { }
     }
 
+    @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -138,7 +142,7 @@ public class BackgroundListener extends Service {
                     }
                 }
             } catch (JSONException e) {
-                Log.e("CAe", "🆘 Could not parse message as JSON");
+                Log.e("BLe", "🆘 Could not parse message as JSON");
             }
         }
     }
