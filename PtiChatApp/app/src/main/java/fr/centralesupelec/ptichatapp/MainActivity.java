@@ -1,6 +1,7 @@
 package fr.centralesupelec.ptichatapp;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -53,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
 
     private List<User> mUserDataset = new ArrayList<>();
     private List<Chat> mChatDataset = new ArrayList<>();
+
+    private Intent mServiceIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,8 +111,9 @@ public class MainActivity extends AppCompatActivity {
 
         // set up the listeners
         setupEnterListener(this);
-        Intent intent = new Intent(this, BackgroundListener.class);
-        startService(intent);
+
+        mServiceIntent = new Intent(this, BackgroundListener.class);
+        if (!isBackgroundListenerRunning()) startService(mServiceIntent);
     }
 
     public void onPause() {
@@ -309,6 +313,23 @@ public class MainActivity extends AppCompatActivity {
         selectChatIntent.putExtra("chatName", chatNameById(chatId));
         selectChatIntent.putExtra("myUserId", Session.getUserId());
         startActivity(selectChatIntent);
+    }
+
+    // ----- BACKGROUND LISTENER MANAGEMENT ----- //
+
+    private boolean isBackgroundListenerRunning() {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        if (manager == null) return false;
+
+        String blClassName = BackgroundListener.class.getName();
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (blClassName.equals(service.service.getClassName())) {
+                Log.i ("MAs", "👂 isMyServiceRunning? true");
+                return true;
+            }
+        }
+        Log.i ("MAs", "👂 isMyServiceRunning? false");
+        return false;
     }
 
     // ----- RECEIVER FOR MESSAGES FROM THE SOCKET ----- //
