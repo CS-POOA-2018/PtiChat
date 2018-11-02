@@ -22,7 +22,7 @@ public class SocketServerConnection implements Runnable {
     }
 
     void sendMessage(String message) {
-        System.out.println("📧 Sending message: " + message);
+        System.out.println("📧 Sending message: " + ((message.length() <= 180) ? message : message.substring(0, 176) + " ···"));
         mOut.println(message);
         mOut.flush();
     }
@@ -68,8 +68,8 @@ public class SocketServerConnection implements Runnable {
 
             ConnectionsManager cm = StorageSingleton.getInstance().getConnectionsManager();
             String userWhoWasConnected = cm.getUserOfSocket(this);
-            if (userWhoWasConnected != null) cm.sendMessageToAllConnectedUsers(JsonUtils.announceConnection(userWhoWasConnected, false));
             cm.unregisterSocket(this);
+            if (userWhoWasConnected != null) cm.sendMessageToAllConnectedUsers(JsonUtils.announceConnection(userWhoWasConnected, false));
 
         } catch (IOException e) {
             System.out.println("😿 Client disconnected due to error: " + e.getMessage());

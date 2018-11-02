@@ -16,6 +16,7 @@ public class JsonUtils {
         JSONObject json = new JSONObject();
         json.put("chatId", chat.getId());
         json.put("chatName", chat.getName());
+        json.put("isPrivate", chat.isPrivate());
         return json;
     }
 

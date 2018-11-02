@@ -6,6 +6,7 @@ import com.pooa.ptichat.BackServer.PODS.Message;
 import com.pooa.ptichat.BackServer.PODS.User;
 import com.pooa.ptichat.BackServer.Storage.IStorage;
 import com.pooa.ptichat.BackServer.StorageSingleton;
+import com.pooa.ptichat.BackServer.Utils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -162,7 +163,7 @@ public class ReceivedMessageHandler implements Runnable {
             } else if ("getPrivateMessages".equals(messageType)) {
                 String userId1 = json.getString("userId1");
                 String userId2 = json.getString("userId2");
-                String chatId = (userId2.compareTo(userId1) > 0) ? userId1 + "+" + userId2 : userId2 + "+" + userId1;
+                String chatId = Utils.twoUserIdsToPrivateChatId(userId1, userId2);
                 IStorage storage = StorageSingleton.getInstance().getStorage();
                 Chat chat = storage.getChat(chatId);
                 // If the chat does not exist, create it

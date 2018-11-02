@@ -24,4 +24,8 @@ public class Utils {
         }
         return messageDate;
     }
+
+    public static String twoUserIdsToPrivateChatId(String userId1, String userId2) {
+        return (userId2.compareTo(userId1) > 0) ? userId1 + "+" + userId2 : userId2 + "+" + userId1;
+    }
 }
