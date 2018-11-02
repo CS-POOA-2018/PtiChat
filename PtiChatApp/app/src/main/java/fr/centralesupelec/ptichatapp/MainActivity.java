@@ -271,6 +271,16 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
+    private String chatNameById(String chatId) {
+        for (Chat c : mChatDataset) if (chatId.equals(c.getId())) return c.getName();
+        return "ChatNotFound";
+    }
+
+    private String userPseudoById(String userId) {
+        for (User u : mUserDataset) if (userId.equals(u.getId())) return u.getPseudo();
+        return "UserNotFound";
+    }
+
     public void onSelectContact(String contactId) {
         // Switch activity to Chat, using the contact name
         Log.i("MAc", "👈 Selected contact " + contactId);
@@ -283,6 +293,8 @@ public class MainActivity extends AppCompatActivity {
 
         Intent selectChatIntent = new Intent(this, ChatActivity.class);
         selectChatIntent.putExtra("isPrivateChat", true);
+        selectChatIntent.putExtra("chatId", Utils.twoUserIdsToPrivateChatId(myUserId, contactId));
+        selectChatIntent.putExtra("chatName", userPseudoById(contactId));
         selectChatIntent.putExtra("myUserId", myUserId);
         selectChatIntent.putExtra("otherUserId", contactId);
         startActivity(selectChatIntent);
@@ -293,8 +305,9 @@ public class MainActivity extends AppCompatActivity {
         Log.i("MAc", "👈 Selected chat " + chatId);
         Intent selectChatIntent = new Intent(this, ChatActivity.class);
         selectChatIntent.putExtra("isPrivateChat", false);
-        selectChatIntent.putExtra("myUserId", Session.getUserId());
         selectChatIntent.putExtra("chatId", chatId);
+        selectChatIntent.putExtra("chatName", chatNameById(chatId));
+        selectChatIntent.putExtra("myUserId", Session.getUserId());
         startActivity(selectChatIntent);
     }
 

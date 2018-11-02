@@ -43,6 +43,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private boolean mIsPrivateChat;
     private String mChatId;
+    private String mChatName;
     private String mMyUserId;
     private String mOtherUserId;
     private EditText newMessage;
@@ -56,12 +57,16 @@ public class ChatActivity extends AppCompatActivity {
 
     private void applyChatInfoFromIntent() {
         mIsPrivateChat = getIntent().getBooleanExtra("isPrivateChat", false);
+        mChatId = getIntent().getStringExtra("chatId");
+        mChatName = getIntent().getStringExtra("chatName");
         mMyUserId = getIntent().getStringExtra("myUserId");
-        if (mIsPrivateChat) {
-            mOtherUserId = getIntent().getStringExtra("otherUserId");
-        } else {
-            mChatId = getIntent().getStringExtra("chatId");
-        }
+        if (mIsPrivateChat) mOtherUserId = getIntent().getStringExtra("otherUserId");
+        setActionBarTitle();
+    }
+
+    private void setActionBarTitle() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null && mChatName != null) actionBar.setTitle(mChatName);
     }
 
     @Override
@@ -83,15 +88,6 @@ public class ChatActivity extends AppCompatActivity {
         ImageView chanImage = findViewById(R.id.chatAvatar);
         if (!mIsPrivateChat) {
             chanImage.setImageResource(R.drawable.cat_set);
-        }
-
-        // request list of members
-        if (mIsPrivateChat) {
-            // TODO : get pseudo and not ID of other user
-            User otherUser = new User(mOtherUserId, mOtherUserId, null, null, true);
-            memberDataset.add(otherUser);
-        } else {
-            SendMessageTask.sendMessageAsync(this, JsonUtils.askForListOfChatMembers(mChatId));
         }
 
         // Set recyclerView for members
@@ -176,6 +172,9 @@ public class ChatActivity extends AppCompatActivity {
         } else {
             SendMessageTask.sendMessageAsync(this, JsonUtils.askForListOfMessages(mChatId));
         }
+
+        // Request list of members
+        SendMessageTask.sendMessageAsync(this, JsonUtils.askForListOfChatMembers(mChatId));
     }
 
     String getMyUserId() {
@@ -231,9 +230,16 @@ public class ChatActivity extends AppCompatActivity {
                     Collections.addAll(memberDataset, JsonUtils.listOfUsersJsonToUsers(json));
                     mMemberAdapter.notifyDataSetChanged();
 
+                    // If private chat, update title with contact pseudo
+                    if (mIsPrivateChat)
+                        for (User u : memberDataset)
+                            if (!mMyUserId.equals(u.getId()) && !mChatName.equals(u.getPseudo())) {
+                                mChatName = u.getPseudo();
+                                setActionBarTitle();
+                            }
+
                 } else if ("listMessagesChat".equals(json.getString("type"))) {
                     Log.i("CAl", "🗒 Got list of messages in chat");
-                    if (mChatId == null) mChatId = json.getString("chatId");
                     messageDataset.clear();
                     Collections.addAll(messageDataset, JsonUtils.listOfMessagesJsonToMessages(json));
                     mMessagesAdapter.notifyDataSetChanged();

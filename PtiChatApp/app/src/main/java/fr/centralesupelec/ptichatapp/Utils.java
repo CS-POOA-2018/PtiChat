@@ -22,6 +22,10 @@ public class Utils {
         return dateToString(date, Constants.DATE_PATTERN);
     }
 
+    public static String twoUserIdsToPrivateChatId(String userId1, String userId2) {
+        return (userId2.compareTo(userId1) > 0) ? userId1 + "+" + userId2 : userId2 + "+" + userId1;
+    }
+
     public static Date stringToDate(String dateString) {
         if ("".equals(dateString)) return null;
         DateFormat messageDateFormat = new SimpleDateFormat(Constants.DATE_PATTERN, Locale.FRANCE);
