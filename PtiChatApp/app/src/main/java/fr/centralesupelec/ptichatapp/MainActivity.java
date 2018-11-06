@@ -39,6 +39,12 @@ import fr.centralesupelec.ptichatapp.PODS.User;
 import fr.centralesupelec.ptichatapp.PODS.UserOnlineComparator;
 
 
+/**
+ * This activity is run when you are logged in.
+ * It hosts you user info, the contacts registered on the server, and the list of chats you are in.
+ * You can start chatting with one user or in a group chat, create a new group chat,
+ * edit your user info, or delete your user.
+ */
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView.Adapter mUsersAdapter;

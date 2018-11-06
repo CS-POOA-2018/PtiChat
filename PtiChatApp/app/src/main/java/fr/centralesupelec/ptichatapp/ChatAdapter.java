@@ -12,6 +12,11 @@ import java.util.List;
 
 import fr.centralesupelec.ptichatapp.PODS.Chat;
 
+
+/**
+ * This activity is the chat page. Here you can send and receive messages in the current chat.
+ * The chat can be private (only you and another user) or not (group of users, including yourself)
+ */
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder> {
 
     private List<Chat> mDataset;

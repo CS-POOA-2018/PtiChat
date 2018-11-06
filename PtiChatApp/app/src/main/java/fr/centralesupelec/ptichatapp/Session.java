@@ -2,11 +2,11 @@ package fr.centralesupelec.ptichatapp;
 
 import fr.centralesupelec.ptichatapp.PODS.User;
 
+/**
+ * Serve as global variables, shared by all the classes. No real need for a singleton here
+ */
 public class Session {
     private static User user;
-
-    // TODO use a session structure that will be the interface between data that servers sends, and the display
-    // Store data when it is received, serve it when asked. Think about timing problems.
 
     public static User getUser() {
         return user;

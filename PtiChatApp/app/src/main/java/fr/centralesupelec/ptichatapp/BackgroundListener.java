@@ -21,8 +21,6 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.UUID;
-
 import fr.centralesupelec.ptichatapp.PODS.Chat;
 import fr.centralesupelec.ptichatapp.PODS.Message;
 
@@ -69,9 +67,7 @@ public class BackgroundListener extends Service {
         return null;
     }
 
-    /**
-     * Allows to make the phone vibrate when a wizz is received
-     */
+    /** Make the phone vibrate when a wizz is received */
     private void wizz() {
         Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         if (v == null) return;
@@ -85,6 +81,7 @@ public class BackgroundListener extends Service {
         }
     }
 
+    /** Create the NotificationChannel, on API 26+ */
     private void createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
@@ -104,9 +101,7 @@ public class BackgroundListener extends Service {
         }
     }
 
-    /**
-     * Creates and pop the notification for a message that appeared in a chat
-     */
+    /** Create and pop the notification for a message that appeared in a chat */
     private void sendNotification(Message message, Chat chat) {
         Intent redirect = new Intent(this, ChatActivity.class);
 
@@ -141,18 +136,14 @@ public class BackgroundListener extends Service {
         notificationManager.notify(chat.getId().hashCode(), mBuilder.build());
     }
 
-    /**
-     * The activity will listen for BROADCAST_NEW_MESSAGE messages from other classes
-     */
+    /** The activity will listen for BROADCAST_NEW_MESSAGE messages from other classes */
     private void registerNewBroadcastReceiver() {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.BROADCAST_NEW_MESSAGE);
         registerReceiver(newMessageReceiver, intentFilter);
     }
 
-    /**
-     * Receive messages from the socket controller
-     */
+    /** Receive messages from the socket controller */
     public class NewMessageReceiver extends BroadcastReceiver {
         public BackgroundListener backgroundListener;
 

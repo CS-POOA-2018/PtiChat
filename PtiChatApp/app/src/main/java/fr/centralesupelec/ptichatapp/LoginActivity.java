@@ -24,6 +24,10 @@ import fr.centralesupelec.ptichatapp.NativeSocketClient.SocketSingleton;
 import fr.centralesupelec.ptichatapp.PODS.User;
 
 
+/**
+ * In this activity you can log yourself in. You can choose the server you want to be connected to,
+ * and use your credentials to create or log into you account.
+ */
 public class LoginActivity extends AppCompatActivity {
 
     private EditText nameField;

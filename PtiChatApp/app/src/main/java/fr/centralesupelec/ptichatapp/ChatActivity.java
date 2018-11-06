@@ -59,6 +59,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private List<User> memberDataset = new ArrayList<>();
 
+    /** Use the intent the activity have been called with to fill its attributes */
     private void applyChatInfoFromIntent() {
         mIsPrivateChat = getIntent().getBooleanExtra("isPrivateChat", false);
         mChatId = getIntent().getStringExtra("chatId");
@@ -68,6 +69,7 @@ public class ChatActivity extends AppCompatActivity {
         setActionBarTitle();
     }
 
+    /** Put the chat name in the action bar */
     private void setActionBarTitle() {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null && mChatName != null) actionBar.setTitle(mChatName);
@@ -187,10 +189,12 @@ public class ChatActivity extends AppCompatActivity {
         SendMessageTask.sendMessageAsync(this, JsonUtils.askForListOfChatMembers(mChatId));
     }
 
+    /** Return my user id */
     String getMyUserId() {
         return (mMyUserId == null) ? Session.getUserId() : mMyUserId;
     }
 
+    /** Method called when the [SEND] button is clicked */
     public void onSend(View view) {
         // get text content and empty the input field
         String textContent = newMessage.getText().toString().trim();
@@ -202,6 +206,7 @@ public class ChatActivity extends AppCompatActivity {
         sendMessage(newMessage);
     }
 
+    /** Send the message to the backend */
     private void sendMessage(Message message) {
         // Display the new message immediately
         messageDataset.add(message);
@@ -215,12 +220,14 @@ public class ChatActivity extends AppCompatActivity {
         SendMessageTask.sendMessageAsync(this, JsonUtils.sendNewMessageJson(message));
     }
 
+    /** Method called when the [WIZZ] button is clicked */
     public void onWizz(View view) {
         // send a wizz to have the phone vibrate
         Message wizz = new Message(":wizz:", getMyUserId(), mChatId);
         sendMessage(wizz);
     }
 
+    /** Method called when the user wants to rename the chat */
     public void onRenameChat() {
         final Context caContext = this;
 

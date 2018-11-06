@@ -17,6 +17,12 @@ import fr.centralesupelec.ptichatapp.NativeSocketClient.SendMessageTask;
 import fr.centralesupelec.ptichatapp.PODS.User;
 
 
+/**
+ * This activity will be the first to be launched on application startup.
+ * It will try to log you using the last credentials and server you were using.
+ * If it succeeds, you are logged in
+ * If it fails, you are redirected to the login page
+ */
 public class HelloActivity extends AppCompatActivity {
 
     private final NewMessageReceiver newMessageReceiver = new NewMessageReceiver();
@@ -36,6 +42,7 @@ public class HelloActivity extends AppCompatActivity {
         onConnect();
     }
 
+    /** Wait for a few seconds, then call onFailedLogin if not interrupted before the timeout */
     private class Waiter implements Runnable {
 
         private HelloActivity mHelloActivity;
@@ -103,18 +110,14 @@ public class HelloActivity extends AppCompatActivity {
         finish();
     }
 
-    /**
-     * The activity will listen for BROADCAST_NEW_MESSAGE messages from other classes
-     */
+    /** The activity will listen for BROADCAST_NEW_MESSAGE messages from other classes */
     private void registerNewBroadcastReceiver() {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.BROADCAST_NEW_MESSAGE);
         registerReceiver(newMessageReceiver, intentFilter);
     }
 
-    /**
-     * Receive messages from the socket interface. If login is accepted, go to main activity
-     */
+    /** Receive messages from the socket interface. If login is accepted, go to main activity */
     public class NewMessageReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
