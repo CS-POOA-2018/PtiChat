@@ -4,6 +4,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.app.TaskStackBuilder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -58,7 +59,8 @@ public class BackgroundListener extends Service {
         sendBroadcast(broadcastIntent);
         try {
             unregisterReceiver(newMessageReceiver);
-        } catch (IllegalArgumentException ignored) { }
+        } catch (IllegalArgumentException ignored) {
+        }
     }
 
     @Nullable
@@ -67,7 +69,9 @@ public class BackgroundListener extends Service {
         return null;
     }
 
-    /** Allows to make the phone vibrate when a wizz is received */
+    /**
+     * Allows to make the phone vibrate when a wizz is received
+     */
     private void wizz() {
         Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         if (v == null) return;
@@ -100,10 +104,11 @@ public class BackgroundListener extends Service {
         }
     }
 
-    /** Creates and pop the notification for a message that appeared in a chat */
+    /**
+     * Creates and pop the notification for a message that appeared in a chat
+     */
     private void sendNotification(Message message, Chat chat) {
         Intent redirect = new Intent(this, ChatActivity.class);
-        redirect.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
         // Check if chat is private or not and gives info about it to the incoming activity
         redirect.putExtra("isPrivateChat", chat.isPrivate());
@@ -116,7 +121,13 @@ public class BackgroundListener extends Service {
             redirect.putExtra("chatName", chat.getName());
         }
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, UUID.randomUUID().hashCode(), redirect, PendingIntent.FLAG_UPDATE_CURRENT);
+        // Use TaskStackBuilder to build the back stack and get the PendingIntent
+        // Create the TaskStackBuilder and add the intent, which inflates the back stack
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addNextIntentWithParentStack(redirect);
+        // Get the PendingIntent containing the entire back stack
+        PendingIntent pendingIntent =
+                stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, "messages")
                 .setSmallIcon(R.drawable.ic_chat_24dp)
                 .setContentTitle("New message!")
@@ -130,14 +141,18 @@ public class BackgroundListener extends Service {
         notificationManager.notify(chat.getId().hashCode(), mBuilder.build());
     }
 
-    /** The activity will listen for BROADCAST_NEW_MESSAGE messages from other classes */
+    /**
+     * The activity will listen for BROADCAST_NEW_MESSAGE messages from other classes
+     */
     private void registerNewBroadcastReceiver() {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.BROADCAST_NEW_MESSAGE);
         registerReceiver(newMessageReceiver, intentFilter);
     }
 
-    /** Receive messages from the socket controller */
+    /**
+     * Receive messages from the socket controller
+     */
     public class NewMessageReceiver extends BroadcastReceiver {
         public BackgroundListener backgroundListener;
 
