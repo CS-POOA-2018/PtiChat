@@ -36,6 +36,7 @@ import java.util.List;
 import fr.centralesupelec.ptichatapp.NativeSocketClient.SendMessageTask;
 import fr.centralesupelec.ptichatapp.PODS.Chat;
 import fr.centralesupelec.ptichatapp.PODS.User;
+import fr.centralesupelec.ptichatapp.PODS.UserOnlineComparator;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -86,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
         chatsRecyclerView.setLayoutManager(chatsLayoutManager);
 
         // specify an mUsersAdapter
+        mUserDataset.sort(new UserOnlineComparator());
         mUsersAdapter = new ContactAdapter(mUserDataset, this);
         usersRecyclerView.setAdapter(mUsersAdapter);
 
@@ -372,6 +374,7 @@ public class MainActivity extends AppCompatActivity {
                             mUserDataset.add(u);
                         }
                     }
+                    mUserDataset.sort(new UserOnlineComparator());
                     mUsersAdapter.notifyDataSetChanged();
                     mCurrentUser.setConnected(true);
 
