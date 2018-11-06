@@ -16,6 +16,7 @@
     <string name="delete_user">Delete User</string>
     <string name="delete_chat">Delete Chat</string>
     <string name="rename_chat">Rename Chat…</string>
+    <string name="wizz">👋</string>
 
     <!-- Descriptions -->
     <string name="avatar">Cute image of a cat</string>

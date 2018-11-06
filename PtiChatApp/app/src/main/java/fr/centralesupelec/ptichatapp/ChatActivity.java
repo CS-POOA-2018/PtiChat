@@ -197,17 +197,28 @@ public class ChatActivity extends AppCompatActivity {
         if (textContent.isEmpty()) return;
         newMessage.setText("");
 
-        // Create and display the new message immediately
+        // Create and send message
         Message newMessage = new Message(textContent, getMyUserId(), mChatId);
-        messageDataset.add(newMessage);
+        sendMessage(newMessage);
+    }
+
+    private void sendMessage(Message message) {
+        // Display the new message immediately
+        messageDataset.add(message);
 
         int positionInserted = messageDataset.size() - 1;
         mMessagesAdapter.notifyItemInserted(positionInserted);
         mMessagesRecyclerView.scrollToPosition(positionInserted);
 
         // Send the message to the back
-        mPendingMessages.put(newMessage.getId(), positionInserted);
-        SendMessageTask.sendMessageAsync(this, JsonUtils.sendNewMessageJson(newMessage));
+        mPendingMessages.put(message.getId(), positionInserted);
+        SendMessageTask.sendMessageAsync(this, JsonUtils.sendNewMessageJson(message));
+    }
+
+    public void onWizz(View view) {
+        // send a wizz to have the phone vibrate
+        Message wizz = new Message(":wizz:", getMyUserId(), mChatId);
+        sendMessage(wizz);
     }
 
     public void onRenameChat() {
