@@ -1,6 +1,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <item android:id="@+id/action_rename_chat"
+        android:icon="@drawable/ic_chat_24dp"
+        android:title="@string/rename_chat"
+        app:showAsAction="never"/>
+
     <item android:id="@+id/action_delete_chat"
         android:icon="@drawable/ic_chat_24dp"
         android:title="@string/delete_chat"

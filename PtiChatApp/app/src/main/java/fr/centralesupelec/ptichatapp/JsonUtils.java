@@ -164,6 +164,19 @@ public class JsonUtils {
         return toSend;
     }
 
+    public static JSONObject editChatJson(Chat chat) {
+        JSONObject toSend = null;
+        try {
+            toSend = new JSONObject();
+            toSend.put("type", "editChat");
+            toSend.put("chatId", chat.getId());
+            toSend.put("chatName", chat.getName());
+        } catch (JSONException e) {
+            Log.e("JUe", "Could not make JSON: " + e.getMessage());
+        }
+        return toSend;
+    }
+
     public static JSONObject deleteUserJson(String userId) {
         JSONObject toSend = null;
         try {

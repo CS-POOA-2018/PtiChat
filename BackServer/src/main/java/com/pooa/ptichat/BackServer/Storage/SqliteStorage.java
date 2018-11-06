@@ -120,6 +120,20 @@ public class SqliteStorage implements IStorage {
     }
 
     @Override
+    public void editChat(Chat chat) {
+//        System.out.println("Editing chat " + chat.getId());
+        String sql = "UPDATE chats SET name = ? WHERE chatId = ?";
+        try (Connection conn = this.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, chat.getName());
+            pstmt.setString(2, chat.getId());
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("🆘 editChat failed: " + e.getMessage());
+        }
+    }
+
+    @Override
     public Chat getChat(String chatId) {
         String sql = "SELECT chatId, name, isPrivate FROM chats WHERE chatId = ?";
 

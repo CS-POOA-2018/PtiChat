@@ -81,10 +81,19 @@ public class JsonUtils {
         return json;
     }
 
-    public static JSONObject editAcceptance(User user, boolean accepted, String message) {
+    public static JSONObject userEditAcceptance(User user, boolean accepted, String message) {
         JSONObject json = new JSONObject();
-        json.put("type", "editAcceptance");
+        json.put("type", "userEditAcceptance");
         json.put("user", (user != null) ? userToJson(user) : "");
+        json.put("value", accepted);
+        json.put("message", message);
+        return json;
+    }
+
+    public static JSONObject chatEditAcceptance(Chat chat, boolean accepted, String message) {
+        JSONObject json = new JSONObject();
+        json.put("type", "chatEditAcceptance");
+        json.put("chat", (chat != null) ? chatToJson(chat) : "");
         json.put("value", accepted);
         json.put("message", message);
         return json;
@@ -137,7 +146,7 @@ public class JsonUtils {
         return json;
     }
 
-    public static Chat jsonToChat(JSONObject json) throws JSONException {
+    public static Chat jsonToNewChat(JSONObject json) throws JSONException {
         Chat c = new Chat(json.getString("chatName"));
         JSONArray usersJsonArray = new JSONArray(json.getString("users"));
         List<String> userList = new ArrayList<>();
@@ -146,6 +155,10 @@ public class JsonUtils {
         }
         c.setUsers(userList);
         return c;
+    }
+
+    public static Chat jsonToChat(JSONObject json) throws JSONException {
+        return new Chat(json.getString("chatId"), json.getString("chatName"));
     }
 
     public static List<String> newChatJsonToUserIdList(JSONObject json) throws JSONException {

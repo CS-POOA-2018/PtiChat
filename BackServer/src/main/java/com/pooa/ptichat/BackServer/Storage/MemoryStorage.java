@@ -22,6 +22,11 @@ public class MemoryStorage implements IStorage {
     }
 
     @Override
+    public void editChat(Chat chat) {
+        mChatData.put(chat.getId(), chat);
+    }
+
+    @Override
     public Chat getChat(String chatId) {
         return mChatData.get(chatId);
     }

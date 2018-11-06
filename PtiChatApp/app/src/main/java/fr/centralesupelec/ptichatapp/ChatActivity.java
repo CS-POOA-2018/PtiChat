@@ -2,14 +2,17 @@ package fr.centralesupelec.ptichatapp;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -31,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 
 import fr.centralesupelec.ptichatapp.NativeSocketClient.SendMessageTask;
+import fr.centralesupelec.ptichatapp.PODS.Chat;
 import fr.centralesupelec.ptichatapp.PODS.Message;
 import fr.centralesupelec.ptichatapp.PODS.User;
 
@@ -74,6 +78,8 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
+        applyChatInfoFromIntent();
+
         // Add the toolbar
         Toolbar myToolbar = findViewById(R.id.chat_toolbar);
         setSupportActionBar(myToolbar);
@@ -81,8 +87,6 @@ public class ChatActivity extends AppCompatActivity {
         // Add the return arrow
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) actionBar.setDisplayHomeAsUpEnabled(true);
-
-        applyChatInfoFromIntent();
 
         // Set the right image for the chan depending on the private/public parameter
         ImageView chanImage = findViewById(R.id.chatAvatar);
@@ -128,6 +132,7 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_chat, menu);
+        if (mIsPrivateChat) menu.findItem(R.id.action_rename_chat).setVisible(false);
         return true;
     }
 
@@ -141,6 +146,11 @@ public class ChatActivity extends AppCompatActivity {
                 JSONObject toSend = JsonUtils.deleteChatJson(mChatId);
                 if (toSend != null) SendMessageTask.sendMessageAsync(this, toSend);
                 finish();
+                return true;
+
+            case R.id.action_rename_chat:
+                Log.i("CAa", "Chat renaming asked for chatId " + mChatId);
+                onRenameChat();
                 return true;
 
             default:
@@ -198,6 +208,38 @@ public class ChatActivity extends AppCompatActivity {
         // Send the message to the back
         mPendingMessages.put(newMessage.getId(), positionInserted);
         SendMessageTask.sendMessageAsync(this, JsonUtils.sendNewMessageJson(newMessage));
+    }
+
+    public void onRenameChat() {
+        final Context caContext = this;
+
+        final EditText chatNameEditText = new EditText(ChatActivity.this);
+        chatNameEditText.setText(mChatName);
+        chatNameEditText.setInputType(InputType.TYPE_CLASS_TEXT);
+        chatNameEditText.setMaxLines(1);
+        chatNameEditText.setImeOptions(EditorInfo.IME_ACTION_SEND);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ChatActivity.this);
+        alertDialogBuilder.setIcon(R.drawable.ic_chat_24dp);
+        alertDialogBuilder.setTitle("Select new chat name");
+        alertDialogBuilder.setView(chatNameEditText);
+
+        alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String newChatName = chatNameEditText.getText().toString().trim();
+                if (newChatName.isEmpty() || newChatName.equals(mChatName)) return;
+                JSONObject toSend = JsonUtils.editChatJson(new Chat(mChatId, newChatName, false));
+                SendMessageTask.sendMessageAsync(caContext, toSend);
+            }
+        });
+        alertDialogBuilder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) { }
+        });
+        AlertDialog dialog = alertDialogBuilder.create();
+        dialog.show();
+        chatNameEditText.requestFocus();
     }
 
     /**
@@ -266,6 +308,18 @@ public class ChatActivity extends AppCompatActivity {
                         mMessagesRecyclerView.scrollToPosition(messageDataset.size() - 1);
                     } else {
                         Log.i("CAn", "🗒 Got new message in another chat");
+                    }
+                } else if ("chatEditAcceptance".equals(json.getString("type"))) {
+                    if (json.getJSONObject("chat").getString("chatId").equals(mChatId)) {
+                        boolean accepted = json.getBoolean("value");
+                        Log.i("CAn", "🗒 Chat name edited: " + accepted);
+                        Toast.makeText(getApplicationContext(), json.getString("message"), Toast.LENGTH_LONG).show();
+                        if (accepted) {
+                            Toast.makeText(getApplicationContext(), json.getString("message"), Toast.LENGTH_LONG).show();
+                            mChatName = json.getJSONObject("chat").getString("chatName");
+                            getIntent().putExtra("chatName", mChatName);
+                            setActionBarTitle();
+                        }
                     }
                 }
             } catch (JSONException e) {

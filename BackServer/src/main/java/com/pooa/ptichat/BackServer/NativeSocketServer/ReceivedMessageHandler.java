@@ -134,9 +134,25 @@ public class ReceivedMessageHandler implements Runnable {
                     }
 
                     storage.editUser(newUser);
-                    mSocketServerConnection.sendMessage(JsonUtils.editAcceptance(newUser, true, ""));
+                    mSocketServerConnection.sendMessage(JsonUtils.userEditAcceptance(newUser, true, ""));
                 } else {
-                    mSocketServerConnection.sendMessage(JsonUtils.editAcceptance(newUser, false, "User " + userId + " not found."));
+                    mSocketServerConnection.sendMessage(JsonUtils.userEditAcceptance(newUser, false, "User " + userId + " not found."));
+                }
+
+            } else if ("editChat".equals(messageType)) {
+                Chat newChat = JsonUtils.jsonToChat(json);
+                String chatId = newChat.getId();
+                String newName = newChat.getName();
+
+                IStorage storage = StorageSingleton.getInstance().getStorage();
+                Chat chatMatch = storage.getChat(chatId);
+
+                if (chatMatch != null && newName != null) {
+                    storage.editChat(newChat);
+                    System.out.println("😺 Chat " + chatId + " edited, new name: " + newName);
+                    mSocketServerConnection.sendMessage(JsonUtils.chatEditAcceptance(newChat, true, "New chat info registered"));
+                } else {
+                    mSocketServerConnection.sendMessage(JsonUtils.chatEditAcceptance(newChat, false, "Chat edition failed."));
                 }
 
             } else if ("getListOfUsers".equals(messageType)) {

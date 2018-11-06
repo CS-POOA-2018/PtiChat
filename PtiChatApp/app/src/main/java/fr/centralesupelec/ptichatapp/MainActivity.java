@@ -206,8 +206,8 @@ public class MainActivity extends AppCompatActivity {
 
     /** When "new chat" button is pressed, show dialog to choose contacts and set chat name */
     public void onNewChatPressed(View view) {
-        // Switch activity to Login
         Log.i("MAc", "👈 Clicked on New Chat button");
+        final Context maContext = this;
 
         final EditText chatNameEditText = new EditText(MainActivity.this);
         chatNameEditText.setHint("Chat name...");
@@ -222,7 +222,6 @@ public class MainActivity extends AppCompatActivity {
         }
         final String[] userInfo = userInfoList.toArray(new String[0]);
         final boolean[] usersChecked = new boolean[userInfo.length];
-        final Context maContext = this;
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
         alertDialogBuilder.setIcon(R.drawable.ic_chat_24dp);
@@ -248,7 +247,9 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "You need to add at least one person", Toast.LENGTH_LONG).show();
                     return;
                 }
-                JSONObject toSend = JsonUtils.createNewChat(chatNameEditText.getText().toString(), selectedUserIds.toArray(new String[0]));
+                String newChatName = chatNameEditText.getText().toString().trim();
+                if (newChatName.isEmpty()) return;
+                JSONObject toSend = JsonUtils.createNewChat(newChatName, selectedUserIds.toArray(new String[0]));
                 SendMessageTask.sendMessageAsync(maContext, toSend);
             }
         });

@@ -48,6 +48,16 @@ This project has two folders: one for the back in Java 8.0 and one for the Andro
 }
 ```
 
+#### Edit chat
+
+```json
+{
+  "type": "editChat",
+  "chatId": "chat id",
+  "chatName": "chat (new?) name"
+}
+```
+
 #### Delete user
 
 ```json
@@ -168,8 +178,19 @@ This project has two folders: one for the back in Java 8.0 and one for the Andro
 
 ```json
 {
-  "type": "editAcceptance",
+  "type": "userEditAcceptance",
   "user": {"userId": "user id", "pseudo": "pseudo", "profilePicture": "...", "status": "...", "isConnected": true},
+  "value": true,
+  "message": ""
+}
+```
+
+#### Validate chat edition
+
+```json
+{
+  "type": "chatEditAcceptance",
+  "chat": {"chatId": "chat id", "chatName": "chat display name", "isPrivate": false},
   "value": true,
   "message": ""
 }

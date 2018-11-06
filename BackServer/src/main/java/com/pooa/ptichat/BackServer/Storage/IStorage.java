@@ -6,6 +6,7 @@ import com.pooa.ptichat.BackServer.PODS.User;
 
 public interface IStorage {
     void addChat(Chat chat);
+    void editChat(Chat chat);
     Chat getChat(String chatId);
     void removeChat(String chatId);
     Chat[] listChats();
