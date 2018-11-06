@@ -111,6 +111,7 @@ public class BackgroundListener extends Service {
         redirect.putExtra("myUserId", Session.getUserId());
         if (chat.isPrivate()) {
             redirect.putExtra("chatName", message.getSenderId());  // TODO other person's pseudo
+            redirect.putExtra("otherUserId", message.getSenderId());
         } else {
             redirect.putExtra("chatName", chat.getName());
         }
