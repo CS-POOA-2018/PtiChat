@@ -193,7 +193,7 @@ public class ChatActivity extends AppCompatActivity {
 
     public void onSend(View view) {
         // get text content and empty the input field
-        String textContent = newMessage.getText().toString();
+        String textContent = newMessage.getText().toString().trim();
         if (textContent.isEmpty()) return;
         newMessage.setText("");
 
@@ -253,18 +253,14 @@ public class ChatActivity extends AppCompatActivity {
         chatNameEditText.requestFocus();
     }
 
-    /**
-     * The activity will listen for BROADCAST_NEW_MESSAGE messages from other classes
-     */
+    /** The activity will listen for BROADCAST_NEW_MESSAGE messages from other classes */
     private void registerNewBroadcastReceiver() {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.BROADCAST_NEW_MESSAGE);
         registerReceiver(newMessageReceiver, intentFilter);
     }
 
-    /**
-     * Receive messages from the socket interface. If login is accepted, go to main activity
-     */
+    /** Receive messages from the socket interface. If login is accepted, go to main activity */
     public class NewMessageReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -339,9 +335,7 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * The message box will listen for the Enter key, and send the message if the user uses it
-     */
+    /** The message box will listen for the Enter key, and send the message if the user uses it */
     public void setupEnterListener(EditText messageBox) {
         TextView.OnEditorActionListener enterListener = new TextView.OnEditorActionListener() {
             @Override

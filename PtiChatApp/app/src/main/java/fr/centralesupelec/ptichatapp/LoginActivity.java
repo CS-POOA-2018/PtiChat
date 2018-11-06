@@ -33,9 +33,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private final NewMessageReceiver newMessageReceiver = new NewMessageReceiver();
 
-    // TODO : this is a debug option plz remove for prod
-    private boolean backIsWorking = true;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,13 +59,11 @@ public class LoginActivity extends AppCompatActivity {
         hostNameField.setText(hostInfo.first);
         hostPortField.setText(String.valueOf(hostInfo.second));
 
-        if (backIsWorking) {
-            // Creates and run the Socket Client Connector, this will make the login faster  // TEMP ?
-            SendMessageTask.sendMessageAsync(this, JsonUtils.justTextJSON("cc"));  // TEMP ?
+        // Creates and run the Socket Client Connector, this will make the login faster  // TEMP ?
+        SendMessageTask.sendMessageAsync(this, JsonUtils.justTextJSON("cc"));  // TEMP ?
 
-            // Register the receiver for new incoming message
-            registerNewBroadcastReceiver();
-        }
+        // Register the receiver for new incoming message
+        registerNewBroadcastReceiver();
 
         // Input password listens for the Enter key
         setupEnterListener();
@@ -77,41 +72,32 @@ public class LoginActivity extends AppCompatActivity {
     public void onPause() {
         super.onPause();
         unregisterReceiver(newMessageReceiver);
-//        SendMessageTask.sendMessageAsync(this, "brb");  // TEMP ?
     }
 
     public void onResume() {
         super.onResume();
         registerNewBroadcastReceiver();
-//        SendMessageTask.sendMessageAsync(this, "re");  // TEMP ?
     }
 
+    /** Method called when the [CONNECT] button is pushed */
     public void onConnect(View view) {
         // Get login and password
-        String login = nameField.getText().toString();
-        String password = passwordField.getText().toString();
+        String login = nameField.getText().toString().trim();
+        String password = passwordField.getText().toString().trim();
 
         // Write them into phone storage
         Utils.writeCredentials(this, login, password);
 
-        if (backIsWorking) {
-            // Send User connection to Backend
-            JSONObject toSend = JsonUtils.userInfoToNewUserJson(login, password);
-            if (toSend != null) SendMessageTask.sendMessageAsync(this, toSend);
-        } else {
-            // Connect with session on front
-            Session.setUser(new User(login, login, "", "", true));
-            // Switch activity to main
-            Intent mainActivityIntent = new Intent(this, MainActivity.class);
-            startActivity(mainActivityIntent);
-            finish();
-        }
+        // Send User connection to Backend
+        JSONObject toSend = JsonUtils.userInfoToNewUserJson(login, password);
+        if (toSend != null) SendMessageTask.sendMessageAsync(this, toSend);
     }
 
+    /** Method called when the [OK] button for host change is pushed */
     public void onHostNameChanged(View view) {
         // Get host name and port
-        String hostName = hostNameField.getText().toString();
-        int hostPort = Integer.valueOf(hostPortField.getText().toString());
+        String hostName = hostNameField.getText().toString().trim();
+        int hostPort = Integer.valueOf(hostPortField.getText().toString().trim());
         if (hostName.isEmpty() || hostPort == 0) {
             return;
         }

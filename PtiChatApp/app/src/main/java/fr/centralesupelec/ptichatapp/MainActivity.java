@@ -123,6 +123,15 @@ public class MainActivity extends AppCompatActivity {
         unregisterReceiver(newMessageReceiver);
     }
 
+    public void onDestroy() {
+        super.onDestroy();
+        Log.i("MAd", "☁️ MainActivity destroyed");
+//        stopService(mServiceIntent);
+        try {
+            unregisterReceiver(newMessageReceiver);
+        } catch (IllegalArgumentException ignored) { }
+    }
+
     public void onResume() {
         super.onResume();
         mCurrentUser = Session.getUser();
@@ -133,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
 
     // ----- ACTION BAR ----- //
 
-    /** Menu icons are inflated just as they were with actionbar */
+    /** Menu icons are inflated */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -184,8 +193,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateUserInfo() {
         // update the user object
-        String newPseudo = userNameTV.getText().toString();
-        String newStatus = userStatusTV.getText().toString();
+        String newPseudo = userNameTV.getText().toString().trim();
+        String newStatus = userStatusTV.getText().toString().trim();
 
         boolean somethingChanged = false;
         if (!mCurrentUser.getPseudo().equals(newPseudo)) {
@@ -196,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
             mCurrentUser.setStatus(newStatus);
             somethingChanged = true;
         }
-        if (somethingChanged) {
+        if (somethingChanged && !newPseudo.isEmpty()) {
             Log.i("MAu", "🌱 New User info: " + newPseudo + " ; " + newStatus);
             // send the new data via the API
             JSONObject toSend = JsonUtils.editUserJson(mCurrentUser);
@@ -206,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
 
     // ----- CREATE NEW CHAT DIALOG ----- //
 
-    /** When "new chat" button is pressed, show dialog to choose contacts and set chat name */
+    /** When (new chat) button is pressed, show dialog to choose contacts and set chat name */
     public void onNewChatPressed(View view) {
         Log.i("MAc", "👈 Clicked on New Chat button");
         final Context maContext = this;
@@ -266,6 +275,7 @@ public class MainActivity extends AppCompatActivity {
 
     // ----- NAVIGATION TO OTHER ACTIVITIES ----- //
 
+    /** Method called when the [Logout] button has been clicked */
     public void onLogout(View view) {
         // Switch activity to Login
         Log.i("MAc", "👈 Clicked on Logout button");
@@ -288,6 +298,7 @@ public class MainActivity extends AppCompatActivity {
         return "UserNotFound";
     }
 
+    /** Method called when a contact is selected (open private chat with him) */
     public void onSelectContact(String contactId) {
         // Switch activity to Chat, using the contact name
         Log.i("MAc", "👈 Selected contact " + contactId);
@@ -307,6 +318,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(selectChatIntent);
     }
 
+    /** Method called when a chat is selected (open this chat) */
     public void onSelectChat(String chatId) {
         // Switch activity to Chat, using the chat id
         Log.i("MAc", "👈 Selected chat " + chatId);
@@ -320,6 +332,7 @@ public class MainActivity extends AppCompatActivity {
 
     // ----- BACKGROUND LISTENER MANAGEMENT ----- //
 
+    /** Check if the background listener for notifications is running */
     private boolean isBackgroundListenerRunning() {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         if (manager == null) return false;
@@ -443,6 +456,7 @@ public class MainActivity extends AppCompatActivity {
         activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
+    /** Hide the keyboard */
     public static void hideSoftKeyboard(Activity activity) {
         InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         if (inputMethodManager == null) return;

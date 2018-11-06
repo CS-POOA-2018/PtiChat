@@ -2,6 +2,8 @@ package fr.centralesupelec.ptichatapp;
 
 public class Constants {
     public static final String BROADCAST_NEW_MESSAGE = "fr.centralesupelec.ptichatapp.BROADCAST_SOCKET_MESSAGE";
+    public static final String BROADCAST_HEARTBEAT = "fr.centralesupelec.ptichatapp.BROADCAST_HEARTBEAT";
+    public static final String BROADCAST_BL_RESTART = "fr.centralesupelec.ptichatapp.RESTART_BL_SERVICE";
 
     public static final String DATE_PATTERN = "yyyy-MM-dd HH:mm:ss";
 
