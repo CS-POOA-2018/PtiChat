@@ -23,9 +23,17 @@ Votre back devrait maintenant être up and running. Notez bien le numéro de por
 
 ### Launch the App
 
-// TODO (work in progress)
+#### Lancer l'app via Android Studio
+
+Si vous disposez d'Android Studio sur votre ordinateur, vous pouvez l'utiliser pour lancer l'app sur un émulateur ou sur votre téléphone.
+
+#### Lancer l'app via l'APK
+
+Sinon, vous pouvez lancer l'APK depuis votre téléphone pour installer l'app. Attention, elle apparaîtra comme provenant d'une "source inconnue", vous devrez donc autoriser celles-ci à être installées sur votre téléphone le temps du test.
 
 #### Relier au serveur
+
+Par défaut, lors de l'ouverture de l'app vous serez connecté au serveur bebert.cs-campus.fr qui est notre serveur de test. Vous pouvez l'utiliser tel quel, ou vous relier au serveur que vous venez de lancer dans l'étape précédente. Pour cela, vous aurez besoin de votre adresse IP :
 
 Pour trouver l'adresse IP de votre serveur, tappez la ligne de commande suivante dans votre terminal (sous mac) :
 
