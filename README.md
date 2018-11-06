@@ -1,16 +1,16 @@
 # PtiChat App
 
-As part of a school project, we developed a MSN-like app that allows users to send and receive messages (and has a few nice features). It runs on Android 7.0+ and is written in Java.
+Cette application a été développée en 9 demi-journées dans le cadre d'un projet scalaire. Il s'agit d'un chat qui permet à ses utilisateurs d'envoyer et recevoir des messages d'autres personnes connectées. Conçu pour supporter Android 7.0+, elle est entièrement écrite en Java.
 
 ## Getting Started
 
-This project has two folders: one for the back in Java 8.0 and one for the Android app.
+Ce projet se divise en deux parties : un fichier pour le Back en Java 8.0 contenant la BDD et les routes API, et un autre pour l'app elle-même.
 
-### Back
+### Set up the Back
 
 // TODO (work in progress)
 
-### App
+### Launch the App
 
 // TODO (work in progress)
 
@@ -18,7 +18,7 @@ This project has two folders: one for the back in Java 8.0 and one for the Andro
 
 ### Front-end -> Back-end messages
 
-#### Just send a message to be displayed on the other side
+#### Just send a message to be displayed on the Server
 
 ```json
 {
@@ -149,12 +149,12 @@ This project has two folders: one for the back in Java 8.0 and one for the Andro
   "userId": "user id"
 }
 ```
-(`connection` is `true` to announce a connection with the id `userId`, `false` for a disconnection)
 
+(`connection` is `true` to announce a connection with the id `userId`, `false` for a disconnection)
 
 ### Back-end -> Front-end messages
 
-#### Just send a message to be displayed on the other side
+#### Just send a message to be displayed on the App
 
 ```json
 {
@@ -259,7 +259,6 @@ This project has two folders: one for the back in Java 8.0 and one for the Andro
 }
 ```
 
-
 ## Built With
 
 * [Android](https://developer.android.com) - The app runs on it
@@ -270,10 +269,13 @@ This project has two folders: one for the back in Java 8.0 and one for the Andro
 * [Come de Cerval](https://github.com/CarbonC)
 * [Solen Le Roux--Couloigner](https://github.com/Tishwa)
 
-## License
+## Licence
 
-This project is licensed under the MIT License
+Ce project est sous licence MIT.
 
-## Acknowledgments
+## Remerciements
 
-* MSN for the inspiration
+* MSN Messenger pour l'inspirations
+* Android Studio pour l'avatar des utilisateurs
+* [Freepik](https://www.flaticon.com/authors/freepik) de [Flaticon](/www.flaticon.com) pour l'icone des groupes
+* [hakule](https://www.istockphoto.com/fr/portfolio/hakule?mediatype=illustration&sort=best) de [istockphoto](www.istockphoto.com) pour l'icone de l'app
