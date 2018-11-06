@@ -386,7 +386,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
 
-                } else if ("editAcceptance".equals(json.getString("type"))) {
+                } else if ("userEditAcceptance".equals(json.getString("type"))) {
                     boolean editSuccess = json.getBoolean("value");
                     if (editSuccess) {
                         Toast.makeText(getApplicationContext(), "Successfully edited profile !", Toast.LENGTH_LONG).show();
