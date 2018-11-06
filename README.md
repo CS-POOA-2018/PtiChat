@@ -8,11 +8,36 @@ Ce projet se divise en deux parties : un fichier pour le Back en Java 8.0 conten
 
 ### Set up the Back
 
-// TODO (work in progress)
+#### En ligne de commande
+
+Si vous êtes dans un environnement mac ou linux, ouvrez votre terminal dans le dossier *Backserver* et exécutez les commandes suivantes :
+
+```terminal
+// Pour lancer les tests unitaires et build
+$ ./gradlew build
+// Pour run le serveur
+$ ./gradlew run
+```
+
+Votre back devrait maintenant être up and running. Notez bien le numéro de port (8059 par défaut) sur lequel il tourne.
 
 ### Launch the App
 
 // TODO (work in progress)
+
+#### Relier au serveur
+
+Pour trouver l'adresse IP de votre serveur, tappez la ligne de commande suivante dans votre terminal (sous mac) :
+
+```terminal
+ifconfig | grep "inet " | grep -v 127.0.0.1 | cut -d\  -f2
+```
+
+Elle devrait vous renvoyer votre adresse IP. Si vous n'êtes pas sous mac et/ou que cette commande ne fonctionne pas, il existe d'autres méthodes pour obtenir votre adresse IP.
+
+Vous devriez avoir noté votre numéro de port lorsque vous avez lancé le serveur.
+
+Entrez ces deux informations au bas de la page de connexion, puis appuyez sur OK. Si tout s'est bien passé, vous devriez recevoir un message "The back says hello to you". Vous pouvez maintenant vous connecter avec les identifiants que vous voulez.
 
 ## API specification
 
