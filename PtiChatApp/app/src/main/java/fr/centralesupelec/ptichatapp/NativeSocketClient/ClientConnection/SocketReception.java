@@ -47,6 +47,11 @@ class SocketReception implements Runnable {
         mCtx.sendBroadcast(intent);
     }
 
+    private void broadcastHeartBeat() {
+        Intent intent = new Intent(Constants.BROADCAST_HEARTBEAT);
+        mCtx.sendBroadcast(intent);
+    }
+
     public void run() {
         try {
             mIn = new BufferedReader(new InputStreamReader(mSocket.getInputStream()));
@@ -57,8 +62,12 @@ class SocketReception implements Runnable {
 
                 if (messageIn == null) break;
 
-                // Send the new incoming message to the other classes
-                broadcastNewMessage(messageIn);
+                if (messageIn.equals("heartBeat")) {
+                    broadcastHeartBeat();
+                } else {
+                    // Send the new incoming message to the other classes
+                    broadcastNewMessage(messageIn);
+                }
             }
             if (mClosed) {
                 Log.i("CCk", "😿 Connection with the server was closed");

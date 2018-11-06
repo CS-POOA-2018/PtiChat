@@ -29,6 +29,18 @@ public class BackgroundListener extends Service {
 
     private final NewMessageReceiver newMessageReceiver = new NewMessageReceiver(this);
 
+//    /** Creates a Background Listener */
+//    public BackgroundListener() {
+//        super();
+//    }
+
+//    @Override
+//    public void onCreate() {
+//        Log.i("BLs", "👮 BackgroundListener created!");
+//        registerNewBroadcastReceiver();
+//        createNotificationChannel();
+//    }
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
@@ -42,6 +54,8 @@ public class BackgroundListener extends Service {
     public void onDestroy() {
         super.onDestroy();
         Log.w("BLs", "😡 BackgroundListener stopped!");
+        Intent broadcastIntent = new Intent(Constants.BROADCAST_BL_RESTART);
+        sendBroadcast(broadcastIntent);
         try {
             unregisterReceiver(newMessageReceiver);
         } catch (IllegalArgumentException ignored) { }

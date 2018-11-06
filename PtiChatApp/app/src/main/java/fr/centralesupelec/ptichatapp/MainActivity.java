@@ -121,6 +121,15 @@ public class MainActivity extends AppCompatActivity {
         unregisterReceiver(newMessageReceiver);
     }
 
+    public void onDestroy() {
+        super.onDestroy();
+        Log.i("MAd", "☁️ MainActivity destroyed");
+        stopService(mServiceIntent);
+        try {
+            unregisterReceiver(newMessageReceiver);
+        } catch (IllegalArgumentException ignored) { }
+    }
+
     public void onResume() {
         super.onResume();
         mCurrentUser = Session.getUser();
