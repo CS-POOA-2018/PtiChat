@@ -63,7 +63,7 @@ Vous pouvez maintenant vous connecter avec les identifiants que vous voulez
 (l'utilisateur sera créé à la volée s'il n'existe pas, cela évite d'avoir un flow de création de compte fastidieux).
 
 Remarque : Si vous vous connectez sur le serveur backend que vous venez de mettre en place, l'interface semblera assez vide
-puisque vous serez le seul utilisateur connecté. Vous pouver vous déconnecter puis vous connecter avec un autre compte
+puisque vous serez le seul utilisateur connecté. Vous pouvez vous déconnecter puis vous connecter avec un autre compte
 pour pouvoir voir l'interface de chat, créer un nouveau chat,... Si vous avez accès à 2 téléphone vous pourrez vraiment
 tester le temps réel. Sinon, si vous contactez les développeurs de l'application en leur indiquant un créneau horaire durant lequel
 vous évaluerez notre application, nous pourrons essayer de nous connecter (sur le serveur bebert.cs-campus.fr) et communiquer avec vous :D
@@ -87,7 +87,7 @@ Diagramme UML géré par IntelliJ IDEA, édité pour distinguer les blocs foncti
 ##### Interface
 
 La classe IStorage est une interface décrivant les méthodes utilisables pour accéder et enregistrer des données.
-Elle est implémenté par deux classes :
+Elle est implémentée par deux classes :
 - MemoryStorage stocke les structures de données telle quelles, en mémoire, utilisant des HashMaps.
 Ces données sont volatiles, perdues en cas de redémarrage du serveur, et non transférables.
 - SqliteStorage stockes les données dans une base de donnée SQLite.
@@ -114,7 +114,7 @@ de caractères au format JSON (cf. la partie *Spécification API*, qui détaille
 ##### Threading
 
 Chaque traitement de message reçu par le serveur est lancé dans une Thread séparée, afin de n'occuper que très peu
-la Thread principale. Ainsi, le serveur ne devrait pas souffrire de latence si une requête génère des calculs ou des accès
+la Thread principale. Ainsi, le serveur ne devrait pas souffrir de latence si une requête génère des calculs ou des accès
 aux données lourds, la Thread principale continuera d'écouter les messages entrants.
 
 ### Côté frontend (application mobile)
@@ -146,7 +146,7 @@ La connexion au serveur se fait par sockets.
 
 La gestion de la connexion socket utilise des Threads. Une Thread écoute en permanence le serveur (si la connexion est établie).
 À chaque envoi de message, une nouvelle Thread est lancée, dont le but est d'envoyer le message vers le serveur.
-Cette séparation est cruciale, un retard dans le flux réseau ne doit en aucon cas générer des ralentissements de
+Cette séparation est cruciale, un retard dans le flux réseau ne doit en aucun cas générer des ralentissements de
 l'interface graphique de l'application.
 
 Remarque: étant donné que les requêtes au backend se font par sockets et non par API REST, il n'y a pas de réel lien entre
@@ -166,11 +166,11 @@ certaines informations...
 
 - Déconnexion (bouton Logout)
 - Édition du pseudo (l'identifiant de connexion reste bien sûr le même) et du statut, visibles par les autres utilisateurs
-(toucher les chmaps de texte correspondant, en haut)
+(toucher les champs de texte correspondant, en haut)
 - Liste des utilisateurs inscrits sur le serveur. Les utilisateurs connectés sont en temps réel affichés en vert et placés
 en tête de liste. Cliquer sur un utilisateur lance le chat privé avec celui-ci
 - Liste des chats dans lesquels l'utilisateur courant participe. Cliquer sur le chat l'ouvre
-- Création d'un nouveau chat, avec choix du nom et des utilisateurs y participant (bouton rond avec l'icone de chat)
+- Création d'un nouveau chat, avec choix du nom et des utilisateurs y participant (bouton rond avec l'icône de chat)
 - Suppression de l'utilisateur courant (bouton de menu en haut à droite)
 
 ##### Page de chat
@@ -193,7 +193,7 @@ en tête de liste. Cliquer sur un utilisateur lance le chat privé avec celui-ci
 - Originalité: Nous sommes le seul groupe ayant développé une application android, et le seul groupe à notre connaissance
 à avoir choisi ce projet
 - Le fait d'implémenter une application android nous a offert beaucoup de challenge, nous n'avons pas choisi la solution de
-facilité. De même, nous utilisont très peu de libraires externes à notre projet, il est presque *from scratch*
+facilité. De même, nous utilisons très peu de libraires externes à notre projet, il est presque *from scratch*
 (librairies externes: `json` et `sqlite-jdbc` pour le backend, aucune pour l'application mobile !)
 - De même, nous avons choisi Java et non Python pour faire de la POO proprement et monter en compétences dans ce langage,
 alors que chacun d'entre nous est bien plus à l'aise en Python qu'en Java.
@@ -460,7 +460,7 @@ Ce project est sous licence MIT.
 
 ## Remerciements
 
-* MSN Messenger pour l'inspirations
+* MSN Messenger pour l'inspiration
 * Android Studio pour l'avatar des utilisateurs
-* [Freepik](https://www.flaticon.com/authors/freepik) de [Flaticon](https://www.flaticon.com) pour l'icone des groupes
-* [hakule](https://www.istockphoto.com/fr/portfolio/hakule?mediatype=illustration&sort=best) de [istockphoto](https://www.istockphoto.com) pour l'icone de l'app
+* [Freepik](https://www.flaticon.com/authors/freepik) de [Flaticon](https://www.flaticon.com) pour l'icône des groupes
+* [hakule](https://www.istockphoto.com/fr/portfolio/hakule?mediatype=illustration&sort=best) de [istockphoto](https://www.istockphoto.com) pour l'icône de l'app
